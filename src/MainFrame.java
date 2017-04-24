@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Klasse des Hauptfensters
@@ -9,7 +10,9 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("PSem Alpha 1.1.2_01");
         setSize(800, 600);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
         setVisible(true);
     }
 
@@ -19,5 +22,28 @@ public class MainFrame extends JFrame {
      */
     public static void main(String[] args) {
         new MainFrame();
+    }
+
+    /**
+     * Eine wichtige Methode, um die aktuelle Ansicht zu wechseln
+     * @param view Ansicht, zu der gewechselt werden soll
+     */
+    public void changeTo(AbstractView view) {
+        remove(currentView);
+        currentView = view;
+        add(currentView);
+        revalidate();
+        repaint();
+        currentView.revalidate();
+        currentView.update();
+        currentView.repaint();
+    }
+
+    /**
+     * Getter-Methode für die aktuelle Ansicht
+     * @return Momentan aktive Ansicht
+     */
+    public AbstractView getCurrentView() {
+        return currentView;
     }
 }

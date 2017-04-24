@@ -12,4 +12,6 @@ public abstract class AbstractView extends JPanel {
     public AbstractView(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
+
+    protected abstract void update();
 }
