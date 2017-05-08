@@ -14,6 +14,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
         setVisible(true);
+        setResizable(false);
     }
 
     /**
@@ -29,7 +30,9 @@ public class MainFrame extends JFrame {
      * @param view Ansicht, zu der gewechselt werden soll
      */
     public void changeTo(AbstractView view) {
-        remove(currentView);
+        if(currentView != null){
+            remove(currentView);
+        }
         currentView = view;
         add(currentView);
         revalidate();
