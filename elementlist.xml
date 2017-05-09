@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--Liste mit allen Elementen und ihren Attributen.
+Praktisch die Datenbank des Programms.
+-->
+<elementlist>
+    <element key="1">
+        <title>test</title>
+    </element>
+    <element key="3">
+    <title>test</title>
+    </element>
+    <element key="2">
+        <title>test2</title>
+    </element>
+</elementlist>
