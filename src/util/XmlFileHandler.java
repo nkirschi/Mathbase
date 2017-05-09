@@ -12,14 +12,15 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 
-public class XmlLoader {
+public class XmlFileHandler {
     private Document doc; //Document Objekt der zu ladenden Datei
 
     /**
-     * Die Hauptmethode der Applikation
+     * Der Konstruktor des FileHandlers
+     * Hier wird die Datei als in ein Document Objekt verwandelt
      * @param filename Name der zu ladenden Datei
      */
-    public XmlLoader(String filename){
+    public XmlFileHandler(String filename){
         DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder=factory.newDocumentBuilder();
@@ -39,12 +40,12 @@ public class XmlLoader {
      * @param myExpr XPath-Pfad
      * @return Nodelist aus allen Elementen mit des Pfades
      */
-    public NodeList getNodeListXPath(String myExpr){
-        NodeList tNodelist=null;
+    public NodeList getNodeListXPath(String myExpr) {
+        NodeList tNodelist = null;
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         try {
-            tNodelist=(NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
+            tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
