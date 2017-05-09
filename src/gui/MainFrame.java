@@ -12,7 +12,7 @@ import java.io.IOException;
 public class MainFrame extends JFrame implements WindowListener {
     private AbstractView currentView;
 
-    public MainFrame() {
+    private MainFrame() {
         setTitle("Mathbase Alpha 1.1.2_01");
         setSize(800, 600);
         setResizable(false);
@@ -30,8 +30,23 @@ public class MainFrame extends JFrame implements WindowListener {
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
         exitItem.addActionListener(e -> System.exit(0));
+        try {
+            exitItem.setIcon(new ImageIcon(ImageUtil.getImage("images/exit.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         fileMenu.add(exitItem);
+        JMenu helpMenu = new JMenu("Hilfe");
+        JMenuItem aboutItem = new JMenuItem("Über");
+        //aboutItem.addActionListener(); Hier würde dann Impressum und sowas kommen
+        try {
+            aboutItem.setIcon(new ImageIcon(ImageUtil.getImage("images/help.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        helpMenu.add(aboutItem);
         menuBar.add(fileMenu);
+        menuBar.add(helpMenu);
         setJMenuBar(menuBar);
 
         setVisible(true);
@@ -75,6 +90,10 @@ public class MainFrame extends JFrame implements WindowListener {
         return currentView;
     }
 
+    /**
+     * Diese Methode wird von Swing beim Versuch des Schließens ausgeführt
+     * @param e Das WindowEvent mit Detailinformationen (brauchen wir hier aber nicht)
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", 0);
