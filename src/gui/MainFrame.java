@@ -1,3 +1,6 @@
+package gui;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -22,7 +25,7 @@ public class MainFrame extends JFrame {
                     System.exit(0);
             }
         });
-        setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
+        setIconImage(new ImageIcon(getClass().getResource("/images/icon.png")).getImage());
         setVisible(true);
         setResizable(false);
     }
