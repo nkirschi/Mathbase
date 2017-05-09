@@ -1,3 +1,5 @@
+package gui;
+
 /**
  * Über Klassennamen lässt sich noch streiten, vorerst mal zu Testzwecken
  */

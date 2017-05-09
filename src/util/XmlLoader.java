@@ -1,3 +1,5 @@
+package util;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -10,14 +12,14 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 
-public class xmlLoader {
+public class XmlLoader {
     private Document doc; //Document Objekt der zu ladenden Datei
 
     /**
      * Die Hauptmethode der Applikation
      * @param filename Name der zu ladenden Datei
      */
-    public xmlLoader(String filename){
+    public XmlLoader(String filename){
         DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder=factory.newDocumentBuilder();
@@ -51,7 +53,7 @@ public class xmlLoader {
 
     //ZUM TESTEN; NICHT LÖSCHEN!
     /*public static void main(String[] args){
-     *  xmlLoader asd=new xmlLoader("elementlist.xml");
+     *  XmlLoader asd=new XmlLoader("elementlist.xml");
      *   NodeList test=asd.getNodeListXPath("/elementlist/element[title=\"test\"]");
      *   for(int i=0;i<test.getLength();i++){
      *       Node element=test.item(i);

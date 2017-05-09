@@ -1,3 +1,5 @@
+package gui;
+
 /**
  * Klasse für die Detailansicht der einzelnen Themen
  */
