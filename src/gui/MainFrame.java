@@ -15,6 +15,7 @@ public class MainFrame extends JFrame implements WindowListener {
     public MainFrame() {
         setTitle("Mathbase Alpha 1.1.2_01");
         setSize(800, 600);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -23,8 +24,17 @@ public class MainFrame extends JFrame implements WindowListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Provisorische Menüleiste :D
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Datei");
+        JMenuItem exitItem = new JMenuItem("Beenden");
+        exitItem.addActionListener(e -> System.exit(0));
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
         setVisible(true);
-        setResizable(false);
     }
 
     /**
