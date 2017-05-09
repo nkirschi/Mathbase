@@ -1,15 +1,15 @@
 package gui;
+import util.ImageUtil;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
 
 /**
  * Klasse des Hauptfensters
  */
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements WindowListener {
     private AbstractView currentView;
 
     public MainFrame() {
@@ -17,15 +17,12 @@ public class MainFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(null, "Wirklich beenden?", "Mathbase", 0);
-                if (result == 0)
-                    System.exit(0);
-            }
-        });
-        setIconImage(new ImageIcon(getClass().getResource("/images/icon.png")).getImage());
+        addWindowListener(this);
+        try {
+            setIconImage(ImageUtil.getImage("images/icon.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setVisible(true);
         setResizable(false);
     }
@@ -67,4 +64,29 @@ public class MainFrame extends JFrame {
     public AbstractView getCurrentView() {
         return currentView;
     }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", 0);
+        if (result == 0)
+            System.exit(0);
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {}
+
+    @Override
+    public void windowClosed(WindowEvent e) {}
+
+    @Override
+    public void windowIconified(WindowEvent e) {}
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+
+    @Override
+    public void windowActivated(WindowEvent e) {}
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
 }
