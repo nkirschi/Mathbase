@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class ImageUtil {
     // Der Bilder-Cache; Wenn man hin- und hernavigiert, soll doch nicht jedes mal dasselbe Bild neu geladen werden ;)
-    private static Map<String, BufferedImage> imageCache = new HashMap<>();
+    private static final Map<String, BufferedImage> imageCache = new HashMap<>();
 
     /**
      * Der Konstruktor ist hier privat, da von dieser Klasse nie ein Objekt existieren soll.
