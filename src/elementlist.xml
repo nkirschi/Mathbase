@@ -1,15 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--Liste mit allen Elementen und ihren Attributen.
 Praktisch die Datenbank des Programms.
 Beschreibung sollte evtl als eigene .txt abgespeichert werden?!
 -->
 <elementlist>
-    <element key="1" title="test" thema="Birnen/Klasse 5" type="exponat">
+    <element key="1" thema="Birnen/Klasse 5" title="test" type="exponat">
         <filepath type="picture">test.png</filepath>
         <filepath type="picture">test2.png</filepath>
         <filepath type="description">test.txt</filepath>
     </element>
-    <element key="2" title="movie1" thema="Datteln/Klasse 10" type="film">
+    <element key="2" thema="Datteln/Klasse 10" title="movie1" type="film">
         <filepath type="movie">movie1.mp4</filepath>
         <filepath type="picture">movie1.preview.png</filepath>
         <filepath type="description">movie1.txt</filepath>

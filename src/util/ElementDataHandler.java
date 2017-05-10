@@ -1,5 +1,8 @@
 package util;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * Klasse, von der später einmal über getter-Methoden die Daten von Exponaten abgefragt werden können.
  * Ziel ist es, dass dann nur Strings returnt werden, um die Verarbeitung zu erleichtern.
@@ -14,10 +17,10 @@ public class ElementDataHandler {
      * Der Konstruktor des DataHandlers
      */
     public ElementDataHandler(){
-        elementlistHandler = new XmlFileHandler("elementlist.xml");
-    }
-
-    public String getElementTitle(int key){ //Hier ein Bsp. Soll in dem Fall den Titel zu einem bestimmten Element geben
-        return "";
+        try {
+            elementlistHandler = new XmlFileHandler("src/elementlist.xml");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

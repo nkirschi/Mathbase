@@ -6,10 +6,18 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class XmlFileHandler {
@@ -18,21 +26,36 @@ public class XmlFileHandler {
     /**
      * Der Konstruktor des FileHandlers
      * Hier wird die Datei als in ein Document Objekt verwandelt
-     * @param filename Name der zu ladenden Datei
+     * @param filePath Name der zu ladenden Datei
      */
-    public XmlFileHandler(String filename){
-        DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
+    public XmlFileHandler(String filePath) throws FileNotFoundException {
+        DocumentBuilderFactory dFactory= DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder builder=factory.newDocumentBuilder();
-            doc=builder.parse(filename);
-        } catch (ParserConfigurationException e) { //Hier sollte dringenst noch eine Rückmeldung an Nutzer stattfinden -> Fehler beim Laden des Dokuments
+            DocumentBuilder builder=dFactory.newDocumentBuilder();
+            doc=builder.parse(filePath);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileNotFoundException("Error while loading File. File "+filePath+"not loaded!");
         }
     }
+
+    /**
+     * Methode, die das Document Objekt in einer Datei speichert
+     * @param targetPath Pfad der Zieldatei
+     */
+    public void saveDocToXml(String targetPath) throws IOException{
+        DOMSource source=new DOMSource(doc);
+        StreamResult result=new StreamResult(new File(targetPath));
+        TransformerFactory tFactory=TransformerFactory.newInstance();
+        try {
+            Transformer transformer=tFactory.newTransformer();
+            transformer.transform(source,result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException("Error while saving File. File "+targetPath+"not saved!");
+        }
+    }
+
     /**
      * Methode, um Nodelist aus allen Elementen eines bestimmten XPath-Pfads zu erzeugen,
      * ausgehend von doc
@@ -40,7 +63,7 @@ public class XmlFileHandler {
      * @param myExpr XPath-Pfad
      * @return Nodelist aus allen Elementen mit des Pfades
      */
-    public NodeList getNodeListXPath(String myExpr) {
+    public NodeList getNodeListXPath(String myExpr) throws IOException {
         NodeList tNodelist = null;
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
@@ -48,19 +71,18 @@ public class XmlFileHandler {
             tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
+            throw new IOException("Error while parsing File with '"+myExpr+"'");
         }
         return tNodelist;
     }
 
     //ZUM TESTEN; NICHT LÖSCHEN!
-    /*public static void main(String[] args){
-     *  XmlLoader asd=new XmlLoader("elementlist.xml");
-     *   NodeList test=asd.getNodeListXPath("/elementlist/element[title=\"test\"]");
-     *   for(int i=0;i<test.getLength();i++){
-     *       Node element=test.item(i);
-     *       Element sig=(Element)element;
-     *       System.out.println(sig.getAttribute("key"));
-     *   }
-     *}
-    */
+    //public static void main(String[] args){
+    //    try {
+    //        XmlFileHandler test=new XmlFileHandler("src/elementlist.xml");
+    //        test.saveDocToXml("src/elementlist.xml");
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    }
+    //}
 }
