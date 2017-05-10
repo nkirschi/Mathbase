@@ -22,7 +22,7 @@ import java.io.IOException;
  * Versprochen.
  */
 
-public class XmlFileHandler {
+public class XMLFileHandler {
     private Document doc; //Document Objekt der zu ladenden Datei
 
     /**
@@ -30,7 +30,7 @@ public class XmlFileHandler {
      * Hier wird die Datei als in ein Document Objekt verwandelt
      * @param filePath Name der zu ladenden Datei
      */
-    public XmlFileHandler(String filePath) throws FileNotFoundException {
+    public XMLFileHandler(String filePath) throws FileNotFoundException {
         DocumentBuilderFactory dFactory= DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder=dFactory.newDocumentBuilder();
@@ -81,7 +81,7 @@ public class XmlFileHandler {
     //ZUM TESTEN; NICHT LÖSCHEN!
     //public static void main(String[] args){
     //    try {
-    //        XmlFileHandler test=new XmlFileHandler("src/elementlist.xml");
+    //        XMLFileHandler test=new XMLFileHandler("src/elementlist.xml");
     //        test.saveDocToXml("src/elementlist.xml");
     //    } catch (IOException e) {
     //        e.printStackTrace();
