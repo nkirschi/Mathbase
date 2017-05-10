@@ -15,7 +15,7 @@ public class MainFrame extends JFrame implements WindowListener {
     private MainFrame() {
         setTitle("Mathbase Alpha 1.1.2_01");
         setSize(800, 600);
-        setResizable(false);
+        //setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -24,31 +24,8 @@ public class MainFrame extends JFrame implements WindowListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Provisorische Menüleiste :D
-        JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("Datei");
-        JMenuItem exitItem = new JMenuItem("Beenden");
-        exitItem.addActionListener(e -> System.exit(0));
-        try {
-            exitItem.setIcon(new ImageIcon(ImageUtil.getImage("images/exit.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        fileMenu.add(exitItem);
-        JMenu helpMenu = new JMenu("Hilfe");
-        JMenuItem aboutItem = new JMenuItem("Über");
-        //aboutItem.addActionListener(); Hier würde dann Impressum und sowas kommen
-        try {
-            aboutItem.setIcon(new ImageIcon(ImageUtil.getImage("images/help.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        helpMenu.add(aboutItem);
-        menuBar.add(fileMenu);
-        menuBar.add(helpMenu);
-        setJMenuBar(menuBar);
-
+        initMenuBar();
+        changeTo(new MenuView(this));
         setVisible(true);
     }
 
@@ -80,6 +57,34 @@ public class MainFrame extends JFrame implements WindowListener {
         currentView.revalidate();
         currentView.update();
         currentView.repaint();
+    }
+
+    /**
+     * Hilfsmethode zur Initialisierung der Menüleiste
+     */
+    private void initMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Datei");
+        JMenuItem exitItem = new JMenuItem("Beenden");
+        exitItem.addActionListener(e -> System.exit(0));
+        try {
+            exitItem.setIcon(new ImageIcon(ImageUtil.getImage("images/exit.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fileMenu.add(exitItem);
+        JMenu helpMenu = new JMenu("Hilfe");
+        JMenuItem aboutItem = new JMenuItem("Über");
+        //aboutItem.addActionListener(); Hier würde dann Impressum und sowas kommen
+        try {
+            aboutItem.setIcon(new ImageIcon(ImageUtil.getImage("images/help.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        helpMenu.add(aboutItem);
+        menuBar.add(fileMenu);
+        menuBar.add(helpMenu);
+        setJMenuBar(menuBar);
     }
 
     /**
