@@ -75,7 +75,7 @@ public class MainFrame extends JFrame implements WindowListener {
         fileMenu.add(exitItem);
         JMenu helpMenu = new JMenu("Hilfe");
         JMenuItem aboutItem = new JMenuItem("Über");
-        //aboutItem.addActionListener(); Hier würde dann Impressum und sowas kommen
+        aboutItem.addActionListener(e -> new AboutDialog(this));
         try {
             aboutItem.setIcon(new ImageIcon(ImageUtil.getImage("images/help.png")));
         } catch (IOException e) {
