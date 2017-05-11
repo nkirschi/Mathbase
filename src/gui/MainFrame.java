@@ -101,9 +101,10 @@ public class MainFrame extends JFrame implements WindowListener {
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", 0);
-        if (result == 0)
+        int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", JOptionPane.YES_NO_OPTION);
+        if (result == 0) {
             System.exit(0);
+        }
     }
 
     @Override

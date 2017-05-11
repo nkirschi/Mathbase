@@ -29,6 +29,7 @@ public class MenuView extends AbstractView {
     private void initToolPane() {
         JPanel toolPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("Hinzufügen");
+        addButton.addActionListener(e -> new TopicDialog(mainFrame));
         JLabel searchLabel = new JLabel("Suchen:");
         JTextField searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(100, 20));
