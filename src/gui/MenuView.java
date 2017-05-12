@@ -63,9 +63,21 @@ public class MenuView extends AbstractView {
     private void initTopicList() {
         DefaultListModel<TopicListItem> model = new DefaultListModel<>();
         try {
-            model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/cherry.png")));
             model.addElement(new TopicListItem("Blattspinat", ImageUtil.getIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Aubergine", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Aubergine", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Gurke", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Wirsing", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Spargel", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Kartoffel", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Brokkoli", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Tomate", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Paprika", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Zucchini", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Rucola", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Meerrettich", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Knoblauch", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Radieschen", ImageUtil.getIcon("images/cherry.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
