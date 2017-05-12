@@ -43,7 +43,7 @@ public class ElementDataHandler {
      * @param attributeName Name des Attributs
      * @return Wert des Attributs
      */
-    public String getElementAttribute(long key, String attributeName) {
+    public String getElementAttribute(String key, String attributeName) {
         try {
             NodeList nodelist=xmlHandler.getNodeListXPath("//elementlist/element[@key=\""+key+"\"]");
             if(nodelist.getLength()==1){
@@ -68,7 +68,7 @@ public class ElementDataHandler {
      * @param type Welche typen zurückgegeben werden sollen
      * @return Array mit allen Filepaths vom Typ type
      */
-    public String[] getElementFilePathsByType(long key, String type){
+    public String[] getElementFilePathsByType(String key, String type){
         String[] pathslist=new String[0];
         try {
             NodeList nodelist=xmlHandler.getNodeListXPath("//elementlist/element[@key=\""+key+"\"]/filepath[@type=\""+type+"\"]");
@@ -85,11 +85,63 @@ public class ElementDataHandler {
     }
 
     /**
-     * Methode, die das die Daten in einer .xml Datei speichert
+     * Methode, die eine Liste aller Keys zurückgibt
+     * @return Array mit allen Keys
+     */
+    public String[] getElementKeyList(){
+        String[] keylist=new String[0];
+        try {
+            NodeList nodelist=xmlHandler.getNodeListXPath("//elementlist/element");
+            keylist=new String[nodelist.getLength()];
+            for(int i=0;i<nodelist.getLength();i++){
+                Node inode=nodelist.item(i);
+                if(inode.getNodeType()==Node.ELEMENT_NODE){
+                    Element ielement=(Element)inode;
+                    keylist[i]=ielement.getAttribute("key");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return keylist;
+    }
+
+    /**
+     * Methode, mit der man ein Element hinzufügen kann.
+     */
+    public void addElement(String key, String theme, String title, String type){
+        Element element=xmlHandler.createElement("element");
+        element.setAttribute("key",key);
+        element.setAttribute("theme",theme);
+        element.setAttribute("title",title);
+        element.setAttribute("type",type);
+        xmlHandler.getRoot().appendChild(element);
+    }
+
+    /**
+     * Methode, mit der man ein bestimmtes Element löschen kann.
+     * @param key Eindeutiger Schlüssel des Elements
+     */
+    public void deleteElement(String key){
+
+    }
+
+    /**
+     * Methode, die die Daten in einer .xml Datei speichert
      */
     public void safeElementData(){
         try {
             xmlHandler.saveDocToXml(targetfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args){
+        ElementDataHandler test=ELEMENT_DATA_HANDLER;
+        test.addElement("56","Testthema","Toller Titel","film");
+        try {
+            test.xmlHandler.saveDocToXml(targetfile);
         } catch (IOException e) {
             e.printStackTrace();
         }

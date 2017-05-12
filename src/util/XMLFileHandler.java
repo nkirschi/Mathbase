@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -36,6 +37,18 @@ public class XMLFileHandler {
         try {
             DocumentBuilder builder=dFactory.newDocumentBuilder();
             doc=builder.parse(filePath);
+
+            /*
+             * Das benötigt man, weil xml-Formatting eine Bitch ist. Ernsthaft. UAAAAARGH
+             * Im Prinzip sucht es einfach alle Leeräume außerhalb von Elementen und löscht sie raus,
+             * weil der DOM-Parser diese tatsächlich als Nodes mitnimmt und damit dann beim speichern alles Kacke aussieht.
+             * *Computer anzünd*
+             */
+            NodeList whitespace=getNodeListXPath("//text()[normalize-space()='']");
+            for (int i = 0; i < whitespace.getLength(); ++i) {
+                Node node = whitespace.item(i);
+                node.getParentNode().removeChild(node);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new FileNotFoundException("Error while loading File. File "+filePath+"not loaded!");
@@ -52,12 +65,26 @@ public class XMLFileHandler {
         TransformerFactory tFactory=TransformerFactory.newInstance();
         try {
             Transformer transformer=tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD,"xml");
+            transformer.setOutputProperty(OutputKeys.INDENT,"yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transformer.transform(source,result);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IOException("Error while saving File. File "+targetPath+"not saved!");
         }
     }
+
+    public Node getRoot(){
+        return doc.getFirstChild();
+    }
+
+    public Element createElement(String tagname){
+        return doc.createElement(tagname);
+    }
+
 
     /**
      * Methode, um Nodelist aus allen Elementen eines bestimmten XPath-Pfads zu erzeugen,
