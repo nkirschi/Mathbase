@@ -3,6 +3,8 @@ package util;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ExceptionUtil {
     private static BufferedWriter writer;
@@ -16,6 +18,9 @@ public class ExceptionUtil {
             }
         }
         try {
+            String timestamp = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss").format(new Date());
+            writer.write(timestamp);
+            writer.newLine();
             for (StackTraceElement s : exception.getStackTrace()) {
                 writer.write("Exception: " + exception.getMessage());
                 writer.newLine();
