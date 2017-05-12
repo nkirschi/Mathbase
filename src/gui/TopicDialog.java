@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /**
  * Eingabemaske beim Erstellen eines neuen Themas
+ * TODO Bene will Map<Pfad, Typ> zurück haben für alle medialen Inhalte und Description selbst TXT und dann zurück
  */
 public class TopicDialog extends JDialog {
     public TopicDialog(MainFrame mainFrame) {
