@@ -1,22 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><elementlist>
-    <element key="1" thema="Birnen/Klasse 5" title="sigdarim" type="exponat">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<elementlist>
+    <element key="1" theme="Birnen/Klasse 5" title="sigdarim" type="exponat">
         <filepath type="picture">test.png</filepath>
         <filepath type="picture">test2.png</filepath>
         <filepath type="description">test.txt</filepath>
     </element>
-    <element key="4" thema="Birnen/Klasse 5" title="test" type="exponat">
+    <element key="4" theme="Birnen/Klasse 5" title="test" type="exponat">
         <filepath type="picture">test.png</filepath>
         <filepath type="picture">test2.png</filepath>
         <filepath type="description">test.txt</filepath>
     </element>
-    <element key="3" thema="Birnen/Klasse 5" title="test" type="exponat">
+    <element key="3" theme="Birnen/Klasse 5" title="test" type="exponat">
         <filepath type="picture">test.png</filepath>
         <filepath type="picture">test2.png</filepath>
         <filepath type="description">test.txt</filepath>
     </element>
-    <element key="2" thema="Datteln/Klasse 10" title="movie1" type="film">
+    <element key="2" theme="Datteln/Klasse 10" title="movie1" type="film">
         <filepath type="movie">movie1.mp4</filepath>
         <filepath type="picture">movie1.preview.png</filepath>
         <filepath type="description">movie1.txt</filepath>
     </element>
+    <element key="56" theme="Testthema" title="Toller Titel" type="film"/>
 </elementlist>
