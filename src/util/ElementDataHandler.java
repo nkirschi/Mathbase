@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ElementDataHandler {
     private XMLFileHandler xmlHandler;
 
-    public static final String ATTRIBUTE_ = "";
+    public static final String ATTRIBUTE_TITLE = "title";
     public static final String FILE_TYPE_PICTURE = "picture";
     public static final String FILE_TYPE_DESCRIPTION = "description";
     public static final String FILE_TYPE_MOVIE = "movie";
