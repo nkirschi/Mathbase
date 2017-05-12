@@ -15,9 +15,14 @@ import java.io.IOException;
 public class ElementDataHandler {
     private XMLFileHandler xmlHandler;
 
+    public static final String ATTRIBUTE_ = "";
+    public static final String FILE_TYPE_PICTURE = "picture";
+    public static final String FILE_TYPE_DESCRIPTION = "description";
+    public static final String FILE_TYPE_MOVIE = "movie";
+
     private static String originfile="src/elementlist.xml";
     private static String targetfile="src/elementlist.xml"; //FILEPATHS MÜSSEN NOCH HINZUGEFÜGT WERDEN
-    private static ElementDataHandler ELEMENT_DATA_HANDLER=new ElementDataHandler(originfile);
+    private static ElementDataHandler ELEMENT_DATA_HANDLER=new ElementDataHandler(originfile); //Hält die Reference zum einzigen existierenden Objekt der Klasse ElementDataHandler
 
     public ElementDataHandler(String filePath){
         try {
