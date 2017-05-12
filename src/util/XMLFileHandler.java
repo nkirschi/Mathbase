@@ -1,6 +1,9 @@
 package util;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,9 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /*
- *Klasse, von der die Element-Daten abgefragt, Elemente hinzugefügt und gelöscht werden können.
- * Später gibt es schnieke getter-Methoden, die öden XPath-Expressions bekommt außerhalb hier keiner zu Gesicht.
- * Versprochen.
+ *Klasse zum bearbeiten von XML-Dateien
  */
 
 public class XMLFileHandler {
@@ -65,7 +66,7 @@ public class XMLFileHandler {
      * @param myExpr XPath-Pfad
      * @return Nodelist aus allen Elementen mit des Pfades
      */
-    private NodeList getNodeListXPath(String myExpr) throws IOException {
+    public NodeList getNodeListXPath(String myExpr) throws IOException {
         NodeList tNodelist = null;
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
@@ -77,14 +78,4 @@ public class XMLFileHandler {
         }
         return tNodelist;
     }
-
-    //ZUM TESTEN; NICHT LÖSCHEN!
-    //public static void main(String[] args){
-    //    try {
-    //        XMLFileHandler test=new XMLFileHandler("src/elementlist.xml");
-    //        test.saveDocToXml("src/elementlist.xml");
-    //    } catch (IOException e) {
-    //        e.printStackTrace();
-    //    }
-    //}
 }
