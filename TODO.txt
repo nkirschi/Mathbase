@@ -14,3 +14,10 @@ TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
     <element path="" type=""></element>
 </topic>
 </elementlist>
+
+
+
+Map<String, String> map = ...
+for (Map.Entry<String, String> entry : map.entrySet()) {
+    System.out.println(entry.getKey() + "/" + entry.getValue());
+}
