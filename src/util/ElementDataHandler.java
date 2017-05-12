@@ -1,6 +1,7 @@
 package util;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,12 +45,12 @@ public class ElementDataHandler {
      */
     public String getElementAttribute(long key, String attributeName) {
         try {
-            NodeList list=xmlHandler.getNodeListXPath("//elementlist/element[@key=\""+key+"\"]");
-            if(list.getLength()==1){
-                Element listelement=(Element)list.item(0);
+            NodeList nodelist=xmlHandler.getNodeListXPath("//elementlist/element[@key=\""+key+"\"]");
+            if(nodelist.getLength()==1){
+                Element listelement=(Element)nodelist.item(0);
                 return listelement.getAttribute(attributeName);
             }
-            else if(list.getLength()==0){
+            else if(nodelist.getLength()==0){
 
             }
             else {
@@ -67,9 +68,20 @@ public class ElementDataHandler {
      * @param type Welche typen zurückgegeben werden sollen
      * @return Array mit allen Filepaths vom Typ type
      */
-    public String[] getElementFilePathsByType(long key, int type){
-        String[] pathlist=new String[10];          //UNFERTIG
-        return pathlist;
+    public String[] getElementFilePathsByType(long key, String type){
+        String[] pathslist=new String[0];
+        try {
+            NodeList nodelist=xmlHandler.getNodeListXPath("//elementlist/element[@key=\""+key+"\"]/filepath[@type=\""+type+"\"]");
+            pathslist=new String[nodelist.getLength()];
+            for(int i=0;i<nodelist.getLength();i++){
+                Node inode=nodelist.item(i);
+                pathslist[i]=inode.getTextContent();
+            }
+            return pathslist;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pathslist;
     }
 
     /**
