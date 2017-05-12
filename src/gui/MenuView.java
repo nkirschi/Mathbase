@@ -27,15 +27,33 @@ public class MenuView extends AbstractView {
      * Hilfsklasse für die Initialisierung der Werkzeugleiste
      */
     private void initToolPane() {
-        JPanel toolPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel toolPane = new JPanel(new BorderLayout());
+
+        JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("Hinzufügen");
         addButton.addActionListener(e -> new TopicDialog(mainFrame));
+        JButton removeButton = new JButton("Entfernen");
+        removeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Computer sagt: Nein!", "Weltuntergang", JOptionPane.WARNING_MESSAGE));
+        try {
+            addButton.setIcon(ImageUtil.getIcon("images/add.png", 12, 12));
+            removeButton.setIcon(ImageUtil.getIcon("images/remove.png", 12, 12));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        buttonPane.add(addButton);
+        buttonPane.add(removeButton);
+
+        JPanel searchPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel searchLabel = new JLabel("Suchen:");
         JTextField searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(100, 20));
-        toolPane.add(addButton);
-        toolPane.add(searchLabel);
-        toolPane.add(searchField);
+        searchField.setPreferredSize(new Dimension(200, 22));
+        searchPane.add(searchLabel);
+        searchPane.add(searchField);
+
+        toolPane.add(buttonPane, BorderLayout.WEST);
+        toolPane.add(searchPane, BorderLayout.EAST);
         add(toolPane, BorderLayout.SOUTH);
     }
 
@@ -45,9 +63,9 @@ public class MenuView extends AbstractView {
     private void initTopicList() {
         DefaultListModel<TopicListItem> model = new DefaultListModel<>();
         try {
-            model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getImage("images/icon.png")));
-            model.addElement(new TopicListItem("Blattspinat", ImageUtil.getImage("images/icon.png")));
-            model.addElement(new TopicListItem("Aubergine", ImageUtil.getImage("images/icon.png")));
+            model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Blattspinat", ImageUtil.getIcon("images/icon.png")));
+            model.addElement(new TopicListItem("Aubergine", ImageUtil.getIcon("images/icon.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,10 +85,9 @@ class TopicListItem {
     private String title;
     private ImageIcon icon;
 
-    TopicListItem(String title, BufferedImage icon) {
+    TopicListItem(String title, ImageIcon icon) {
         this.title = title;
-        Image image = new ImageIcon(icon).getImage();
-        this.icon = new ImageIcon(image.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+        this.icon = new ImageIcon(icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
     }
 
     String getTitle() {

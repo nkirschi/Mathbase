@@ -1,7 +1,10 @@
 package gui;
 
+import util.ImageUtil;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * Eingabemaske beim Erstellen eines neuen Themas
@@ -13,6 +16,11 @@ public class TopicDialog extends JDialog {
         setSize(700, 500);
         setResizable(false);
         setLocationRelativeTo(mainFrame);
+        try {
+            setIconImage(ImageUtil.getImage("images/icon.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         initFormPanel();
         initButtonPanel();
         setVisible(true);
@@ -26,7 +34,7 @@ public class TopicDialog extends JDialog {
         JButton cancelButton = new JButton("Abbrechen");
         cancelButton.addActionListener(e -> dispose());
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(e -> dispose());
+        okButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Computer sagt: Nein!", "Weltuntergang", JOptionPane.WARNING_MESSAGE));
         buttonPanel.add(cancelButton);
         buttonPanel.add(okButton);
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);

@@ -1,9 +1,7 @@
 package gui;
 
 import util.ImageUtil;
-
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -12,14 +10,15 @@ import java.io.IOException;
 public class AboutDialog extends JDialog {
     public AboutDialog(MainFrame mainFrame) {
         super(mainFrame);
-        setTitle("Thema hinzufügen");
+        setTitle("Über Mathbase");
         setSize(500, 300);
         setResizable(false);
         setLocationRelativeTo(mainFrame);
         JPanel panel = new JPanel();
         setContentPane(panel);
         try {
-            panel.add(new JLabel(new ImageIcon(ImageUtil.getImage("images/icon.png"))));
+            setIconImage(ImageUtil.getImage("images/icon.png"));
+            panel.add(new JLabel(ImageUtil.getIcon("images/icon.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

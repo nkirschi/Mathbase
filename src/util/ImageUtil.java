@@ -1,6 +1,8 @@
 package util;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,5 +35,27 @@ public class ImageUtil {
             imageCache.put(path, image);
         }
         return imageCache.get(path);
+    }
+
+    /**
+     * Abstrahierte Methode für die Rückgabe eines Bildes als ImageIcon
+     * @param path Der Pfad der Bilddatei, ausgehend vom src root folder
+     * @return Das Ergebnis von getImage als ImageIcon
+     * @throws IOException von getImage durchgeschoben
+     */
+    public static ImageIcon getIcon(String path) throws IOException {
+        return new ImageIcon(getImage(path));
+    }
+
+    /**
+     * Erweiterung von getIcon mit parametisierter Bildgröße
+     * @param path Der Pfad der Bilddatei, ausgehend vom src root folder
+     * @param width Die neue Breite des Icons
+     * @param height Die neue Höhe des Icons
+     * @return Das Ergebnis von getIcon mit den neuen Maßen
+     * @throws IOException von getIcon durchgeschoben
+     */
+    public static ImageIcon getIcon(String path, int width, int height) throws IOException {
+        return new ImageIcon(getIcon(path).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
     }
 }

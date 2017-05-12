@@ -64,26 +64,32 @@ public class MainFrame extends JFrame implements WindowListener {
      */
     private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
         exitItem.addActionListener(e -> System.exit(0));
-        try {
-            exitItem.setIcon(new ImageIcon(ImageUtil.getImage("images/exit.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        JMenu editMenu = new JMenu("Bearbeiten");
+        menuBar.add(editMenu);
+
+        JMenu viewMenu = new JMenu("Ansicht");
+        menuBar.add(viewMenu);
+
         JMenu helpMenu = new JMenu("Hilfe");
         JMenuItem aboutItem = new JMenuItem("Über");
         aboutItem.addActionListener(e -> new AboutDialog(this));
+        helpMenu.add(aboutItem);
+        menuBar.add(helpMenu);
+
         try {
-            aboutItem.setIcon(new ImageIcon(ImageUtil.getImage("images/help.png")));
+            exitItem.setIcon(ImageUtil.getIcon("images/exit.png"));
+            aboutItem.setIcon(ImageUtil.getIcon("images/help.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        helpMenu.add(aboutItem);
-        menuBar.add(fileMenu);
-        menuBar.add(helpMenu);
+
         setJMenuBar(menuBar);
     }
 
