@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 public class MenuView extends AbstractView {
     private DefaultListModel<TopicListItem> listmodel;
+    private JList<TopicListItem> list;
 
     public MenuView(MainFrame mainFrame){
         super(mainFrame);
@@ -40,7 +41,15 @@ public class MenuView extends AbstractView {
         JButton addButton = new JButton("Hinzufügen");
         addButton.addActionListener(e -> new TopicDialog(mainFrame));
         JButton removeButton = new JButton("Entfernen");
-        removeButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Computer sagt: Nein!", "Weltuntergang", JOptionPane.WARNING_MESSAGE));
+        removeButton.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(this, "Wollen das Thema '"+list.getSelectedValue().getTitle()+
+                    "' und alle enthalteten Elemente wirklich löschen (permanent!)?", "", JOptionPane.YES_NO_OPTION);
+            if(result==0){
+                ElementDataHandler.getElementDataHandler().deleteTheme(list.getSelectedValue().getKey());
+                ElementDataHandler.getElementDataHandler().safeElementData();
+                this.update();
+            }
+        });
         try {
             addButton.setIcon(ImageUtil.getIcon("images/add.png", 12, 12));
             removeButton.setIcon(ImageUtil.getIcon("images/remove.png", 12, 12));
@@ -86,6 +95,7 @@ public class MenuView extends AbstractView {
         JScrollPane scrollPane = new JScrollPane(topicList);
         add(scrollPane, BorderLayout.CENTER);
         listmodel=model;
+        list=topicList;
     }
 
     private void initTopicListModel(DefaultListModel<TopicListItem> model){
