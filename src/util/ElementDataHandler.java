@@ -235,17 +235,7 @@ public class ElementDataHandler {
         }
     }
 
-
-    //ALLES ZUM TESTEN
-    public static void main(String[] args){
-        ElementDataHandler test=ELEMENT_DATA_HANDLER;
-        test.test();
-        try {
-            test.xmlHandler.saveDocToXml(targetfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    //ZUM TESTEN TODO test-Methode entfernen
     private void test(){
         addTheme("Thema1");
         try {

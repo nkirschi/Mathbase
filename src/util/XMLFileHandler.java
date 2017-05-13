@@ -1,6 +1,5 @@
 package util;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
