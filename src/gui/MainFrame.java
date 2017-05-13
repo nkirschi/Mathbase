@@ -1,5 +1,6 @@
 package gui;
 import util.ImageUtil;
+import util.LogUtil;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -67,7 +68,7 @@ public class MainFrame extends JFrame implements WindowListener {
 
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
-        exitItem.addActionListener(e -> System.exit(0));
+        exitItem.addActionListener(e -> {LogUtil.close(); System.exit(0);});
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
@@ -109,6 +110,7 @@ public class MainFrame extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", JOptionPane.YES_NO_OPTION);
         if (result == 0) {
+            LogUtil.close();
             System.exit(0);
         }
     }
