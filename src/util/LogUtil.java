@@ -11,9 +11,9 @@ public class LogUtil {
     private static BufferedWriter writer;
 
     // Konstanten für die Angabe eines Logging-Levels
-    private static final String INFO = "INFO: ";
-    private static final String WARNING = "WARNUNG: ";
-    private static final String ERROR = "FEHLER: ";
+    public static final String INFO = "INFO: ";
+    public static final String WARNING = "WARNUNG: ";
+    public static final String ERROR = "FEHLER: ";
 
     /**
      * Statischer Block, der beim Laden der Klasse ausgeführt wird (konstruktorähnlich)
