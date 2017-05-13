@@ -8,14 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import static util.LogUtil.*;
 
 /**
  * Klasse, welche sich um die Verwaltung der Element-Daten handelt;
  * mit Hilfe der XMLFileHandler
  */
-
-//!!!!!!FEHLERVERARBEITUNG MUSS NOCH STATTFINDEN!!!!!!!
-
 public class ElementDataHandler {
     private XMLFileHandler xmlHandler;
 
@@ -25,14 +23,16 @@ public class ElementDataHandler {
     public static final String FILE_TYPE_MOVIE = "movie";
 
     private static String originfile="src/topics.xml";
-    private static String targetfile="src/topics.xml"; //FILEPATHS MÜSSEN NOCH HINZUGEFÜGT WERDEN
+    private static String targetfile="src/topics.xml"; //TODO FILEPATHS MÜSSEN NOCH HINZUGEFÜGT WERDEN
     private static ElementDataHandler ELEMENT_DATA_HANDLER=new ElementDataHandler(originfile); //Hält die Reference zum einzigen existierenden Objekt der Klasse ElementDataHandler
 
     private ElementDataHandler(String filePath){
         try {
             xmlHandler=new XMLFileHandler(filePath);
+            log(INFO,"Datei '"+originfile+"' erfolgreich geladen!");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log(ERROR,"Datei '"+originfile+"' konnte nicht geladen werden!");
+            log(ERROR,e);
         }
     }
 
@@ -55,7 +55,7 @@ public class ElementDataHandler {
                 return listelement.getAttribute(attributeName);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
         return "";
     }
@@ -77,7 +77,7 @@ public class ElementDataHandler {
             }
             return pathslist;
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
         return pathslist;
     }
@@ -100,7 +100,7 @@ public class ElementDataHandler {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
         return keylist;
     }
@@ -118,7 +118,7 @@ public class ElementDataHandler {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
         return keylist;
     }
@@ -139,7 +139,7 @@ public class ElementDataHandler {
                 }
             }
         } catch (IOException e) {
-            LogUtil.log(LogUtil.WARNING, e);
+            log(WARNING, e);
         }
         return "";
     }
@@ -166,9 +166,10 @@ public class ElementDataHandler {
             if(inode.getNodeType()==Node.ELEMENT_NODE){
                 Element topicelement=(Element)inode;
                 topicelement.appendChild(element);
+                log(INFO,"Element '"+title+"' erfolgreich hinzugefügt!");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
     }
 
@@ -182,6 +183,7 @@ public class ElementDataHandler {
         element.setAttribute("key", String.valueOf(System.nanoTime()));
         element.setAttribute("name",theme);
         xmlHandler.getRoot().appendChild(element);
+        log(INFO,"Thema '"+theme+"' erfolgreich hinzugefügt!");
     }
 
     /**
@@ -195,9 +197,10 @@ public class ElementDataHandler {
             if(inode.getNodeType()==Node.ELEMENT_NODE){
                 Element element=(Element)inode;
                 element.getParentNode().removeChild(element);
+                log(INFO,"Element mit key '"+key+"' erfolgreich gelöscht!");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
     }
 
@@ -208,10 +211,14 @@ public class ElementDataHandler {
     public void deleteTheme(String key){
         try {
             NodeList nodelist=xmlHandler.getNodeListXPath("//topiclist/theme[@key=\""+key+"\"]");
-            Element element=(Element)nodelist.item(0);
-            element.getParentNode().removeChild(element);
+            Node inode=nodelist.item(0);
+            if(inode.getNodeType()==Node.ELEMENT_NODE){
+                Element element=(Element)inode;
+                element.getParentNode().removeChild(element);
+                log(INFO,"Thema mit key '"+key+"' erfolgreich gelöscht!");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
     }
 
@@ -221,8 +228,10 @@ public class ElementDataHandler {
     public void safeElementData(){
         try {
             xmlHandler.saveDocToXml(targetfile);
+            log(INFO,"Datei '"+targetfile+"' wurde gespeichert!");
         } catch (IOException e) {
-            e.printStackTrace();
+            log(ERROR,"Datei '"+targetfile+"' konnte nicht gespeichert werden!");
+            log(ERROR,e);
         }
     }
 
