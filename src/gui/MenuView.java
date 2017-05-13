@@ -1,10 +1,12 @@
 package gui;
 
+import util.ElementDataHandler;
 import util.ImageUtil;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 /**
@@ -63,7 +65,7 @@ public class MenuView extends AbstractView {
     private void initTopicList() {
         DefaultListModel<TopicListItem> model = new DefaultListModel<>();
         try {
-            model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/cherry.png")));
+            /*model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/cherry.png")));
             model.addElement(new TopicListItem("Blattspinat", ImageUtil.getIcon("images/icon.png")));
             model.addElement(new TopicListItem("Aubergine", ImageUtil.getIcon("images/cherry.png")));
             model.addElement(new TopicListItem("Gurke", ImageUtil.getIcon("images/icon.png")));
@@ -77,7 +79,12 @@ public class MenuView extends AbstractView {
             model.addElement(new TopicListItem("Rucola", ImageUtil.getIcon("images/icon.png")));
             model.addElement(new TopicListItem("Meerrettich", ImageUtil.getIcon("images/cherry.png")));
             model.addElement(new TopicListItem("Knoblauch", ImageUtil.getIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Radieschen", ImageUtil.getIcon("images/cherry.png")));
+            model.addElement(new TopicListItem("Radieschen", ImageUtil.getIcon("images/cherry.png")));*/
+            ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
+            for (String s : handler.getThemeKeyList()) {
+                System.out.println(s);
+                model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getIcon("images/cherry.png")));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,6 +92,15 @@ public class MenuView extends AbstractView {
         topicList.setCellRenderer(new TopicListCellRenderer());
         topicList.setFixedCellHeight(50);
         topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        topicList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() > 1) {
+                    TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
+                    System.out.printf("Titel: %s, Key: %s%n", item.getTitle(), item.getKey());
+                }
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(topicList);
         add(scrollPane, BorderLayout.CENTER);
     }
@@ -94,12 +110,17 @@ public class MenuView extends AbstractView {
  * Klassenhülle für ein Element der Themenliste
  */
 class TopicListItem {
-    private String title;
+    private String key, title;
     private ImageIcon icon;
 
-    TopicListItem(String title, ImageIcon icon) {
+    TopicListItem(String key, String title, ImageIcon icon) {
+        this.key = key;
         this.title = title;
         this.icon = new ImageIcon(icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+    }
+
+    String getKey() {
+        return key;
     }
 
     String getTitle() {
