@@ -6,8 +6,12 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
+import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 public class VideoPlayerTest {
 
@@ -17,8 +21,10 @@ public class VideoPlayerTest {
 
     public static void main(final String[] args) {
         new NativeDiscovery().discover();
-        //NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "lib");
-        //Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+        /*NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "lib/vlc-win32");
+        NativeLibrary.addSearchPath(RuntimeUtil.getPluginsDirectoryName(), "lib/vlc-win32/plugins");
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcCoreName(), "lib/vlc-win32");
+        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);*/
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
