@@ -3,6 +3,7 @@ package util;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -122,16 +123,23 @@ public class ElementDataHandler {
         return keylist;
     }
 
-    public String getThemeName(String key){
+    /**
+     * Getter-Methode für den Titel eines Themas
+     * @param key Der Schlüssel des betreffenden Themas
+     * @return Der gesuchte Titel
+     */
+    public String getTopicName(String key){
         try {
-            NodeList nodelist=xmlHandler.getNodeListXPath("//topiclist/theme");
-            Node inode=nodelist.item(0);
-            if(inode.getNodeType()==Node.ELEMENT_NODE){
-                Element topicelement=(Element)inode;
-                return topicelement.getAttribute("name");
+            NodeList nodeList = xmlHandler.getNodeListXPath("//topiclist/theme");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element topicElement = (Element) nodeList.item(i);
+                    if (topicElement.getAttribute("key").equals(key))
+                        return topicElement.getAttribute("name");
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(LogUtil.WARNING, e);
         }
         return "";
     }
@@ -252,9 +260,9 @@ public class ElementDataHandler {
             for(int temp=0;temp<3;temp++){
                 String title="Test"+temp;
                 Map<String,String> map=new HashMap<>();
-                map.put("src/"+getThemeName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
-                map.put("src/"+getThemeName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
-                map.put("src/"+getThemeName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
+                map.put("src/"+ getTopicName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
+                map.put("src/"+ getTopicName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
+                map.put("src/"+ getTopicName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
                 addElement(i,title,map);
                 try {
                     Thread.sleep(500);
