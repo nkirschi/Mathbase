@@ -81,10 +81,8 @@ public class MenuView extends AbstractView {
             model.addElement(new TopicListItem("Knoblauch", ImageUtil.getIcon("images/icon.png")));
             model.addElement(new TopicListItem("Radieschen", ImageUtil.getIcon("images/cherry.png")));*/
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-            for (String s : handler.getThemeKeyList()) {
-                System.out.println(s);
+            for (String s : handler.getThemeKeyList())
                 model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getIcon("images/cherry.png")));
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
