@@ -70,7 +70,7 @@ public class Logger {
     }
 
     /**
-     * Methode zu Testzwecken
+     * Methode zu Testzwecken TODO Entfernen
      * @param args Kommandozeilenparameter
      */
     public static void main(String[] args) {

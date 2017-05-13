@@ -1,4 +1,5 @@
 package gui;
+import util.ElementDataHandler;
 import util.ImageUtil;
 import util.Logger;
 
@@ -70,8 +71,7 @@ public class MainFrame extends JFrame implements WindowListener {
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
         exitItem.addActionListener(e -> {
-            Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
-            Logger.close();
+            doBeforeClose();
             System.exit(0);
         });
         fileMenu.add(exitItem);
@@ -115,10 +115,15 @@ public class MainFrame extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", JOptionPane.YES_NO_OPTION);
         if (result == 0) {
-            Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
-            Logger.close();
+            doBeforeClose();
             System.exit(0);
         }
+    }
+
+    private void doBeforeClose(){ //TODO alle Sachen, die beim entfernen aufgeführt werden sollen hinzufügen
+        ElementDataHandler.getElementDataHandler().safeElementData();
+        Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
+        Logger.close();
     }
 
     @Override

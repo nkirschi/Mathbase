@@ -22,8 +22,8 @@ public class ElementDataHandler {
     public static final String FILE_TYPE_DESCRIPTION = "description";
     public static final String FILE_TYPE_MOVIE = "movie";
 
-    private static String originfile="topics.xml";
-    private static String targetfile="topics.xml"; //TODO FILEPATHS MÜSSEN NOCH HINZUGEFÜGT WERDEN
+    private static String originfile= "topics/topics.xml";
+    private static String targetfile= "topics/topics.xml"; //TODO FILEPATHS MÜSSEN NOCH HINZUGEFÜGT WERDEN
     private static ElementDataHandler ELEMENT_DATA_HANDLER=new ElementDataHandler(originfile); //Hält die Reference zum einzigen existierenden Objekt der Klasse ElementDataHandler
 
     private ElementDataHandler(String filePath){

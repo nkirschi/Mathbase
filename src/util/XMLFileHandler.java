@@ -35,7 +35,7 @@ public class XMLFileHandler {
         DocumentBuilderFactory dFactory= DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder=dFactory.newDocumentBuilder();
-            doc=builder.parse(ClassLoader.getSystemResourceAsStream(filePath));
+            doc=builder.parse(filePath);
 
             /*
              * Das benötigt man, weil xml-Formatting eine Bitch ist. Ernsthaft. UAAAAARGH

@@ -15,6 +15,7 @@ import java.io.IOException;
  * Klasse des Hauptmenüs
  */
 public class MenuView extends AbstractView {
+    private DefaultListModel<TopicListItem> listmodel;
 
     public MenuView(MainFrame mainFrame){
         super(mainFrame);
@@ -25,7 +26,8 @@ public class MenuView extends AbstractView {
     }
 
     protected void update() {
-
+        listmodel.clear();
+        initTopicListModel(listmodel);
     }
 
     /**
@@ -67,6 +69,26 @@ public class MenuView extends AbstractView {
      */
     private void initTopicList() {
         DefaultListModel<TopicListItem> model = new DefaultListModel<>();
+        initTopicListModel(model);
+        JList<TopicListItem> topicList = new JList<>(model);
+        topicList.setCellRenderer(new TopicListCellRenderer());
+        topicList.setFixedCellHeight(50);
+        topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        topicList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() > 1) {
+                    TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
+                    System.out.printf("Titel: %s, Key: %s%n", item.getTitle(), item.getKey());
+                }
+            }
+        });
+        JScrollPane scrollPane = new JScrollPane(topicList);
+        add(scrollPane, BorderLayout.CENTER);
+        listmodel=model;
+    }
+
+    private void initTopicListModel(DefaultListModel<TopicListItem> model){
         try {
             /*model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getIcon("images/cherry.png")));
             model.addElement(new TopicListItem("Blattspinat", ImageUtil.getIcon("images/icon.png")));
@@ -89,21 +111,6 @@ public class MenuView extends AbstractView {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JList<TopicListItem> topicList = new JList<>(model);
-        topicList.setCellRenderer(new TopicListCellRenderer());
-        topicList.setFixedCellHeight(50);
-        topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        topicList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() > 1) {
-                    TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
-                    System.out.printf("Titel: %s, Key: %s%n", item.getTitle(), item.getKey());
-                }
-            }
-        });
-        JScrollPane scrollPane = new JScrollPane(topicList);
-        add(scrollPane, BorderLayout.CENTER);
     }
 }
 
