@@ -1,4 +1,4 @@
-# Mathbase
+# Mathbases
 > Mathematik als Abenteuer oder: Mathematik in 5 Minuten - von Schülern für Schüler
 
 Diese Applikation entstand im Rahmen eines P-Seminares am Apian-Gymnasium in Ingolstadt.
