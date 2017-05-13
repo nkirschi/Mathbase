@@ -1,5 +1,6 @@
 package gui;
 
+import util.ElementDataHandler;
 import util.ImageUtil;
 
 import javax.swing.*;
@@ -11,8 +12,11 @@ import java.io.IOException;
  * TODO Bene will Map<Pfad, Typ> zurück haben für alle medialen Inhalte und Description selbst TXT und dann zurück
  */
 public class TopicDialog extends JDialog {
+    private MainFrame mainFrame;
+
     public TopicDialog(MainFrame mainFrame) {
         super(mainFrame);
+        this.mainFrame = mainFrame;
         setTitle("Thema hinzufügen");
         setSize(700, 500);
         setResizable(false);
