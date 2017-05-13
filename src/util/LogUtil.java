@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Nützliche Klasse für das Logging in eine Datei
+ * Nützliche Klasse für das Logging in eine Datei TODO Der BufferedWriter muss am Ende des Programms geclosed werden!
  */
 public class LogUtil {
     private static BufferedWriter writer;
@@ -59,22 +59,34 @@ public class LogUtil {
     }
 
     /**
+     * Methode zur Ressourcenfreigabe nach korrekter Beendigung des Programms
+     */
+    public static void close() {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Methode zu Testzwecken
      * @param args Kommandozeilenparameter
      */
     public static void main(String[] args) {
-        log(LogUtil.INFO, "System erfolgreich gestartet");
+        LogUtil.log(LogUtil.INFO, "System erfolgreich gestartet");
         try {
             "".concat(null);
         } catch (NullPointerException e) {
-            log(LogUtil.WARNING, e);
+            LogUtil.log(LogUtil.WARNING, e);
         }
         try {
             new BufferedReader(new FileReader("abc.txt"));
         } catch (FileNotFoundException e) {
-            log(LogUtil.ERROR, e);
+            LogUtil.log(LogUtil.ERROR, e);
         }
-        log(LogUtil.ERROR, "Fataler Fehler! Der Benutzer ist hässlich!");
-        log(LogUtil.INFO, "System erfolgreich beendet");
+        LogUtil.log(LogUtil.ERROR, "Fataler Fehler! Der Benutzer ist hässlich!");
+        LogUtil.log(LogUtil.INFO, "System erfolgreich beendet");
+        LogUtil.close();
     }
 }
