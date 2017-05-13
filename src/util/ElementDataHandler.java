@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import static util.LogUtil.*;
+import static util.Logger.*;
 
 /**
  * Klasse, welche sich um die Verwaltung der Element-Daten handelt;

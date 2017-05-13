@@ -2,7 +2,7 @@ package gui;
 
 import util.ElementDataHandler;
 import util.ImageUtil;
-import util.LogUtil;
+import util.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +21,7 @@ public class MenuView extends AbstractView {
         setLayout(new BorderLayout());
         initToolPane();
         initTopicList();
-        LogUtil.log(LogUtil.INFO, "Oberfläche vollständig initialisiert");
+        Logger.log(Logger.INFO, "Oberfläche vollständig initialisiert");
     }
 
     protected void update() {

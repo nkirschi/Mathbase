@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Nützliche Klasse für das Logging in eine Datei TODO Der BufferedWriter muss am Ende des Programms geclosed werden!
  */
-public class LogUtil {
+public class Logger {
     private static BufferedWriter writer;
 
     // Konstanten für die Angabe eines Logging-Levels
@@ -74,19 +74,19 @@ public class LogUtil {
      * @param args Kommandozeilenparameter
      */
     public static void main(String[] args) {
-        LogUtil.log(LogUtil.INFO, "System erfolgreich gestartet");
+        Logger.log(Logger.INFO, "System erfolgreich gestartet");
         try {
             "".concat(null);
         } catch (NullPointerException e) {
-            LogUtil.log(LogUtil.WARNING, e);
+            Logger.log(Logger.WARNING, e);
         }
         try {
             new BufferedReader(new FileReader("abc.txt"));
         } catch (FileNotFoundException e) {
-            LogUtil.log(LogUtil.ERROR, e);
+            Logger.log(Logger.ERROR, e);
         }
-        LogUtil.log(LogUtil.ERROR, "Fataler Fehler! Der Benutzer ist hässlich!");
-        LogUtil.log(LogUtil.INFO, "System erfolgreich beendet");
-        LogUtil.close();
+        Logger.log(Logger.ERROR, "Fataler Fehler! Der Benutzer ist hässlich!");
+        Logger.log(Logger.INFO, "System erfolgreich beendet");
+        Logger.close();
     }
 }

@@ -1,6 +1,6 @@
 package gui;
 import util.ImageUtil;
-import util.LogUtil;
+import util.Logger;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -24,7 +24,7 @@ public class MainFrame extends JFrame implements WindowListener {
             setIconImage(ImageUtil.getImage("images/icon.png"));
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.log(LogUtil.WARNING, e);
+            Logger.log(Logger.WARNING, e);
         }
         initMenuBar();
         changeTo(new MenuView(this));
@@ -70,8 +70,8 @@ public class MainFrame extends JFrame implements WindowListener {
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
         exitItem.addActionListener(e -> {
-            LogUtil.log(LogUtil.INFO, "Applikation ordnungsgemäß beendet");
-            LogUtil.close();
+            Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
+            Logger.close();
             System.exit(0);
         });
         fileMenu.add(exitItem);
@@ -115,8 +115,8 @@ public class MainFrame extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", JOptionPane.YES_NO_OPTION);
         if (result == 0) {
-            LogUtil.log(LogUtil.INFO, "Applikation ordnungsgemäß beendet");
-            LogUtil.close();
+            Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
+            Logger.close();
             System.exit(0);
         }
     }
