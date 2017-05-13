@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Nützliche Klasse für das Logging in eine Datei TODO Der BufferedWriter muss am Ende des Programms geclosed werden!
+ * Nützliche Klasse für das Logging in eine Datei
  */
 public class Logger {
     private static BufferedWriter writer;
