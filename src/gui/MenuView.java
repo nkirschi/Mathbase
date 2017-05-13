@@ -42,7 +42,7 @@ public class MenuView extends AbstractView {
         addButton.addActionListener(e -> new TopicDialog(mainFrame));
         JButton removeButton = new JButton("Entfernen");
         removeButton.addActionListener(e -> {
-            int result = JOptionPane.showConfirmDialog(this, "Wollen das Thema '"+list.getSelectedValue().getTitle()+
+            int result = JOptionPane.showConfirmDialog(this, "Wollen Sie das Thema '"+list.getSelectedValue().getTitle()+
                     "' und alle enthalteten Elemente wirklich löschen (permanent!)?", "", JOptionPane.YES_NO_OPTION);
             if(result==0){
                 ElementDataHandler.getElementDataHandler().deleteTheme(list.getSelectedValue().getKey());
