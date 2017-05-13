@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,9 +30,10 @@ public class ImageUtil {
      */
     public static BufferedImage getImage(String path) throws IOException {
         if (!imageCache.containsKey(path)) {
-            BufferedImage image = ImageIO.read(ClassLoader.getSystemResourceAsStream(path));
-            if (image == null)
-                throw new IOException("File not found."); // wichtig für die Nachvollziehbarkeit von Fehlern
+            InputStream stream = ClassLoader.getSystemResourceAsStream(path);
+            if (stream == null)
+                throw new IOException("Datei nicht gefunden!"); // wichtig für die Nachvollziehbarkeit von Fehlern
+            BufferedImage image = ImageIO.read(stream);
             imageCache.put(path, image);
         }
         return imageCache.get(path);
