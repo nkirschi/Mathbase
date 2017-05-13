@@ -1,6 +1,6 @@
 TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
 
-- <B,N> Auf XML-Syntax einigen; im Allgemeinen ein paar sachen besprechen
+- <B,N> Auf XML-Syntax einigen; im Allgemeinen ein paar sachen besprechen -> Icons für jedes Thema
 - Wir brauchen dringend ein Interface zur Verarbeitung und User-Weitergabe von Fehlern
 - <B> Aufräumen in ElementDataHandler; siehe dortige Kommentareinzeilen
 - Eingabemaske weitermachen (Ich hab kein Bock mehr *heul*)
