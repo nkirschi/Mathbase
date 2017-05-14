@@ -49,8 +49,8 @@ public class AddTopicDialog extends JDialog {
         getRootPane().setDefaultButton(okButton);
         okButton.addActionListener( e -> {
             String name = titleField.getText();
-            if (name.compareTo("")==0){
-                JOptionPane.showMessageDialog(this, "Geben Sie einen Titel ein!", "", JOptionPane.WARNING_MESSAGE);
+            if (name.equals("")){
+                JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Titel an!", "Achtung", JOptionPane.WARNING_MESSAGE);
             }
             else{
                 ElementDataHandler handler=ElementDataHandler.getElementDataHandler();
@@ -76,10 +76,7 @@ public class AddTopicDialog extends JDialog {
         titleField.setPreferredSize(new Dimension(200, 20));
         JLabel titleLabel = new JLabel("Titel des Themas:");
         titleLabel.setLabelFor(titleField);
-        layout.putConstraint(SpringLayout.WEST, titleLabel, 20, SpringLayout.WEST, formPanel);
-        layout.putConstraint(SpringLayout.NORTH, titleLabel, 20, SpringLayout.NORTH, formPanel);
-        layout.putConstraint(SpringLayout.WEST, titleField, 20, SpringLayout.EAST, titleLabel);
-        layout.putConstraint(SpringLayout.NORTH, titleField, 16, SpringLayout.NORTH, formPanel);
+
         formPanel.add(titleLabel);
         formPanel.add(titleField);
         fileChooser = new JFileChooser();
@@ -91,6 +88,10 @@ public class AddTopicDialog extends JDialog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        layout.putConstraint(SpringLayout.WEST, titleLabel, 20, SpringLayout.WEST, formPanel);
+        layout.putConstraint(SpringLayout.NORTH, titleLabel, 20, SpringLayout.NORTH, formPanel);
+        layout.putConstraint(SpringLayout.WEST, titleField, 20, SpringLayout.EAST, titleLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, titleField, 0, SpringLayout.VERTICAL_CENTER, titleLabel);
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, iconLabel, 0, SpringLayout.HORIZONTAL_CENTER, titleLabel);
         layout.putConstraint(SpringLayout.NORTH, iconLabel, 20, SpringLayout.SOUTH, titleLabel);
         layout.putConstraint(SpringLayout.WEST, chooseIconButton, 0, SpringLayout.WEST, titleField);
