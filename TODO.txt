@@ -5,3 +5,4 @@ TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
 - Eingabemaske weitermachen (Ich hab kein Bock mehr *heul*)
 - GUI "verschönern #icons #effekte abstaende #farben #sonstsozeugs
 - <N> Bibliotheken einbinden und Funktionalität testen
+- <N> XML Gedöns improven
