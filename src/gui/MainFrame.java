@@ -28,7 +28,7 @@ public class MainFrame extends JFrame implements WindowListener {
             Logger.log(Logger.WARNING, e);
         }
         initMenuBar();
-        changeTo(new MenuView(this));
+        changeTo(MenuView.getInstance(this));
         setVisible(true);
     }
 
