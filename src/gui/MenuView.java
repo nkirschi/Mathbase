@@ -102,7 +102,7 @@ public class MenuView extends AbstractView {
         topicList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
+                if (mouseEvent.getClickCount() >= 2) {
                     TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
                     mainFrame.changeTo(new TopicView(mainFrame));
                 }
