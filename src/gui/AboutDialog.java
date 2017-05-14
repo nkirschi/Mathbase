@@ -17,8 +17,8 @@ public class AboutDialog extends JDialog {
         JPanel panel = new JPanel();
         setContentPane(panel);
         try {
-            setIconImage(ImageUtil.getImage("images/icon.png"));
-            panel.add(new JLabel(ImageUtil.getIcon("images/icon.png")));
+            setIconImage(ImageUtil.getInternalImage("images/icon.png"));
+            panel.add(new JLabel(ImageUtil.getInternalIcon("images/icon.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

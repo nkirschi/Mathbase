@@ -27,7 +27,7 @@ public class AddTopicDialog extends JDialog {
         setResizable(false);
         setLocationRelativeTo(mainFrame);
         try {
-            setIconImage(ImageUtil.getImage("images/icon.png"));
+            setIconImage(ImageUtil.getInternalImage("images/icon.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,7 +87,7 @@ public class AddTopicDialog extends JDialog {
         JButton chooseIconButton = new JButton("Icon auswählen...");
         JLabel iconLabel = new JLabel();
         try {
-            iconLabel.setIcon(ImageUtil.getIcon("images/witcher.png", 64, 64));
+            iconLabel.setIcon(ImageUtil.getInternalIcon("images/witcher.png", 64, 64));
         } catch (IOException e) {
             e.printStackTrace();
         }

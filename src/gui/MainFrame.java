@@ -22,7 +22,7 @@ public class MainFrame extends JFrame implements WindowListener {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
         try {
-            setIconImage(ImageUtil.getImage("images/icon.png"));
+            setIconImage(ImageUtil.getInternalImage("images/icon.png"));
         } catch (IOException e) {
             e.printStackTrace();
             Logger.log(Logger.WARNING, e);
@@ -90,8 +90,8 @@ public class MainFrame extends JFrame implements WindowListener {
         menuBar.add(helpMenu);
 
         try {
-            exitItem.setIcon(ImageUtil.getIcon("images/exit.png"));
-            aboutItem.setIcon(ImageUtil.getIcon("images/help.png"));
+            exitItem.setIcon(ImageUtil.getInternalIcon("images/exit.png"));
+            aboutItem.setIcon(ImageUtil.getInternalIcon("images/help.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
