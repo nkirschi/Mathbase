@@ -39,15 +39,24 @@ public class MenuView extends AbstractView {
 
         JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("Hinzufügen");
-        addButton.addActionListener(e -> new TopicDialog(mainFrame));
+        addButton.addActionListener(e -> new AddTopicDialog(mainFrame));
         JButton removeButton = new JButton("Entfernen");
         removeButton.addActionListener(e -> {
-            int result = JOptionPane.showConfirmDialog(this, "Wollen Sie das Thema '"+list.getSelectedValue().getTitle()+
-                    "' und alle enthalteten Elemente wirklich löschen (permanent!)?", "", JOptionPane.YES_NO_OPTION);
-            if(result==0){
-                ElementDataHandler.getElementDataHandler().deleteTheme(list.getSelectedValue().getKey());
-                ElementDataHandler.getElementDataHandler().safeElementData();
-                this.update();
+            if (list.getSelectedValue() == null)
+                JOptionPane.showMessageDialog(this, "Kein Thema gewählt!", "Thema löschen",
+                        JOptionPane.ERROR_MESSAGE);
+            else {
+                int result = JOptionPane.showConfirmDialog(this, String.format("Möchten Sie dieses " +
+                                "Thema wirklich unwiderruflich löschen?%nDiese Aktion " +
+                                "kann nicht rückgängig gemacht werden!%n%nTitel: %s, Elemente: %d%n%n",
+                        list.getSelectedValue().getTitle(), ElementDataHandler.getElementDataHandler().
+                                getElementKeyList(list.getSelectedValue().getKey()).length), "Thema löschen",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (result == 0) {
+                    ElementDataHandler.getElementDataHandler().deleteTheme(list.getSelectedValue().getKey());
+                    ElementDataHandler.getElementDataHandler().safeElementData();
+                    this.update();
+                }
             }
         });
         try {
@@ -117,7 +126,7 @@ public class MenuView extends AbstractView {
             model.addElement(new TopicListItem("Radieschen", ImageUtil.getIcon("images/cherry.png")));*/
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
             for (String s : handler.getThemeKeyList())
-                model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getIcon("images/cherry.png")));
+                model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getIcon("images/witcher.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,6 +176,7 @@ class TopicListCellRenderer extends DefaultListCellRenderer {
     TopicListCellRenderer() {
         label = new JLabel();
         label.setOpaque(true);
+        label.setIconTextGap(10);
         label.setBorder(new EmptyBorder(5, 10, 5, 10));
         label.setFont(label.getFont().deriveFont(16f));
     }
