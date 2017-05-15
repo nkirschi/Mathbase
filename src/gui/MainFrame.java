@@ -70,10 +70,7 @@ public class MainFrame extends JFrame implements WindowListener {
 
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem exitItem = new JMenuItem("Beenden");
-        exitItem.addActionListener(e -> {
-            doBeforeClose();
-            System.exit(0);
-        });
+        exitItem.addActionListener(e -> cleanUpBeforeClose());
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
@@ -107,23 +104,20 @@ public class MainFrame extends JFrame implements WindowListener {
         return currentView;
     }
 
+    private void cleanUpBeforeClose(){ //TODO alle Sachen, die beim entfernen aufgeführt werden sollen hinzufügen
+        ElementDataHandler.getElementDataHandler().safeElementData();
+        Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
+        Logger.close();
+        System.exit(0);
+    }
+
     /**
      * Diese Methode wird von Swing beim Versuch des Schließens ausgeführt
      * @param e Das WindowEvent mit Detailinformationen (brauchen wir hier aber nicht)
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        int result = JOptionPane.showConfirmDialog(this, "Wirklich beenden?", "Mathbase", JOptionPane.YES_NO_OPTION);
-        if (result == 0) {
-            doBeforeClose();
-            System.exit(0);
-        }
-    }
-
-    private void doBeforeClose(){ //TODO alle Sachen, die beim entfernen aufgeführt werden sollen hinzufügen
-        ElementDataHandler.getElementDataHandler().safeElementData();
-        Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
-        Logger.close();
+        cleanUpBeforeClose();
     }
 
     @Override

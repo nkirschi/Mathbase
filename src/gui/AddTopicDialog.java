@@ -42,10 +42,10 @@ public class AddTopicDialog extends JDialog {
     private void initButtonPanel() {
         JPanel buttonPanel = new JPanel();
         JButton cancelButton = new JButton("Abbrechen");
-        cancelButton.setPreferredSize(new Dimension(85, 24));
+        cancelButton.setPreferredSize(new Dimension(88, 24));
         cancelButton.addActionListener(e -> dispose());
         JButton okButton = new JButton("OK");
-        okButton.setPreferredSize(new Dimension(85, 24));
+        okButton.setPreferredSize(new Dimension(88, 24));
         getRootPane().setDefaultButton(okButton);
         okButton.addActionListener( e -> {
             String name = titleField.getText();
@@ -73,8 +73,8 @@ public class AddTopicDialog extends JDialog {
         SpringLayout layout = new SpringLayout();
         JPanel formPanel = new JPanel(layout);
         titleField = new JTextField();
-        titleField.setPreferredSize(new Dimension(200, 20));
-        JLabel titleLabel = new JLabel("Titel des Themas:");
+        titleField.setPreferredSize(new Dimension(250, 20));
+        JLabel titleLabel = new JLabel("Titel:");
         titleLabel.setLabelFor(titleField);
 
         formPanel.add(titleLabel);
@@ -83,11 +83,23 @@ public class AddTopicDialog extends JDialog {
         fileChooser.setFileFilter(new FileNameExtensionFilter("Bilder (*.jpg, *.png)", "jpg", "png"));
         JButton chooseIconButton = new JButton("Icon auswählen...");
         JLabel iconLabel = new JLabel();
+        iconLabel.setSize(64, 64);
         try {
             iconLabel.setIcon(ImageUtil.getInternalIcon("images/witcher.png", 64, 64));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        layout.putConstraint(SpringLayout.WEST, titleLabel, 30, SpringLayout.WEST, formPanel);
+        layout.putConstraint(SpringLayout.NORTH, titleLabel, 20, SpringLayout.NORTH, formPanel);
+        layout.putConstraint(SpringLayout.WEST, titleField, 10, SpringLayout.EAST, titleLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, titleField, 0, SpringLayout.VERTICAL_CENTER, titleLabel);
+
+        layout.putConstraint(SpringLayout.WEST, iconLabel, 30, SpringLayout.WEST, formPanel);
+        layout.putConstraint(SpringLayout.NORTH, iconLabel, 25, SpringLayout.SOUTH, titleField);
+        layout.putConstraint(SpringLayout.WEST, chooseIconButton, 20, SpringLayout.EAST, iconLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, chooseIconButton, 0, SpringLayout.VERTICAL_CENTER, iconLabel);
+
+        /*
         layout.putConstraint(SpringLayout.WEST, titleLabel, 20, SpringLayout.WEST, formPanel);
         layout.putConstraint(SpringLayout.NORTH, titleLabel, 20, SpringLayout.NORTH, formPanel);
         layout.putConstraint(SpringLayout.WEST, titleField, 20, SpringLayout.EAST, titleLabel);
@@ -96,7 +108,17 @@ public class AddTopicDialog extends JDialog {
         layout.putConstraint(SpringLayout.NORTH, iconLabel, 20, SpringLayout.SOUTH, titleLabel);
         layout.putConstraint(SpringLayout.WEST, chooseIconButton, 0, SpringLayout.WEST, titleField);
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, chooseIconButton, 0, SpringLayout.VERTICAL_CENTER, iconLabel);
-        iconLabel.setSize(64, 64);
+        */
+        /*
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, titleLabel, -10 - (int) titleField.getPreferredSize().getWidth() / 2, SpringLayout.HORIZONTAL_CENTER, formPanel);
+        layout.putConstraint(SpringLayout.NORTH, titleLabel, 20, SpringLayout.NORTH, formPanel);
+        layout.putConstraint(SpringLayout.WEST, titleField, 10, SpringLayout.EAST, titleLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, titleField, 0, SpringLayout.VERTICAL_CENTER, titleLabel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, iconLabel, -20 - (int) chooseIconButton.getPreferredSize().getWidth() / 2, SpringLayout.HORIZONTAL_CENTER, formPanel);
+        layout.putConstraint(SpringLayout.NORTH, iconLabel, 20, SpringLayout.SOUTH, titleField);
+        layout.putConstraint(SpringLayout.WEST, chooseIconButton, 20, SpringLayout.EAST, iconLabel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, chooseIconButton, 0, SpringLayout.VERTICAL_CENTER, iconLabel);
+        */
         chooseIconButton.addActionListener(event -> {
             int result = fileChooser.showOpenDialog(AddTopicDialog.this);
             if (result == JFileChooser.APPROVE_OPTION) {
