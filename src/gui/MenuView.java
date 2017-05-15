@@ -17,13 +17,20 @@ import java.io.IOException;
 public class MenuView extends AbstractView {
     private DefaultListModel<TopicListItem> listmodel;
     private JList<TopicListItem> list;
+    private static MenuView instance;
 
-    public MenuView(MainFrame mainFrame){
+    private MenuView(MainFrame mainFrame){
         super(mainFrame);
         setLayout(new BorderLayout());
         initToolPane();
         initTopicList();
         Logger.log(Logger.INFO, "Oberfläche vollständig initialisiert");
+    }
+
+    public static MenuView getInstance(MainFrame mainFrame) {
+        if (instance == null)
+            instance = new MenuView(mainFrame);
+        return instance;
     }
 
     protected void update() {
@@ -97,9 +104,9 @@ public class MenuView extends AbstractView {
         topicList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() > 1) {
+                if (mouseEvent.getClickCount() >= 2) {
                     TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
-                    System.out.printf("Titel: %s, Key: %s%n", item.getTitle(), item.getKey());
+                    mainFrame.changeTo(new TopicView(mainFrame));
                 }
             }
         });
