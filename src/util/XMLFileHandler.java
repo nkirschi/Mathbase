@@ -36,13 +36,6 @@ public class XMLFileHandler {
         try {
             DocumentBuilder builder=dFactory.newDocumentBuilder();
             doc=builder.parse(filePath);
-
-            /*
-             * Das benötigt man, weil xml-Formatting eine Bitch ist. Ernsthaft. UAAAAARGH
-             * Im Prinzip sucht es einfach alle Leeräume außerhalb von Elementen und löscht sie raus,
-             * weil der DOM-Parser diese tatsächlich als Nodes mitnimmt und damit dann beim speichern alles Kacke aussieht.
-             * *Computer anzünd*
-             */
             NodeList whitespace=getNodeListXPath("//text()[normalize-space()='']");
             for (int i = 0; i < whitespace.getLength(); ++i) {
                 Node node = whitespace.item(i);

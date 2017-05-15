@@ -70,15 +70,17 @@ public class MenuView extends AbstractView {
         buttonPane.add(addButton);
         buttonPane.add(removeButton);
 
+        /*
         JPanel searchPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JLabel searchLabel = new JLabel("Suchen:");
         JTextField searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(200, 22));
         searchPane.add(searchLabel);
         searchPane.add(searchField);
+        toolPane.add(searchPane, BorderLayout.EAST);
+        */
 
         toolPane.add(buttonPane, BorderLayout.WEST);
-        toolPane.add(searchPane, BorderLayout.EAST);
         add(toolPane, BorderLayout.SOUTH);
     }
 
