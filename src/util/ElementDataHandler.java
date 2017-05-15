@@ -274,9 +274,9 @@ public class ElementDataHandler {
             for(int temp=0;temp<3;temp++){
                 String title="PDFTest"+temp;
                 Map<String,String> map=new HashMap<>();
-                map.put("src/"+ getTopicName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
-                map.put("src/"+ getTopicName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
-                map.put("src/"+ getTopicName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
+                map.put("topics/"+ getTopicName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
+                map.put("topics/"+ getTopicName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
+                map.put("topics/"+ getTopicName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
                 addElement(String.valueOf(System.nanoTime()),i,title,map);
                 try {
                     Thread.sleep(500);

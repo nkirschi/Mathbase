@@ -135,11 +135,4 @@ public class AddTopicDialog extends JDialog {
         formPanel.add(iconLabel);
         getContentPane().add(formPanel, BorderLayout.CENTER);
     }
-
-    /**
-     * Hilfsmethode für die Initialisierung des Icon-Auswhlfeldes TODO implementieren
-     */
-    private void initIconChooser(){
-
-    }
 }
