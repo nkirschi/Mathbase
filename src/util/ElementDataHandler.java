@@ -4,8 +4,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.Buffer;
 import java.util.HashMap;
 import java.util.Map;
 import static util.Logger.*;
@@ -31,8 +31,20 @@ public class ElementDataHandler {
             xmlHandler=new XMLFileHandler(filePath);
             log(INFO,"Datei '"+originfile+"' erfolgreich geladen!");
         } catch (FileNotFoundException e) {
-            log(ERROR,"Datei '"+originfile+"' konnte nicht geladen werden!");
-            log(ERROR,e);
+            File file = new File(originfile);
+            try {
+                file.createNewFile();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                        "<topiclist></topiclist>");
+                writer.close();
+                xmlHandler = new XMLFileHandler(filePath);
+                log(INFO,"Datei '"+originfile+"' wurde neu erstellt!");
+            } catch (IOException f) {
+                log(ERROR,"Datei '"+originfile+"' konnte nicht geladen werden!");
+                log(ERROR,e);
+                f.printStackTrace();
+            }
         }
     }
 
