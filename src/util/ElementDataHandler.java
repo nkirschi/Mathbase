@@ -159,13 +159,14 @@ public class ElementDataHandler {
 
     /**
      * Methode, mit der man ein Element hinzufügen kann.
+     * @param elementkey Key des neuen Elements
      * @param themekey Key des Themas
      * @param title Titel des Elements
      * @param pathmap Map mit allen Datei-Pfaden
      */
-    public void addElement(String themekey, String title, Map<String,String> pathmap){
+    public void addElement(String elementkey, String themekey, String title, Map<String,String> pathmap){
         Element element=xmlHandler.createElement("element");
-        element.setAttribute("key",String.valueOf(System.currentTimeMillis()));
+        element.setAttribute("key",elementkey);
         element.setAttribute(ATTRIBUTE_TITLE,title);
         for (Map.Entry<String, String> entry : pathmap.entrySet()) {
             Element pathelement=xmlHandler.createElement("file");
@@ -189,11 +190,12 @@ public class ElementDataHandler {
 
     /**
      * Methode, mit der man ein Thema hinzufügen kann
+     * @param key Key des neuen Themas
      * @param theme Name des neuen Themas
      */
-    public void addTheme(String theme){
+    public void addTheme(String key, String theme){
         Element element=xmlHandler.createElement("theme");
-        element.setAttribute("key", String.valueOf(System.nanoTime()));
+        element.setAttribute("key", key);
         element.setAttribute("name",theme);
         xmlHandler.getRoot().appendChild(element);
         log(INFO,"Thema '"+theme+"' erfolgreich hinzugefügt!");
@@ -250,19 +252,19 @@ public class ElementDataHandler {
 
     //ZUM TESTEN TODO test-Methode entfernen
     private void test(){
-        addTheme("Thema1");
+        addTheme(String.valueOf(System.nanoTime()),"Thema1");
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        addTheme("Thema2");
+        addTheme(String.valueOf(System.nanoTime()),"Thema2");
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        addTheme("Thema3");
+        addTheme(String.valueOf(System.nanoTime()),"Thema3");
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -275,7 +277,7 @@ public class ElementDataHandler {
                 map.put("src/"+ getTopicName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
                 map.put("src/"+ getTopicName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
                 map.put("src/"+ getTopicName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
-                addElement(i,title,map);
+                addElement(String.valueOf(System.nanoTime()),i,title,map);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

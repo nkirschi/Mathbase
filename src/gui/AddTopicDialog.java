@@ -54,7 +54,7 @@ public class AddTopicDialog extends JDialog {
             }
             else{
                 ElementDataHandler handler=ElementDataHandler.getElementDataHandler();
-                handler.addTheme(name); //TODO icon hinzufügen
+                handler.addTheme(String.valueOf(System.nanoTime()),name); //TODO icon hinzufügen
                 handler.safeElementData();
                 mainFrame.getCurrentView().update();
                 dispose();
