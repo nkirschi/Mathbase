@@ -118,21 +118,6 @@ public class MenuView extends AbstractView {
 
     private void initTopicListModel(DefaultListModel<TopicListItem> model){
         try {
-            /*model.addElement(new TopicListItem("Rosenkohl", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Blattspinat", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Aubergine", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Gurke", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Wirsing", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Spargel", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Kartoffel", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Brokkoli", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Tomate", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Paprika", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Zucchini", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Rucola", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Meerrettich", ImageUtil.getInternalIcon("images/cherry.png")));
-            model.addElement(new TopicListItem("Knoblauch", ImageUtil.getInternalIcon("images/icon.png")));
-            model.addElement(new TopicListItem("Radieschen", ImageUtil.getInternalIcon("images/cherry.png")));*/
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
             for (String s : handler.getThemeKeyList())
                 model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getInternalIcon("images/witcher.png")));

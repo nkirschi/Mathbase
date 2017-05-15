@@ -41,8 +41,9 @@ public class ElementDataHandler {
                 xmlHandler = new XMLFileHandler(filePath);
                 log(INFO,"Datei '"+originfile+"' wurde neu erstellt!");
             } catch (IOException f) {
-                log(ERROR,"Datei '"+originfile+"' konnte nicht geladen werden!");
-                log(ERROR,e);
+                log(ERROR,"Datei '"+originfile+"' konnte nicht geladen und auch keine neue erstellt werden!");
+                log(ERROR, e);
+                log(ERROR, f);
                 f.printStackTrace();
             }
         }
