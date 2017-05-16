@@ -37,15 +37,13 @@ public class ElementDataHandler {
             log(INFO,"Datei '"+originfile+"' erfolgreich geladen!");
         } catch (FileNotFoundException e) {
             log(WARNING, "Datei \"" + originfile + "\" konnte nicht geladen werden!");
-            log(WARNING, e);
             e.printStackTrace();
             try {
                 Files.copy(Paths.get(backupfile), Paths.get(originfile), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XMLFileHandler(filePath);
-                log(INFO, "Datei \"" + originfile + "\" wurde aus dem Backup erfolgreich \"" + backupfile + "\" wiederhergestellt!");
+                log(INFO, "Datei \"" + originfile + "\" wurde aus dem Backup \"" + backupfile + "\" erfolgreich wiederhergestellt!");
             } catch (IOException f) {
                 log(ERROR, "Datei \"" + originfile + "\" konnte nicht wiederhergestellt werden!");
-                log(ERROR, f);
                 f.printStackTrace();
                 try {
                     File file = new File(originfile);
@@ -58,6 +56,8 @@ public class ElementDataHandler {
                     log(INFO,"Datei '"+originfile+"' wurde neu erstellt!");
                 } catch (IOException g) {
                     log(ERROR,"Datei '"+originfile+"' konnte nicht neu erstellt werden!");
+                    log(ERROR, e);
+                    log(ERROR, f);
                     log(ERROR, g);
                     g.printStackTrace();
                 }
