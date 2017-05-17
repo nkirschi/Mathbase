@@ -9,8 +9,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+
+import static util.Logger.*;
 
 /**
  * Klasse des Hauptmenüs
@@ -20,12 +23,12 @@ public class MenuView extends AbstractView {
     private JList<TopicListItem> list;
     private static MenuView instance;
 
-    private MenuView(MainFrame mainFrame){
+    private MenuView(MainFrame mainFrame) {
         super(mainFrame);
         setLayout(new BorderLayout());
         initToolPane();
         initTopicList();
-        Logger.log(Logger.INFO, "Oberfläche vollständig initialisiert");
+        log(INFO, "Oberfläche vollständig initialisiert");
     }
 
     public static MenuView getInstance(MainFrame mainFrame) {
@@ -61,7 +64,11 @@ public class MenuView extends AbstractView {
                                 getElementKeyList(list.getSelectedValue().getKey()).length), "Thema löschen",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == 0) {
-                    ElementDataHandler.getElementDataHandler().deleteTheme(list.getSelectedValue().getKey());
+                    String key = list.getSelectedValue().getKey();
+                    if (!new File("topics/" + key).delete()) {
+                        log(WARNING, "Konnte Ordner des Themas " + key + " nicht löschen!");
+                    }
+                    ElementDataHandler.getElementDataHandler().deleteTheme(key);
                     ElementDataHandler.getElementDataHandler().safeElementData();
                     this.update();
                 }
@@ -106,25 +113,29 @@ public class MenuView extends AbstractView {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() >= 2) {
-                    TopicListItem item = (TopicListItem)((JList)mouseEvent.getSource()).getSelectedValue();
+                    TopicListItem item = (TopicListItem) ((JList) mouseEvent.getSource()).getSelectedValue();
                     mainFrame.changeTo(new TopicView(mainFrame));
                 }
             }
         });
         JScrollPane scrollPane = new JScrollPane(topicList);
         add(scrollPane, BorderLayout.CENTER);
-        listmodel=model;
-        list=topicList;
+        listmodel = model;
+        list = topicList;
     }
 
-    private void initTopicListModel(DefaultListModel<TopicListItem> model){
+    private void initTopicListModel(DefaultListModel<TopicListItem> model) {
         try {
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
             for (String s : handler.getTopicKeyList()) {
-                if(handler.getTopicIconPath(s).equals(""))
-                    model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getInternalIcon("images/icon.png")));
-                else
-                    model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getExternalIcon(handler.getTopicIconPath(s))));
+                ImageIcon icon;
+                try {
+                    icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
+                } catch (IOException e1) {
+                    log(WARNING, e1);
+                    icon = ImageUtil.getInternalIcon("images/icon.png");
+                }
+                model.addElement(new TopicListItem(s, handler.getTopicName(s), icon));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -182,16 +193,17 @@ class TopicListCellRenderer extends DefaultListCellRenderer {
 
     /**
      * Dies ist die essentielle Methode, um die Darstellung der Listenelemente zu bearbeiten
-     * @param list Betroffene JList
-     * @param value Aktueller Listeneintrag
-     * @param index Index des aktuellen Eintrags
+     *
+     * @param list     Betroffene JList
+     * @param value    Aktueller Listeneintrag
+     * @param index    Index des aktuellen Eintrags
      * @param selected Aktueller Eintrag ausgewählt
-     * @param focused Aktueller Eintrag im Fokus
+     * @param focused  Aktueller Eintrag im Fokus
      * @return Listeneintrag als Swing-Komponente
      */
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean selected, boolean focused) {
-        TopicListItem item = (TopicListItem)value;
+        TopicListItem item = (TopicListItem) value;
         label.setIcon(item.getIcon());
         label.setText(item.getTitle());
         label.setToolTipText("Index in list: " + index);

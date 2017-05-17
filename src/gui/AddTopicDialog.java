@@ -2,6 +2,7 @@ package gui;
 
 import util.ElementDataHandler;
 import util.ImageUtil;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
+
 import static java.nio.file.Files.copy;
 import static util.Logger.*;
 
@@ -51,33 +53,31 @@ public class AddTopicDialog extends JDialog {
         JButton okButton = new JButton("OK");
         okButton.setPreferredSize(new Dimension(88, 24));
         getRootPane().setDefaultButton(okButton);
-        okButton.addActionListener( e -> {
+        okButton.addActionListener(e -> {
             String name = titleField.getText();
-            if (name.equals("")){
+            if (name.equals("")) {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Titel an!", "Achtung", JOptionPane.WARNING_MESSAGE);
-            }
-            else{
+            } else {
                 String key = String.valueOf(System.nanoTime());
                 String iconpath = "";
-                File dir = new File("topics/"+key);
-                if(dir.mkdirs()){
-                    log(INFO,"Ordner erfolgreich erstellt!");
-                    if(icon!=null){
+                File dir = new File("topics/" + key);
+                if (dir.mkdirs()) {
+                    log(INFO, "Ordner erfolgreich erstellt!");
+                    if (icon != null) {
                         try {
-                            iconpath = copy(icon.toPath(),new File("topics/"+key+"/"+icon.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING).toString();
+                            iconpath = copy(icon.toPath(), new File("topics/" + key + "/" + icon.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING).toString();
                         } catch (IOException e1) {
-                            log(WARNING,e1);
+                            log(WARNING, e1);
                             e1.printStackTrace();
                         }
                     }
-                    ElementDataHandler handler=ElementDataHandler.getElementDataHandler();
-                    handler.addTheme(key,name,iconpath);
+                    ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
+                    handler.addTheme(key, name, iconpath);
                     handler.safeElementData();
                     mainFrame.getCurrentView().update();
                     dispose();
-                }
-                else{
-                    log(WARNING,"Thema nicht erstellt; konnte Ordner nicht erstellen!");
+                } else {
+                    log(WARNING, "Thema nicht erstellt; konnte Ordner nicht erstellen!");
                     dispose();
                 }
             }
