@@ -1,7 +1,7 @@
 TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
 
-- <B,N> im Allgemeinen ein paar sachen besprechen -> Icons für jedes Thema
-- GUI "verschönern #icons #effekte abstaende #farben #sonstsozeugs
+- <B,N> XML-Struktur erörtern
+- GUI "verschönern #icons #effekte #abstaende #farben #sonstsozeugs
 - <N> Bibliotheken einbinden und Funktionalität testen
-- <N> Hilfsklasse für Dateioperationen
+- <N> XML Gedöns improven
 - <B> Eingabemaske weitermachen (Ich hab kein Bock mehr *heul*)
