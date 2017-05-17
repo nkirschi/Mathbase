@@ -1,5 +1,8 @@
 package util;
 
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +70,7 @@ public class ImageUtil {
 
     /**
      * Methode für das Laden eines externen Bildes
-     * @param path Der Pfad der Bilddatei, ausgehend vom src root folder
+     * @param path Der Pfad der Bilddatei im allgemeinen Dateisystem
      * @return Das Bild als Objekt der Klasse BufferedImage
      * @throws IOException falls es Probleme mit dem angegebenen Pfad gibt
      */
@@ -79,7 +85,7 @@ public class ImageUtil {
 
     /**
      * Abstrahierte Methode für die Rückgabe eines externen Bildes als ImageIcon
-     * @param path Der Pfad der Bilddatei, ausgehend vom src root folder
+     * @param path Der Pfad der Bilddatei im allgemeinen Dateisystem
      * @return Das Ergebnis von getExternalImage als ImageIcon
      * @throws IOException von getExternalImage durchgeschoben
      */
@@ -89,7 +95,7 @@ public class ImageUtil {
 
     /**
      * Erweiterung von getExternalIcon mit parametisierter Bildgröße
-     * @param path Der Pfad der Bilddatei, ausgehend vom src root folder
+     * @param path Der Pfad der Bilddatei im allgemeinen Dateisystem
      * @param width Die neue Breite des Icons
      * @param height Die neue Höhe des Icons
      * @return Das Ergebnis von getExternalIcon mit den neuen Maßen
@@ -97,5 +103,20 @@ public class ImageUtil {
      */
     public static ImageIcon getExternalIcon(String path, int width, int height) throws IOException {
         return new ImageIcon(getExternalIcon(path).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+    }
+
+    /**
+     * Methode für das Laden eines PDF-Vorschaubildes mithilfe der Bibliothek PDFRenderer-0.9.1
+     * @param path Der Pfad der Bilddatei im allgemeinen Dateisystem
+     * @param width Die gewünschte Breite des Icons
+     * @param height Die gewünschte HÖhe des Icons
+     * @return Die PDF-Vorschau als ImageIcon
+     * @throws IOException falls Fehler beim Einlesen der PDF-Datei auftreten
+     */
+    public static ImageIcon getPDFPreview(String path, int width, int height) throws IOException {
+        PDFPage page = new PDFFile(ByteBuffer.wrap(Files.readAllBytes(Paths.get(path)))).getPage(0);
+        Rectangle rect = new Rectangle(0, 0, (int) page.getWidth(), (int) page.getHeight());
+        Image image = page.getImage(rect.width, rect.height, rect, null, true, true);
+        return new ImageIcon(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
     }
 }

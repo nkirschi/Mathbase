@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -29,51 +30,53 @@ public class XMLFileHandler {
     /**
      * Der Konstruktor des FileHandlers
      * Hier wird die Datei als in ein Document Objekt verwandelt
+     *
      * @param filePath Name der zu ladenden Datei
      */
     public XMLFileHandler(String filePath) throws FileNotFoundException {
-        DocumentBuilderFactory dFactory= DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder builder=dFactory.newDocumentBuilder();
-            doc=builder.parse(filePath);
-            NodeList whitespace=getNodeListXPath("//text()[normalize-space()='']");
+            DocumentBuilder builder = dFactory.newDocumentBuilder();
+            doc = builder.parse(filePath);
+            NodeList whitespace = getNodeListXPath("//text()[normalize-space()='']");
             for (int i = 0; i < whitespace.getLength(); ++i) {
                 Node node = whitespace.item(i);
                 node.getParentNode().removeChild(node);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new FileNotFoundException("Error while loading File. File "+filePath+"not loaded!");
+            throw new FileNotFoundException("Error while loading File. File " + filePath + "not loaded!");
         }
     }
 
     /**
      * Methode, die das Document Objekt in einer Datei speichert
+     *
      * @param targetPath Pfad der Zieldatei
      */
-    public void saveDocToXml(String targetPath) throws IOException{
-        DOMSource source=new DOMSource(doc);
-        StreamResult result=new StreamResult(new File(targetPath));
-        TransformerFactory tFactory=TransformerFactory.newInstance();
+    public void saveDocToXml(String targetPath) throws IOException {
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(targetPath));
+        TransformerFactory tFactory = TransformerFactory.newInstance();
         try {
-            Transformer transformer=tFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.METHOD,"xml");
-            transformer.setOutputProperty(OutputKeys.INDENT,"yes");
+            Transformer transformer = tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-            transformer.transform(source,result);
+            transformer.transform(source, result);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Error while saving File. File "+targetPath+"not saved!");
+            throw new IOException("Error while saving File. File " + targetPath + "not saved!");
         }
     }
 
-    public Node getRoot(){
+    public Node getRoot() {
         return doc.getFirstChild();
     }
 
-    public Element createElement(String tagname){
+    public Element createElement(String tagname) {
         return doc.createElement(tagname);
     }
 
@@ -82,6 +85,7 @@ public class XMLFileHandler {
      * Methode, um Nodelist aus allen Elementen eines bestimmten XPath-Pfads zu erzeugen,
      * ausgehend von doc
      * Bsp für myExpr: "//elementlist/element[title=\"test\"]" ->liefert alle Elemente mit dem Titel "test"
+     *
      * @param myExpr XPath-Pfad
      * @return Nodelist aus allen Elementen mit des Pfades
      */
@@ -93,7 +97,7 @@ public class XMLFileHandler {
             tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-            throw new IOException("Error while parsing File with '"+myExpr+"'");
+            throw new IOException("Error while parsing File with '" + myExpr + "'");
         }
         return tNodelist;
     }
