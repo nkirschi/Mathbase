@@ -1,6 +1,7 @@
 TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
 
 - <B,N> XML-Struktur erörtern
+- <B,N> Über Dateioperationen sprechen, gibt da mehrere Möglichkeiten
 - <B> GUI "verschönern #icons #effekte #abstaende #farben #sonstsozeugs
 - <N> Bibliotheken einbinden und Funktionalität testen
 - <B> TopicView weiter implementieren
