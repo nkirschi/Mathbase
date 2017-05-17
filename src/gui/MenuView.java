@@ -2,8 +2,6 @@ package gui;
 
 import util.ElementDataHandler;
 import util.ImageUtil;
-import util.Logger;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -11,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static util.Logger.*;
 
@@ -43,7 +40,7 @@ public class MenuView extends AbstractView {
     }
 
     /**
-     * Hilfsklasse für die Initialisierung der Werkzeugleiste
+     * Hilfsmethode für die Initialisierung der Werkzeugleiste
      */
     private void initToolPane() {
         JPanel toolPane = new JPanel(new BorderLayout());
@@ -100,7 +97,7 @@ public class MenuView extends AbstractView {
     }
 
     /**
-     * Hilfsklasse für die Initialisierung der Themenliste
+     * Hilfsmethode für die Initialisierung der Themenliste
      */
     private void initTopicList() {
         DefaultListModel<TopicListItem> model = new DefaultListModel<>();
@@ -114,7 +111,7 @@ public class MenuView extends AbstractView {
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() >= 2) {
                     TopicListItem item = (TopicListItem) ((JList) mouseEvent.getSource()).getSelectedValue();
-                    mainFrame.changeTo(new TopicView(mainFrame));
+                    mainFrame.changeTo(TopicView.getInstance(mainFrame, item.getKey()));
                 }
             }
         });
