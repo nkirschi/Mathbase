@@ -52,6 +52,7 @@ public class TopicView extends AbstractView {
         JButton addButton = new JButton("Hinzufügen"); //TODO ActionListener
         JButton removeButton = new JButton("Entfernen"); //TODO ActionListener
         JButton backButton = new JButton("Zurück");
+        addButton.setIconTextGap(5);
         backButton.addActionListener(e -> mainFrame.changeTo(MenuView.getInstance(mainFrame)));
         try {
             addButton.setIcon(ImageUtil.getInternalIcon("images/add.png", 12, 12));
