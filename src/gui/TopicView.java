@@ -19,6 +19,7 @@ public class TopicView extends AbstractView {
     public TopicView(MainFrame mainFrame, String topicKey) {
         super(mainFrame);
         this.topicKey = topicKey;
+        setLayout(new BorderLayout());
         initToolPane();
         log(INFO, "Themenansicht vollständig initialisiert");
     }
@@ -60,9 +61,9 @@ public class TopicView extends AbstractView {
             e.printStackTrace();
         }
 
-        buttonPane.add(backButton);
         buttonPane.add(addButton);
         buttonPane.add(removeButton);
+        buttonPane.add(backButton);
 
         /*
         JPanel searchPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
