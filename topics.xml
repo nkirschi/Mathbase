@@ -1,56 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <topiclist>
-    <theme key="30126307523780" name="Thema1">
-        <element key="1494619907111" title="Test0">
-            <file type="description">src/Thema1/Test0/description.txt</file>
-            <file type="movie">src/Thema1/Test0/movie.txt</file>
-            <file type="picture">src/Thema1/Test0/picture.txt</file>
-        </element>
-        <element key="1494619907625" title="Test1">
-            <file type="movie">src/Thema1/Test1/movie.txt</file>
-            <file type="picture">src/Thema1/Test1/picture.txt</file>
-            <file type="description">src/Thema1/Test1/description.txt</file>
-        </element>
-        <element key="1494619908136" title="Test2">
-            <file type="description">src/Thema1/Test2/description.txt</file>
-            <file type="picture">src/Thema1/Test2/picture.txt</file>
-            <file type="movie">src/Thema1/Test2/movie.txt</file>
-        </element>
-    </theme>
-    <theme key="30126808005130" name="Thema2">
-        <element key="1494619908644" title="Test0">
-            <file type="description">src/Thema1/Test0/description.txt</file>
-            <file type="movie">src/Thema1/Test0/movie.txt</file>
-            <file type="picture">src/Thema1/Test0/picture.txt</file>
-        </element>
-        <element key="1494619909147" title="Test1">
-            <file type="movie">src/Thema1/Test1/movie.txt</file>
-            <file type="picture">src/Thema1/Test1/picture.txt</file>
-            <file type="description">src/Thema1/Test1/description.txt</file>
-        </element>
-        <element key="1494619909659" title="Test2">
-            <file type="description">src/Thema1/Test2/description.txt</file>
-            <file type="picture">src/Thema1/Test2/picture.txt</file>
-            <file type="movie">src/Thema1/Test2/movie.txt</file>
-        </element>
-    </theme>
-    <theme key="30127308166481" name="Thema3">
-        <element key="1494619910171" title="Test0">
-            <file type="description">src/Thema1/Test0/description.txt</file>
-            <file type="movie">src/Thema1/Test0/movie.txt</file>
-            <file type="picture">src/Thema1/Test0/picture.txt</file>
-        </element>
-        <element key="1494619910684" title="Test1">
-            <file type="movie">src/Thema1/Test1/movie.txt</file>
-            <file type="picture">src/Thema1/Test1/picture.txt</file>
-            <file type="description">src/Thema1/Test1/description.txt</file>
-        </element>
-        <element key="1494619911197" title="Test2">
-            <file type="description">src/Thema1/Test2/description.txt</file>
-            <file type="picture">src/Thema1/Test2/picture.txt</file>
-            <file type="movie">src/Thema1/Test2/movie.txt</file>
-        </element>
-    </theme>
-    <theme key="399120922660" name="Thema4"/>
-    <theme key="17122584386567" name="Thema5"/>
+    <theme iconpath="topics\169656225554188\chrome_2017-04-04_17-46-50.png" key="169656225554188" name="Thema1"/>
+    <theme iconpath="topics\169757741711784\chrome_2017-04-04_17-45-29.png" key="169757741711784" name="Thema2"/>
+    <theme iconpath="topics\169774669707076\chrome_2017-04-04_17-55-07.png" key="169774669707076" name="Thema3"/>
+    <theme iconpath="" key="169778827719012" name="Thema4"/>
 </topiclist>

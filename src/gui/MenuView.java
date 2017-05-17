@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Klasse des Hauptmenüs
@@ -119,8 +120,12 @@ public class MenuView extends AbstractView {
     private void initTopicListModel(DefaultListModel<TopicListItem> model){
         try {
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-            for (String s : handler.getThemeKeyList())
-                model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getInternalIcon("images/witcher.png")));
+            for (String s : handler.getTopicKeyList()) {
+                if(handler.getTopicIconPath(s).equals(""))
+                    model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getInternalIcon("images/icon.png")));
+                else
+                    model.addElement(new TopicListItem(s, handler.getTopicName(s), ImageUtil.getExternalIcon(handler.getTopicIconPath(s))));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

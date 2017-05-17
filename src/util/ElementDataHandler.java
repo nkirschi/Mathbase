@@ -118,7 +118,7 @@ public class ElementDataHandler {
         return keylist;
     }
 
-    public String[] getThemeKeyList(){
+    public String[] getTopicKeyList(){
         String[] keylist=new String[0];
         try {
             NodeList nodelist=xmlHandler.getNodeListXPath("//topiclist/theme");
@@ -143,16 +143,28 @@ public class ElementDataHandler {
      */
     public String getTopicName(String key){
         try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//topiclist/theme");
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    Element topicElement = (Element) nodeList.item(i);
-                    if (topicElement.getAttribute("key").equals(key))
-                        return topicElement.getAttribute("name");
-                }
+            NodeList nodelist=xmlHandler.getNodeListXPath("//topiclist/theme[@key=\""+key+"\"]");
+            Node inode=nodelist.item(0);
+            if(inode.getNodeType()==Node.ELEMENT_NODE){
+                Element topicelement=(Element)inode;
+                return topicelement.getAttribute("name");
             }
         } catch (IOException e) {
-            log(WARNING, e);
+            log(WARNING,e);
+        }
+        return "";
+    }
+
+    public String getTopicIconPath(String key){
+        try {
+            NodeList nodelist=xmlHandler.getNodeListXPath("//topiclist/theme[@key=\""+key+"\"]");
+            Node inode=nodelist.item(0);
+            if(inode.getNodeType()==Node.ELEMENT_NODE){
+                Element topicelement=(Element)inode;
+                return topicelement.getAttribute("iconpath");
+            }
+        } catch (IOException e) {
+            log(WARNING,e);
         }
         return "";
     }
@@ -193,10 +205,11 @@ public class ElementDataHandler {
      * @param key Key des neuen Themas
      * @param theme Name des neuen Themas
      */
-    public void addTheme(String key, String theme){
+    public void addTheme(String key, String theme, String iconpath){
         Element element=xmlHandler.createElement("theme");
-        element.setAttribute("key", key);
+        element.setAttribute("iconpath", iconpath);
         element.setAttribute("name",theme);
+        element.setAttribute("key", key);
         xmlHandler.getRoot().appendChild(element);
         log(INFO,"Thema '"+theme+"' erfolgreich hinzugefügt!");
     }
@@ -251,7 +264,7 @@ public class ElementDataHandler {
     }
 
     //ZUM TESTEN TODO test-Methode entfernen
-    private void test(){
+    /*private void test(){
         addTheme(String.valueOf(System.nanoTime()),"Thema1");
         try {
             Thread.sleep(500);
@@ -285,5 +298,5 @@ public class ElementDataHandler {
                 }
             }
         }
-    }
+    }*/
 }

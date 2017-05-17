@@ -1,13 +1,16 @@
 package gui;
 
+import util.ElementDataHandler;
 import util.ImageUtil;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
-
-import util.ElementDataHandler;
+import java.nio.file.StandardCopyOption;
+import static java.nio.file.Files.copy;
+import static util.Logger.*;
 
 /**
  * Eingabemaske beim Erstellen eines neuen Themas
@@ -17,6 +20,7 @@ public class AddTopicDialog extends JDialog {
     private MainFrame mainFrame;
     private JTextField titleField;
     private JFileChooser fileChooser;
+    private File icon;
 
     public AddTopicDialog(MainFrame mainFrame) {
         super(mainFrame);
@@ -53,11 +57,29 @@ public class AddTopicDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Titel an!", "Achtung", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                ElementDataHandler handler=ElementDataHandler.getElementDataHandler();
-                handler.addTheme(String.valueOf(System.nanoTime()),name); //TODO icon hinzufügen
-                handler.safeElementData();
-                mainFrame.getCurrentView().update();
-                dispose();
+                String key = String.valueOf(System.nanoTime());
+                String iconpath = "";
+                File dir = new File("topics/"+key);
+                if(dir.mkdirs()){
+                    log(INFO,"Ordner erfolgreich erstellt!");
+                    if(icon!=null){
+                        try {
+                            iconpath = copy(icon.toPath(),new File("topics/"+key+"/"+icon.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING).toString();
+                        } catch (IOException e1) {
+                            log(WARNING,e1);
+                            e1.printStackTrace();
+                        }
+                    }
+                    ElementDataHandler handler=ElementDataHandler.getElementDataHandler();
+                    handler.addTheme(key,name,iconpath);
+                    handler.safeElementData();
+                    mainFrame.getCurrentView().update();
+                    dispose();
+                }
+                else{
+                    log(WARNING,"Thema nicht erstellt; konnte Ordner nicht erstellen!");
+                    dispose();
+                }
             }
         });
         buttonPanel.add(cancelButton);
@@ -85,7 +107,7 @@ public class AddTopicDialog extends JDialog {
         JLabel iconLabel = new JLabel();
         iconLabel.setSize(64, 64);
         try {
-            iconLabel.setIcon(ImageUtil.getInternalIcon("images/witcher.png", 64, 64));
+            iconLabel.setIcon(ImageUtil.getInternalIcon("images/icon.png", 64, 64));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,8 +145,9 @@ public class AddTopicDialog extends JDialog {
             int result = fileChooser.showOpenDialog(AddTopicDialog.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+                icon = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
-                    iconLabel.setIcon(ImageUtil.getExternalIcon(fileChooser.getSelectedFile().getAbsolutePath(), 64, 64));
+                    iconLabel.setIcon(ImageUtil.getExternalIcon(icon.getAbsolutePath(), 64, 64));
                     repaint();
                 } catch (IOException e) {
                     e.printStackTrace();
