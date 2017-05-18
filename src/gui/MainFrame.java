@@ -4,6 +4,7 @@ import util.ImageUtil;
 import util.Logger;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -16,6 +17,9 @@ import java.nio.file.StandardCopyOption;
  */
 public class MainFrame extends JFrame implements WindowListener {
     private AbstractView currentView;
+
+    public static Insets BUTTON_INSETS = new Insets(2, 5, 2, 5);
+    public static int BUTTON_ICON_TEXT_GAP = 4;
 
     private MainFrame() {
         setTitle("Mathbase Alpha 1.1.2_01");

@@ -1,5 +1,6 @@
 package gui;
 
+import sun.applet.Main;
 import util.ImageUtil;
 
 import javax.swing.*;
@@ -52,7 +53,6 @@ public class TopicView extends AbstractView {
         JButton addButton = new JButton("Hinzufügen"); //TODO ActionListener
         JButton removeButton = new JButton("Entfernen"); //TODO ActionListener
         JButton backButton = new JButton("Zurück");
-        addButton.setIconTextGap(5);
         backButton.addActionListener(e -> mainFrame.changeTo(MenuView.getInstance(mainFrame)));
         try {
             addButton.setIcon(ImageUtil.getInternalIcon("images/add.png", 12, 12));
@@ -61,6 +61,14 @@ public class TopicView extends AbstractView {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        addButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
+        addButton.setMargin(MainFrame.BUTTON_INSETS);
+        removeButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
+        removeButton.setMargin(MainFrame.BUTTON_INSETS);
+        backButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
+        backButton.setMargin(MainFrame.BUTTON_INSETS);
+
 
         buttonPane.add(addButton);
         buttonPane.add(removeButton);

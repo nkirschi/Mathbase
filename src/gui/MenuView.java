@@ -78,6 +78,10 @@ public class MenuView extends AbstractView {
             e.printStackTrace();
         }
 
+        addButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
+        addButton.setMargin(MainFrame.BUTTON_INSETS);
+        removeButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
+        removeButton.setMargin(MainFrame.BUTTON_INSETS);
 
         buttonPane.add(addButton);
         buttonPane.add(removeButton);
