@@ -18,8 +18,8 @@ import java.nio.file.StandardCopyOption;
 public class MainFrame extends JFrame implements WindowListener {
     private AbstractView currentView;
 
-    public static Insets BUTTON_INSETS = new Insets(2, 5, 2, 5);
-    public static int BUTTON_ICON_TEXT_GAP = 4;
+    public static Insets BUTTON_INSETS = new Insets(2, 6, 2, 6);
+    public static int BUTTON_ICON_TEXT_GAP = 5;
 
     private MainFrame() {
         setTitle("Mathbase Alpha 1.1.2_01");
