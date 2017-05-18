@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 import static util.Logger.*;
 
@@ -62,8 +63,11 @@ public class MenuView extends AbstractView {
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == 0) {
                     String key = list.getSelectedValue().getKey();
-                    if (!new File("topics/" + key).delete()) {
+                    try {
+                        FileUtils.deleteDirectory(new File("topics/" + key));
+                    } catch (IOException e1) {
                         log(WARNING, "Konnte Ordner des Themas " + key + " nicht löschen!");
+                        log(WARNING,e1);
                     }
                     ElementDataHandler.getElementDataHandler().deleteTheme(key);
                     ElementDataHandler.getElementDataHandler().safeElementData();
@@ -133,13 +137,13 @@ public class MenuView extends AbstractView {
                 try {
                     icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
                 } catch (IOException e1) {
-                    log(WARNING, e1);
+                    log(WARNING, "Konnte externes Bild nicht laden, lade Standart-Icon");
                     icon = ImageUtil.getInternalIcon("images/icon.png");
                 }
                 model.addElement(new TopicListItem(s, handler.getTopicName(s), icon));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log(WARNING,e);
         }
     }
 }
