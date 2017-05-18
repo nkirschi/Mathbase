@@ -48,26 +48,25 @@ public class MenuView extends AbstractView {
 
         JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("Hinzufügen");
-        addButton.addActionListener(e -> new AddTopicDialog(mainFrame));
+        addButton.addActionListener(a -> new AddTopicDialog(mainFrame));
         JButton removeButton = new JButton("Entfernen");
-        removeButton.addActionListener(e -> {
+        removeButton.addActionListener(a -> {
             if (list.getSelectedValue() == null)
                 JOptionPane.showMessageDialog(this, "Kein Thema gewählt!", "Thema löschen",
                         JOptionPane.ERROR_MESSAGE);
             else {
                 int result = JOptionPane.showConfirmDialog(this, String.format("Möchten Sie dieses " +
                                 "Thema wirklich unwiderruflich löschen?%nDiese Aktion " +
-                                "kann nicht rückgängig gemacht werden!%n%nTitel: %s, Elemente: %d%n%n",
-                        list.getSelectedValue().getTitle(), ElementDataHandler.getElementDataHandler().
-                                getElementKeyList(list.getSelectedValue().getKey()).length), "Thema löschen",
+                                "kann nicht rückgängig gemacht werden!%n%n%s%n%n",
+                        list.getSelectedValue().getTitle()), "Thema löschen",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (result == 0) {
                     String key = list.getSelectedValue().getKey();
                     try {
                         FileUtils.deleteDirectory(new File("topics/" + key));
-                    } catch (IOException e1) {
+                    } catch (IOException e) {
                         log(WARNING, "Konnte Ordner des Themas " + key + " nicht löschen!");
-                        log(WARNING,e1);
+                        log(WARNING,e);
                     }
                     ElementDataHandler.getElementDataHandler().deleteTheme(key);
                     ElementDataHandler.getElementDataHandler().safeElementData();

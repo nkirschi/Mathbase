@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <topiclist>
-    <theme iconpath="topics\169656225554188\chrome_2017-04-04_17-46-50.png" key="169656225554188" name="Thema1"/>
-    <theme iconpath="topics\169757741711784\chrome_2017-04-04_17-45-29.png" key="169757741711784" name="Thema2"/>
+    <theme iconpath="topics\15929615998436\pythagoras-bust.jpg" key="15929615998436" name="Satz des Pythagoras"/>
+    <theme iconpath="topics\15944227642838\18aedcac996bb1e113b7b6b7e052df8f.jpg" key="15944227642838" name="Vektorsubtraktion"/>
+    <theme iconpath="topics\16004350323868\6625.png" key="16004350323868" name="Laplace-Experimente"/>
 </topiclist>
