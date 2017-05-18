@@ -17,7 +17,7 @@ public class TopicView extends AbstractView {
     private String topicKey;
     private static TopicView instance;
 
-    public TopicView(MainFrame mainFrame, String topicKey) {
+    private TopicView(MainFrame mainFrame, String topicKey) {
         super(mainFrame);
         this.topicKey = topicKey;
         setLayout(new BorderLayout());
