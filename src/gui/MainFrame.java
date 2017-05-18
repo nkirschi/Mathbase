@@ -95,7 +95,7 @@ public class MainFrame extends JFrame implements WindowListener {
 
         try {
             exitItem.setIcon(ImageUtil.getInternalIcon("images/exit.png"));
-            aboutItem.setIcon(ImageUtil.getInternalIcon("images/help.png"));
+            aboutItem.setIcon(ImageUtil.getInternalIcon("images/info.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
