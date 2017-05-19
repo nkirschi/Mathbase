@@ -7,3 +7,4 @@ TODO-Liste: (in <> immer wer sich der Aufgabe annimmt)
 - <B> TopicView weiter implementieren
     ->>>> Bild-Ressourcen müssen freigegeben werden, damit die Ordner ordnungsgemäß gelöscht werden können.
 - <N> Hilfsklasse für Dateioperationen
+- Das Laden des Hauptmenüs dauert mit vielen iconbesitzenden Themen sehr lang, da jedes einzelne Icon vor der Darstellung noch auf 32x32 skaliert werden muss; daher sollten wir aus Performance-Gründen beim Erstellen eines Themas das angegebene Icon bereits skaliert abspeichern (spart auch Platz) und ebenso die ganzen internen Icons für Menüs etc. vorskaliert ablegen, sodass zur Laufzeit möglichst wenig Grafikberechnungen stattfinden müssen.
