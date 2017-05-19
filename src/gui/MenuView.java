@@ -2,6 +2,7 @@ package gui;
 
 import util.ElementDataHandler;
 import util.ImageUtil;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -70,7 +71,7 @@ public class MenuView extends AbstractView {
                         FileUtils.deleteDirectory(new File("topics/" + key));
                     } catch (IOException e) {
                         log(WARNING, "Konnte Ordner des Themas " + key + " nicht löschen!");
-                        log(WARNING,e);
+                        log(WARNING, e);
                     }
                     ElementDataHandler.getElementDataHandler().deleteTheme(key);
                     ElementDataHandler.getElementDataHandler().safeElementData();
@@ -96,34 +97,29 @@ public class MenuView extends AbstractView {
         searchLabel.setLabelFor(searchField);
         searchField.setPreferredSize(new Dimension(200, 22));
         searchField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent documentEvent) {
+
+            private void doStuff() {
                 if (searchField.getText().equals("")) {
                     update();
                     return;
                 }
                 listmodel.clear();
                 initTopicListModel(searchField.getText());
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                doStuff();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                if (searchField.getText().equals("")) {
-                    update();
-                    return;
-                }
-                listmodel.clear();
-                initTopicListModel(searchField.getText());
+                doStuff();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                if (searchField.getText().equals("")) {
-                    update();
-                    return;
-                }
-                listmodel.clear();
-                initTopicListModel(searchField.getText());
+                doStuff();
             }
         });
         searchPanel.add(searchLabel);
@@ -173,65 +169,40 @@ public class MenuView extends AbstractView {
     }
 
     private void initTopicListModel() {
-        try {
-            ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-            String[] keys = handler.getTopicKeyList();
-            ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
-            for (String s : keys) {
-                ImageIcon icon;
-                try {
-                    icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
-                } catch (IOException e1) {
-                    log(WARNING, "Konnte externes Bild nicht laden, lade Standart-Icon");
-                    icon = ImageUtil.getInternalIcon("images/icon.png");
-                }
-                items.add(new TopicListItem(s, handler.getTopicName(s), icon));
-            }
-            Collections.sort(items);
-            for (TopicListItem i : items)
-                listmodel.addElement(i);
-        } catch (IOException e) {
-            log(WARNING,e);
-        }
+        ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
+        String[] keys = handler.getTopicKeyList();
+        ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
+        for (String s : keys)
+            items.add(new TopicListItem(s, handler.getTopicName(s), handler.getTopicIconPath(s)));
+        Collections.sort(items);
+        for (TopicListItem i : items)
+            listmodel.addElement(i);
     }
 
     private void initTopicListModel(String keyword) {
-        try {
-            ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-            String[] keys = handler.getTopicKeyList();
-            ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
-            for (String s : keys) {
-                if (handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase())) {
-                    ImageIcon icon;
-                    try {
-                        icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
-                    } catch (IOException e1) {
-                        log(WARNING, "Konnte externes Bild nicht laden, lade Standart-Icon");
-                        icon = ImageUtil.getInternalIcon("images/icon.png");
-                    }
-                    items.add(new TopicListItem(s, handler.getTopicName(s), icon));
-                }
-            }
-            Collections.sort(items);
-            for (TopicListItem i : items)
-                listmodel.addElement(i);
-        } catch (IOException e) {
-            log(WARNING,e);
-        }
+        ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
+        String[] keys = handler.getTopicKeyList();
+        ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
+        for (String s : keys)
+            if (handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase()))
+                items.add(new TopicListItem(s, handler.getTopicName(s), handler.getTopicIconPath(s)));
+        Collections.sort(items);
+        for (TopicListItem i : items)
+            listmodel.addElement(i);
     }
 }
 
 /**
  * Klassenhülle für ein Element der Themenliste
  */
-class TopicListItem implements Comparable {
+class TopicListItem implements Comparable<TopicListItem> {
     private String key, title;
-    private ImageIcon icon;
+    private String iconPath;
 
-    TopicListItem(String key, String title, ImageIcon icon) {
+    TopicListItem(String key, String title, String iconPath) {
         this.key = key;
         this.title = title;
-        this.icon = new ImageIcon(icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH));
+        this.iconPath = iconPath;
     }
 
     String getKey() {
@@ -242,8 +213,8 @@ class TopicListItem implements Comparable {
         return title;
     }
 
-    ImageIcon getIcon() {
-        return icon;
+    String getIconPath() {
+        return iconPath;
     }
 
     public String toString() {
@@ -251,8 +222,8 @@ class TopicListItem implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return getTitle().compareTo(((TopicListItem) o).getTitle());
+    public int compareTo(TopicListItem item) {
+        return getTitle().compareTo(item.getTitle());
     }
 }
 
@@ -261,8 +232,8 @@ class TopicListItem implements Comparable {
  */
 class TopicListCellRenderer extends DefaultListCellRenderer {
     private JLabel label;
-    private Color textSelectionColor = Color.BLACK;
-    private Color backgroundSelectionColor = new Color(163, 202, 232);
+    private Color textSelectionColor = Color.WHITE;
+    private Color backgroundSelectionColor = new Color(0, 130, 232);
     private Color textNonSelectionColor = Color.BLACK;
     private Color backgroundNonSelectionColor = Color.WHITE;
 
@@ -287,7 +258,15 @@ class TopicListCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean selected, boolean focused) {
         TopicListItem item = (TopicListItem) value;
-        label.setIcon(item.getIcon());
+        try {
+            label.setIcon(new ImageIcon(ImageUtil.getExternalImage(item.getIconPath()).getScaledInstance(32, 32, Image.SCALE_SMOOTH)));
+        } catch (IOException e) {
+            try {
+                label.setIcon(ImageUtil.getInternalIcon("images/icon.png", 32, 32));
+            } catch (IOException f) {
+                f.printStackTrace();
+            }
+        }
         label.setText(item.getTitle());
         label.setToolTipText("Index in list: " + index);
 
