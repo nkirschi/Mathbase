@@ -102,7 +102,7 @@ public class AddTopicDialog extends JDialog {
         formPanel.add(titleLabel);
         formPanel.add(titleField);
         fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Bilder (*.jpg, *.png)", "jpg", "png"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Bilder (*.jpg, *.png)", "jpg", "png", "gif"));
         JButton chooseIconButton = new JButton("Icon auswählen...");
         JLabel iconLabel = new JLabel();
         iconLabel.setSize(64, 64);

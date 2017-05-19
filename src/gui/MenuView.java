@@ -4,11 +4,15 @@ import util.ElementDataHandler;
 import util.ImageUtil;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+
 import org.apache.commons.io.FileUtils;
 
 import static util.Logger.*;
@@ -37,7 +41,7 @@ public class MenuView extends AbstractView {
 
     protected void update() {
         listmodel.clear();
-        initTopicListModel(listmodel);
+        initTopicListModel();
     }
 
     /**
@@ -86,8 +90,49 @@ public class MenuView extends AbstractView {
         removeButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
         removeButton.setMargin(MainFrame.BUTTON_INSETS);
 
+        JPanel searchPanel = new JPanel();
+        JTextField searchField = new JTextField();
+        JLabel searchLabel = new JLabel("Suche:");
+        searchLabel.setLabelFor(searchField);
+        searchField.setPreferredSize(new Dimension(200, 22));
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                if (searchField.getText().equals("")) {
+                    update();
+                    return;
+                }
+                listmodel.clear();
+                initTopicListModel(searchField.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                if (searchField.getText().equals("")) {
+                    update();
+                    return;
+                }
+                listmodel.clear();
+                initTopicListModel(searchField.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                if (searchField.getText().equals("")) {
+                    update();
+                    return;
+                }
+                listmodel.clear();
+                initTopicListModel(searchField.getText());
+            }
+        });
+        searchPanel.add(searchLabel);
+        searchPanel.add(searchField);
+        toolPane.add(searchPanel, BorderLayout.EAST);
+
         buttonPane.add(addButton);
         buttonPane.add(removeButton);
+
 
         /*
         JPanel searchPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -107,9 +152,9 @@ public class MenuView extends AbstractView {
      * Hilfsmethode für die Initialisierung der Themenliste
      */
     private void initTopicList() {
-        DefaultListModel<TopicListItem> model = new DefaultListModel<>();
-        initTopicListModel(model);
-        JList<TopicListItem> topicList = new JList<>(model);
+        listmodel = new DefaultListModel<>();
+        initTopicListModel();
+        JList<TopicListItem> topicList = new JList<>(listmodel);
         topicList.setCellRenderer(new TopicListCellRenderer());
         topicList.setFixedCellHeight(50);
         topicList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -124,14 +169,15 @@ public class MenuView extends AbstractView {
         });
         JScrollPane scrollPane = new JScrollPane(topicList);
         add(scrollPane, BorderLayout.CENTER);
-        listmodel = model;
         list = topicList;
     }
 
-    private void initTopicListModel(DefaultListModel<TopicListItem> model) {
+    private void initTopicListModel() {
         try {
             ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-            for (String s : handler.getTopicKeyList()) {
+            String[] keys = handler.getTopicKeyList();
+            ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
+            for (String s : keys) {
                 ImageIcon icon;
                 try {
                     icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
@@ -139,8 +185,36 @@ public class MenuView extends AbstractView {
                     log(WARNING, "Konnte externes Bild nicht laden, lade Standart-Icon");
                     icon = ImageUtil.getInternalIcon("images/icon.png");
                 }
-                model.addElement(new TopicListItem(s, handler.getTopicName(s), icon));
+                items.add(new TopicListItem(s, handler.getTopicName(s), icon));
             }
+            Collections.sort(items);
+            for (TopicListItem i : items)
+                listmodel.addElement(i);
+        } catch (IOException e) {
+            log(WARNING,e);
+        }
+    }
+
+    private void initTopicListModel(String keyword) {
+        try {
+            ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
+            String[] keys = handler.getTopicKeyList();
+            ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
+            for (String s : keys) {
+                if (handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase())) {
+                    ImageIcon icon;
+                    try {
+                        icon = ImageUtil.getExternalIcon(handler.getTopicIconPath(s));
+                    } catch (IOException e1) {
+                        log(WARNING, "Konnte externes Bild nicht laden, lade Standart-Icon");
+                        icon = ImageUtil.getInternalIcon("images/icon.png");
+                    }
+                    items.add(new TopicListItem(s, handler.getTopicName(s), icon));
+                }
+            }
+            Collections.sort(items);
+            for (TopicListItem i : items)
+                listmodel.addElement(i);
         } catch (IOException e) {
             log(WARNING,e);
         }
@@ -150,7 +224,7 @@ public class MenuView extends AbstractView {
 /**
  * Klassenhülle für ein Element der Themenliste
  */
-class TopicListItem {
+class TopicListItem implements Comparable {
     private String key, title;
     private ImageIcon icon;
 
@@ -174,6 +248,11 @@ class TopicListItem {
 
     public String toString() {
         return title;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return getTitle().compareTo(((TopicListItem) o).getTitle());
     }
 }
 
