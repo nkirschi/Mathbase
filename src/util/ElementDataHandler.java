@@ -6,6 +6,9 @@ import org.w3c.dom.NodeList;
 
 import java.io.*;
 import java.nio.Buffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,27 +28,36 @@ public class ElementDataHandler {
 
     private static String originfile = "topics.xml";
     private static String targetfile = "topics.xml";
+    private static String backupfile = "topics.xml.bak";
     private static ElementDataHandler ELEMENT_DATA_HANDLER = new ElementDataHandler(originfile); //Hält die Reference zum einzigen existierenden Objekt der Klasse ElementDataHandler
 
     private ElementDataHandler(String filePath) {
         try {
             xmlHandler = new XMLFileHandler(filePath);
-            log(INFO, "Datei '" + originfile + "' erfolgreich geladen!");
-        } catch (FileNotFoundException e) {
-            File file = new File(originfile);
+            log(INFO, "Datei \"" + originfile + "\" erfolgreich geladen!");
+        } catch (FileNotFoundException e1) {
+            log(WARNING, "Datei \"" + originfile + "\" konnte nicht geladen werden!");
             try {
-                file.createNewFile();
-                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                        "<topiclist></topiclist>");
-                writer.close();
+                Files.copy(Paths.get(backupfile), Paths.get(originfile), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XMLFileHandler(filePath);
-                log(INFO, "Datei '" + originfile + "' wurde neu erstellt!");
-            } catch (IOException f) {
-                log(ERROR, "Datei '" + originfile + "' konnte nicht geladen und auch keine neue erstellt werden!");
-                log(ERROR, e);
-                log(ERROR, f);
-                f.printStackTrace();
+                log(INFO, "Datei \"" + originfile + "\" wurde erfolgreich aus Backup wiederhergestellt!");
+            } catch (IOException e2) {
+                log(WARNING, "Datei \"" + originfile + "\" konnte nicht aus Backup wiederhergestellt werden!");
+                try {
+                    File file = new File(originfile);
+                    file.createNewFile();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                    writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                            "<topiclist></topiclist>");
+                    writer.close();
+                    xmlHandler = new XMLFileHandler(filePath);
+                    log(INFO, "Datei '" + originfile + "' wurde erfolgreich neu erstellt!");
+                } catch (IOException e3) {
+                    log(ERROR, "Datei '" + originfile + "' konnte nicht neu erstellt werden!");
+                    log(ERROR, e1);
+                    log(ERROR, e2);
+                    log(ERROR, e3);
+                }
             }
         }
     }
@@ -262,13 +274,22 @@ public class ElementDataHandler {
     /**
      * Methode, die die Daten in einer .xml Datei speichert
      */
-    public void safeElementData() {
+    public void save() {
         try {
             xmlHandler.saveDocToXml(targetfile);
             log(INFO, "Datei '" + targetfile + "' wurde gespeichert!");
         } catch (IOException e) {
             log(ERROR, "Datei '" + targetfile + "' konnte nicht gespeichert werden!");
             log(ERROR, e);
+        }
+    }
+
+    public void cleanUp() {
+        try {
+            Files.copy(Paths.get(originfile), Paths.get(backupfile), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.log(Logger.WARNING, "Backup-Datei \"" + backupfile + "\" konnte nicht erstellt werden!");
         }
     }
 

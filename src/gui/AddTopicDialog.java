@@ -73,7 +73,7 @@ public class AddTopicDialog extends JDialog {
                     }
                     ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
                     handler.addTheme(key, name, iconpath);
-                    handler.safeElementData();
+                    handler.save();
                     mainFrame.getCurrentView().update();
                     dispose();
                 } else {

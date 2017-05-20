@@ -75,7 +75,7 @@ public class MenuView extends AbstractView {
                         log(WARNING, e);
                     }
                     ElementDataHandler.getElementDataHandler().deleteTheme(key);
-                    ElementDataHandler.getElementDataHandler().safeElementData();
+                    ElementDataHandler.getElementDataHandler().save();
                     this.update();
                 }
             }
@@ -100,10 +100,6 @@ public class MenuView extends AbstractView {
         searchField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void doStuff() {
-                if (searchField.getText().equals("")) {
-                    update();
-                    return;
-                }
                 listmodel.clear();
                 initTopicListModel(searchField.getText());
             }
@@ -174,7 +170,7 @@ public class MenuView extends AbstractView {
         String[] keys = handler.getTopicKeyList();
         ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
         for (String s : keys)
-            if (keyword != "" && handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase()))
+            if (keyword.isEmpty() || handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase()))
                 items.add(new TopicListItem(s, handler.getTopicName(s), handler.getTopicIconPath(s)));
         Collections.sort(items);
         for (TopicListItem i : items)
@@ -230,7 +226,7 @@ class TopicListCellRenderer extends DefaultListCellRenderer {
     TopicListCellRenderer() {
         label = new JLabel();
         label.setOpaque(true);
-        label.setIconTextGap(10);
+        label.setIconTextGap(15);
         label.setBorder(new EmptyBorder(5, 10, 5, 10));
         label.setFont(label.getFont().deriveFont(16f));
     }
@@ -258,7 +254,7 @@ class TopicListCellRenderer extends DefaultListCellRenderer {
             }
         }
         label.setText(item.getTitle());
-        label.setToolTipText("Index in list: " + index);
+        label.setToolTipText(item.getTitle());
 
         if (selected) {
             label.setBackground(backgroundSelectionColor);

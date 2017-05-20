@@ -8,9 +8,6 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 /**
  * Klasse des Hauptfensters
@@ -112,13 +109,8 @@ public class MainFrame extends JFrame implements WindowListener {
     }
 
     private void cleanUpBeforeClose(){ //TODO alle Sachen, die beim entfernen aufgeführt werden sollen hinzufügen
-        ElementDataHandler.getElementDataHandler().safeElementData();
-        try {
-            Files.copy(Paths.get("topics.xml"), Paths.get("topics.xml.bak"), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.log(Logger.WARNING, "Backup-Datei \"topics.xml.bak\" konnte nicht erstellt werden!");
-        }
+        ElementDataHandler.getElementDataHandler().save();
+        ElementDataHandler.getElementDataHandler().cleanUp();
         Logger.log(Logger.INFO, "Applikation ordnungsgemäß beendet");
         Logger.close();
         System.exit(0);
