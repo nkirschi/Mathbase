@@ -3,10 +3,13 @@ package gui;
 import util.ElementDataHandler;
 import util.ImageUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
@@ -58,14 +61,23 @@ public class AddTopicDialog extends JDialog {
             if (name.equals("")) {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Titel an!", "Achtung", JOptionPane.WARNING_MESSAGE);
             } else {
-                String key = String.valueOf(System.nanoTime());
+                String key = String.valueOf(System.nanoTime()); // TODO nanoTime() ist keine kollisionsfreie Funktion!!
                 String iconpath = "";
                 File dir = new File("topics/" + key);
                 if (dir.mkdirs()) {
                     log(INFO, "Ordner erfolgreich erstellt!");
                     if (icon != null) {
                         try {
-                            iconpath = copy(icon.toPath(), new File("topics/" + key + "/" + icon.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING).toString();
+                            Image image = ImageUtil.getExternalIcon(icon.getAbsolutePath(), 32, 32).getImage();
+                            BufferedImage b = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+                            Graphics2D g = b.createGraphics();
+                            g.setComposite(AlphaComposite.Src);
+                            g.drawImage(image, 0, 0, null);
+                            g.dispose();
+                            File file = new File("topics/" + key + "/icon.png");
+                            ImageIO.write(b, "png", file);
+                            iconpath = file.getPath();
+                            //iconpath = copy(icon.toPath(), new File("topics/" + key + "/" + icon.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING).toString();
                         } catch (IOException e1) {
                             log(WARNING, e1);
                             e1.printStackTrace();
