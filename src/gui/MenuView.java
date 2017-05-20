@@ -24,6 +24,7 @@ import static util.Logger.*;
 public class MenuView extends AbstractView {
     private DefaultListModel<TopicListItem> listmodel;
     private JList<TopicListItem> list;
+    private JTextField searchField;
     private static MenuView instance;
 
     private MenuView(MainFrame mainFrame) {
@@ -42,7 +43,7 @@ public class MenuView extends AbstractView {
 
     protected void update() {
         listmodel.clear();
-        initTopicListModel();
+        initTopicListModel(searchField.getText());
     }
 
     /**
@@ -92,7 +93,7 @@ public class MenuView extends AbstractView {
         removeButton.setMargin(MainFrame.BUTTON_INSETS);
 
         JPanel searchPanel = new JPanel();
-        JTextField searchField = new JTextField();
+        searchField = new JTextField();
         JLabel searchLabel = new JLabel("Suche:");
         searchLabel.setLabelFor(searchField);
         searchField.setPreferredSize(new Dimension(200, 22));
@@ -149,7 +150,7 @@ public class MenuView extends AbstractView {
      */
     private void initTopicList() {
         listmodel = new DefaultListModel<>();
-        initTopicListModel();
+        initTopicListModel(searchField.getText());
         JList<TopicListItem> topicList = new JList<>(listmodel);
         topicList.setCellRenderer(new TopicListCellRenderer());
         topicList.setFixedCellHeight(50);
@@ -168,23 +169,12 @@ public class MenuView extends AbstractView {
         list = topicList;
     }
 
-    private void initTopicListModel() {
-        ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
-        String[] keys = handler.getTopicKeyList();
-        ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
-        for (String s : keys)
-            items.add(new TopicListItem(s, handler.getTopicName(s), handler.getTopicIconPath(s)));
-        Collections.sort(items);
-        for (TopicListItem i : items)
-            listmodel.addElement(i);
-    }
-
     private void initTopicListModel(String keyword) {
         ElementDataHandler handler = ElementDataHandler.getElementDataHandler();
         String[] keys = handler.getTopicKeyList();
         ArrayList<TopicListItem> items = new ArrayList<>(keys.length);
         for (String s : keys)
-            if (handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase()))
+            if (keyword != "" && handler.getTopicName(s).toLowerCase().contains(keyword.toLowerCase()))
                 items.add(new TopicListItem(s, handler.getTopicName(s), handler.getTopicIconPath(s)));
         Collections.sort(items);
         for (TopicListItem i : items)
