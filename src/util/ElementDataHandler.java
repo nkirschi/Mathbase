@@ -292,41 +292,4 @@ public class ElementDataHandler {
             Logger.log(Logger.WARNING, "Backup-Datei \"" + backupfile + "\" konnte nicht erstellt werden!");
         }
     }
-
-    //ZUM TESTEN TODO test-Methode entfernen
-    /*private void test(){
-        addTheme(String.valueOf(System.nanoTime()),"Thema1");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        addTheme(String.valueOf(System.nanoTime()),"Thema2");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        addTheme(String.valueOf(System.nanoTime()),"Thema3");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for(String i:getThemeKeyList()){
-            for(int temp=0;temp<3;temp++){
-                String title="PDFTest"+temp;
-                Map<String,String> map=new HashMap<>();
-                map.put("topics/"+ getTopicName(i)+"/"+title+"/description.txt",FILE_TYPE_DESCRIPTION);
-                map.put("topics/"+ getTopicName(i)+"/"+title+"/movie.txt",FILE_TYPE_MOVIE);
-                map.put("topics/"+ getTopicName(i)+"/"+title+"/picture.txt",FILE_TYPE_PICTURE);
-                addElement(String.valueOf(System.nanoTime()),i,title,map);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }*/
 }
