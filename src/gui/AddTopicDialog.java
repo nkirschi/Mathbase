@@ -8,13 +8,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
+import java.util.TimeZone;
 
-import static java.nio.file.Files.copy;
 import static util.Logger.*;
 
 /**
@@ -62,7 +61,10 @@ public class AddTopicDialog extends JDialog {
             if (name.equals("")) {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Titel an!", "Achtung", JOptionPane.WARNING_MESSAGE);
             } else {
-                String key = String.valueOf(System.nanoTime()); // TODO nanoTime() ist keine kollisionsfreie Funktion!!
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+                String key = Integer.toString(calendar.get(Calendar.YEAR)) + Integer.toString(calendar.get(Calendar.MONTH) + 1) + Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) +
+                        Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)) + Integer.toString(calendar.get(Calendar.MINUTE)) + Integer.toString(calendar.get(Calendar.SECOND)) +
+                        Integer.toString(calendar.get(Calendar.MILLISECOND));
                 String iconpath = "";
                 File dir = new File("topics/" + key);
                 if (dir.mkdirs()) {

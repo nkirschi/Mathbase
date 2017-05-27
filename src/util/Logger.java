@@ -68,25 +68,4 @@ public class Logger {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Methode zu Testzwecken TODO Entfernen
-     * @param args Kommandozeilenparameter
-     */
-    public static void main(String[] args) {
-        Logger.log(Logger.INFO, "System erfolgreich gestartet");
-        try {
-            "".concat(null);
-        } catch (NullPointerException e) {
-            Logger.log(Logger.WARNING, e);
-        }
-        try {
-            new BufferedReader(new FileReader("abc.txt"));
-        } catch (FileNotFoundException e) {
-            Logger.log(Logger.ERROR, e);
-        }
-        Logger.log(Logger.ERROR, "Fataler Fehler! Der Benutzer ist hässlich!");
-        Logger.log(Logger.INFO, "System erfolgreich beendet");
-        Logger.close();
-    }
 }
