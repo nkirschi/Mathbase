@@ -92,11 +92,12 @@ public class MenuView extends AbstractView {
         removeButton.setIconTextGap(MainFrame.BUTTON_ICON_TEXT_GAP);
         removeButton.setMargin(MainFrame.BUTTON_INSETS);
 
-        JPanel searchPanel = new JPanel();
-        searchField = new JTextField();
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchField = new JTextField(20);
         JLabel searchLabel = new JLabel("Suche:");
         searchLabel.setLabelFor(searchField);
-        searchField.setPreferredSize(new Dimension(200, 22));
+        searchLabel.setBorder(new EmptyBorder(0, 0, 0, 7));
+        //searchField.setPreferredSize(new Dimension(200, 22));
         searchField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void doStuff() {
@@ -119,8 +120,9 @@ public class MenuView extends AbstractView {
                 doStuff();
             }
         });
-        searchPanel.add(searchLabel);
-        searchPanel.add(searchField);
+        searchPanel.add(searchLabel, BorderLayout.WEST);
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.setBorder(new EmptyBorder(7, 0, 7, 7));
         toolPane.add(searchPanel, BorderLayout.EAST);
 
         buttonPane.add(addButton);

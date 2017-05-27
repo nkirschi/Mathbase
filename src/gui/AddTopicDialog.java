@@ -51,10 +51,11 @@ public class AddTopicDialog extends JDialog {
     private void initButtonPanel() {
         JPanel buttonPanel = new JPanel();
         JButton cancelButton = new JButton("Abbrechen");
-        cancelButton.setPreferredSize(new Dimension(88, 24));
+        cancelButton.setMargin(new Insets(3, 12, 3, 12));
         cancelButton.addActionListener(a -> dispose());
         JButton okButton = new JButton("OK");
-        okButton.setPreferredSize(new Dimension(88, 24));
+        okButton.setMargin(new Insets(3, 30, 3, 30));
+        okButton.setName("OK");
         getRootPane().setDefaultButton(okButton);
         okButton.addActionListener(a -> {
             String name = titleField.getText();
@@ -106,8 +107,7 @@ public class AddTopicDialog extends JDialog {
     private void initFormPanel() {
         SpringLayout layout = new SpringLayout();
         JPanel formPanel = new JPanel(layout);
-        titleField = new JTextField();
-        titleField.setPreferredSize(new Dimension(250, 20));
+        titleField = new JTextField(30);
         JLabel titleLabel = new JLabel("Titel:");
         titleLabel.setLabelFor(titleField);
 
