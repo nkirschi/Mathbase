@@ -14,8 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * Hauptklasse des Programms mit umfassender Kontrolle<br>
- * Der Konstruktor sollte niemals aufgerufen werden; ein auf diese Weise erzeugtes <tt>Mathbase</tt>-Objekt
+ * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
+ *
+ * Der Konstruktor sollte niemals explizit aufgerufen werden; ein auf diese Weise erzeugtes <tt>Mathbase</tt>-Objekt
  * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster <tt>stage</tt> hält,
  * die es einzig und allein durch die Erzeugung von JavaFX beim Programmstart höchstpersönlich erhält.
  *
@@ -25,13 +26,13 @@ import javafx.stage.StageStyle;
  */
 public class Mathbase extends Application {
     /**
-     * Statische Instanzreferenz auf das Singleton-Objekt
+     * Statische Instanzreferenz auf das Singleton <tt>Mathbase</tt>
      *
      * @since 1.0
      */
     private static Mathbase instance;
     /**
-     * Referenz auf das Hauptfenster
+     * Referenz auf das Hauptfenster <tt>stage</tt>
      *
      * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
      * @since 1.0
@@ -55,7 +56,7 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Statische Instanzmethode aufgrund des Singleton-Entwurfsmusters
+     * Singleton-Instanzoperation
      *
      * @return Die einzige Instanz von <tt>Mathbase</tt>
      */
@@ -66,7 +67,7 @@ public class Mathbase extends Application {
     /**
      * Einstiegsmethode der JavaFX-Anwendung
      *
-     * @param stage Das vom Framework übergebene Hauptfenster
+     * @param stage vom Framework übergebenes Hauptfenster
      */
     @Override
     public void start(Stage stage) {
@@ -77,10 +78,19 @@ public class Mathbase extends Application {
     /**
      * Methode zum Wechseln der aktuellen Szene
      *
-     * @param scene Die anzuzeigende Szene
+     * @param scene anzuzeigende Szene
      */
     void changeTo(Scene scene) {
         stage.setScene(scene);
+    }
+
+    /**
+     * Getter-Methode für die momentan auf der Bühne befindliche Szene
+     *
+     * @return aktuell im Hauptfenster angezeigte Szene
+     */
+    Scene getCurrentScene() {
+        return stage.getScene();
     }
 
     /**

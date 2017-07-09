@@ -10,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 
 /**
- * Der Themenbaum im Hauptmenü als Unterklasse von <tt>Parent</tt>
+ * Themenbaum im Hauptmenü als Unterklasse von <tt>Parent</tt>
  *
  * @author Nikolas Kirschstein
  * @version 1.0
@@ -18,27 +18,26 @@ import javafx.scene.control.Label;
  */
 public class TopicTree extends Parent {
     /**
-     * Statische Instanzreferenz auf das Singleton-Objekt
+     * Statische Instanzreferenz auf das Singleton <tt>TopicTree</tt>
      *
      * @since 1.0
      */
     private static TopicTree instance;
 
     /**
-     * Privater Konstruktor aufgrund des Entwurfsmusters
+     * Privater Singleton-Konstruktor
      *
      * @since 1.0
      */
     private TopicTree() {
         Label label = new Label("Text");
         getChildren().add(label);
-        System.out.println(Mathbase.getInstance());
     }
 
     /**
-     * Statische Instanzmethode aufgrund des Singleton-Entwurfsmusters
+     * Singleton-Instanzoperation
      *
-     * @return Die einzige Instanz von <tt>TopicTree</tt>
+     * @return einzige Instanz von <tt>TopicTree</tt>
      */
     static TopicTree getInstance() {
         if (instance == null)
