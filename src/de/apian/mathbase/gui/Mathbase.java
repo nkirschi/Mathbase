@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * Hauptklasse des Programms mit umfassender Kontrolle
+ * Hauptklasse des Programms mit umfassender Kontrolle<br>
  * Der Konstruktor sollte niemals aufgerufen werden; ein auf diese Weise erzeugtes <tt>Mathbase</tt>-Objekt
  * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster <tt>stage</tt> hält,
  * die es einzig und allein durch die Erzeugung von JavaFX beim Programmstart höchstpersönlich erhält.
@@ -19,35 +19,24 @@ import javafx.stage.StageStyle;
  */
 public class Mathbase extends Application {
     /**
-     * Referenz auf das Hauptfenster
-     *
-     * @since 1.0
-     * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
-     */
-    private Stage stage;
-    /**
      * Statische Instanzreferenz auf das Singleton-Objekt
      *
      * @since 1.0
      */
     private static Mathbase instance;
+    /**
+     * Referenz auf das Hauptfenster
+     *
+     * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
+     * @since 1.0
+     */
+    private Stage stage;
 
     /**
      * Ghost-Konstruktor, der wegen JavaFX <tt>public</tt>-Sichtbarkeit benötigt
      */
     public Mathbase() {
         instance = this;
-    }
-
-    /**
-     * Einstiegsmethode der JavaFX-Anwendung
-     *
-     * @param stage Das vom Framework übergebene Hauptfenster
-     */
-    @Override
-    public void start(Stage stage) {
-        this.stage = stage;
-        initStage();
     }
 
     /**
@@ -66,6 +55,17 @@ public class Mathbase extends Application {
      */
     static Mathbase getInstance() {
         return instance;
+    }
+
+    /**
+     * Einstiegsmethode der JavaFX-Anwendung
+     *
+     * @param stage Das vom Framework übergebene Hauptfenster
+     */
+    @Override
+    public void start(Stage stage) {
+        this.stage = stage;
+        initStage();
     }
 
     /**
