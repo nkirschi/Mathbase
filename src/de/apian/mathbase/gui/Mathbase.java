@@ -73,15 +73,16 @@ public class Mathbase extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         initStage();
+        stage.show();
     }
 
     /**
-     * Methode zum Wechseln der aktuellen Szene
+     * Methode zum Wechseln der aktuellen Ansicht
      *
-     * @param scene anzuzeigende Szene
+     * @param view anzuzeigende <tt>View</tt>
      */
-    void changeTo(Scene scene) {
-        stage.setScene(scene);
+    void changeTo(View view) {
+        stage.setScene(new Scene(view.getComponent()));
     }
 
     /**
@@ -102,8 +103,7 @@ public class Mathbase extends Application {
         stage.setHeight(600);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/de/apian/mathbase/images/icon.png")));
         stage.setOnCloseRequest(e -> cleanUp());
-        changeTo(new Scene(TopicTree.getInstance()));
-        stage.show();
+        changeTo(MainMenu.getInstance());
     }
 
     /**
