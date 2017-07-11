@@ -11,9 +11,10 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 /**
- * Themenbaum im Hauptmenü als Unterklasse von <tt>Parent</tt>
+ * Hauptansicht des Programms mit einem BorderPane.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
@@ -38,7 +39,9 @@ public class MainMenu implements View {
      */
     private MainMenu() {
         component = new BorderPane();
-        component.setCenter(new ImageView(new Image(getClass().getResourceAsStream("/de/apian/mathbase/images/icon.png"))));
+        BorderPane pane = new BorderPane();
+        pane.setCenter(new ImageView(new Image(getClass().getResourceAsStream("/de/apian/mathbase/images/icon.png"))));
+        changeContentTo(pane); // so sähe der Aufruf von außen aus...
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
@@ -61,6 +64,15 @@ public class MainMenu implements View {
         if (instance == null)
             instance = new MainMenu();
         return instance;
+    }
+
+    /**
+     * Nützliche Methode für das Setzen des Angezeigten Hauptinhalts
+     *
+     * @param content Anzuzeigender Inhalt
+     */
+    public void changeContentTo(Pane content) {
+        component.setCenter(content);
     }
 
     /**
