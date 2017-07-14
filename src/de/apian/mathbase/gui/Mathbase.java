@@ -27,6 +27,7 @@ import javafx.stage.StageStyle;
  * @since 1.0
  */
 public class Mathbase extends Application {
+
     /**
      * Statische Instanzreferenz auf das Singleton <tt>Mathbase</tt>
      *
@@ -90,7 +91,7 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     void changeTo(Component component) {
-        stage.setScene(new Scene(component.getComponent()));
+        stage.setScene(new Scene(component.getParent()));
     }
 
     /**

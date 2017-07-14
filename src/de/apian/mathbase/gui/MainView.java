@@ -32,17 +32,23 @@ class MainView implements Component {
 
     /**
      * Komponente dieser Ansicht
+     *
+     * @since 1.0
      */
-    private BorderPane component;
+    private BorderPane parent;
 
     /**
      * Privater Singleton-Konstruktor
+     *
+     * @since 1.0
      */
     private MainView() {
-        component = new BorderPane();
+        parent = new BorderPane();
+
         BorderPane pane = new BorderPane();
         pane.setCenter(new ImageView(new Image(getClass().getResourceAsStream(Constants.IMAGE_ROOT + "icon.png"))));
         setContent(pane); // so sähe der Aufruf von außen aus...
+
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
@@ -53,13 +59,14 @@ class MainView implements Component {
         pythagoras.getChildren().add(new TreeItem<>("Kathetensatz"));
         pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
         treeView.getRoot().getChildren().add(pythagoras);
-        getComponent().setLeft(treeView);
+        getParent().setLeft(treeView);
     }
 
     /**
      * Singleton-Instanzoperation
      *
      * @return einzige Instanz von <tt>MainMenu</tt>
+     * @since 1.0
      */
     static MainView getInstance() {
         if (instance == null)
@@ -68,29 +75,32 @@ class MainView implements Component {
     }
 
     /**
-     * Nützliche Methode für das Setzen des angezeigten Hauptinhalts
+     * Implementierung und Spezialisierung der Interface-Methode
      *
-     * @param content Anzuzeigender Inhalt
+     * @return Enthaltene GUI-Komponente
+     * @since 1.0
      */
-    void setContent(Parent content) {
-        component.setCenter(content);
+    public BorderPane getParent() {
+        return parent;
     }
 
     /**
      * Gettter-Methode für den momentan angezeigten Hauptinhalt
      *
      * @return Aktuell dargestellter Inhalt
+     * @since 1.0
      */
     Parent getContent() {
-        return (Parent) component.getCenter();
+        return (Parent) parent.getCenter();
     }
 
     /**
-     * Implementierung und Spezialisierung der Interface-Methode
+     * Nützliche Methode für das Setzen des angezeigten Hauptinhalts
      *
-     * @return Enthaltene GUI-Komponente
+     * @param content Anzuzeigender Inhalt
+     * @since 1.0
      */
-    public BorderPane getComponent() {
-        return component;
+    void setContent(Parent content) {
+        parent.setCenter(content);
     }
 }

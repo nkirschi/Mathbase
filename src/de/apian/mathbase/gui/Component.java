@@ -23,10 +23,12 @@ import javafx.scene.Parent;
  * @since 1.0
  */
 interface Component {
+
     /**
      * Einzige Methode des funktionalen Interfaces
      *
      * @return Darzustellende GUI-Komponente
+     * @since 1.0
      */
-    Parent getComponent();
+    Parent getParent();
 }

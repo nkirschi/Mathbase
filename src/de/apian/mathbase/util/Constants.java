@@ -6,22 +6,42 @@
 
 package de.apian.mathbase.util;
 
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
 /**
- * Utility-Klasse mit statischen Konstanten
+ * Utility-Klasse mit statischen Konstanten zur universellen Anpassung bestimmter Parameter.
+ *
+ * @since 1.0
  */
 public class Constants {
-    // Allgemein
 
     /**
      * Aktuelle Version des Programms
+     *
+     * @since 1.0
      */
     public static final String APP_VERSION = "1.0";
 
-
-    // Bilder
-
     /**
      * Vom Klassenpfad ausgehender Pfad zum Bilderpaket
+     *
+     * @since 1.0
      */
     public static final String IMAGE_ROOT = "/de/apian/mathbase/images/";
+
+    /**
+     * Standard-Schriftart
+     *
+     * @since 1.0
+     */
+    public static final Font DEFAULT_FONT = Font.loadFont(
+            Constants.class.getResourceAsStream("/de/apian/mathbase/fonts/ADAM.CG_PRO.otf"), 11.0);
+
+    /**
+     * Standard-Schriftfarbe
+     *
+     * @since 1.0
+     */
+    public static final Color DEFAULT_COLOR = Color.BLACK;
 }
