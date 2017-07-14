@@ -7,12 +7,14 @@
 package de.apian.mathbase.gui;
 
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+
+import java.io.IOException;
 
 /**
  * Hauptansicht des Programms mit einem BorderPane.
@@ -46,7 +48,11 @@ class MainView implements Component {
         parent = new BorderPane();
 
         BorderPane pane = new BorderPane();
-        pane.setCenter(new ImageView(new Image(getClass().getResourceAsStream(Constants.IMAGE_ROOT + "icon.png"))));
+        try {
+            pane.setCenter(new ImageView(Images.fetch(Constants.IMAGE_ROOT + "icon.png", true)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setContent(pane); // so sähe der Aufruf von außen aus...
 
         TreeView<String> treeView = new TreeView<>();

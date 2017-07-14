@@ -28,7 +28,7 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final String IMAGE_ROOT = "/de/apian/mathbase/images/";
+    public static final String IMAGE_ROOT = "de/apian/mathbase/images/";
 
     /**
      * Standard-Schriftart

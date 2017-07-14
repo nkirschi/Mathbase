@@ -7,13 +7,15 @@
 package de.apian.mathbase.gui;
 
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 /**
  * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
@@ -113,7 +115,11 @@ public class Mathbase extends Application {
         stage.setTitle("Mathbase " + Constants.APP_VERSION);
         stage.setWidth(800);
         stage.setHeight(600);
-        stage.getIcons().addAll(new Image(getClass().getResourceAsStream(Constants.IMAGE_ROOT + "icon.png")));
+        try {
+            stage.getIcons().add(Images.fetch(Constants.IMAGE_ROOT + "icon.png", true));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         stage.setOnCloseRequest(e -> cleanUp());
         changeTo(MainView.getInstance());
     }
