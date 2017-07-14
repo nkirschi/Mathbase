@@ -9,13 +9,13 @@
     <!-- Möglichkeit 1: Themengebiet, Thema und Unterthema (3-gliedrig) -->
     <subject title="Kryptologie" icon="nsa.jpg">
         <topic title="Die Cäsar-Verschlüsselung" icon="cäsar.gif">
-            <subtopic title="Häufigkeitsanalyse" icon="dagobert.png">
+            <issue title="Häufigkeitsanalyse" icon="dagobert.png">
                 <content type="image" path="diagramm.jpg"/>
                 <content type="worksheet" path="caesar.pdf"/>
                 <content type="worksheet" path="caesar.docx"/>
                 <content type="video" path="hackerbacker.mp4"/>
                 <content type="geogebra" path="visual.ggb"/>
-            </subtopic>
+            </issue>
         </topic>
     </subject>
 
