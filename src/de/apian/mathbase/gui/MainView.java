@@ -6,12 +6,13 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.util.Constants;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 
 /**
  * Hauptansicht des Programms mit einem BorderPane.
@@ -20,14 +21,14 @@ import javafx.scene.layout.Pane;
  * @version 1.0
  * @since 1.0
  */
-public class MainMenu implements View {
+class MainView implements Component {
 
     /**
      * Statische Instanzreferenz auf das Singleton <tt>MainMenu</tt>
      *
      * @since 1.0
      */
-    protected static MainMenu instance;
+    private static MainView instance;
 
     /**
      * Komponente dieser Ansicht
@@ -37,11 +38,11 @@ public class MainMenu implements View {
     /**
      * Privater Singleton-Konstruktor
      */
-    private MainMenu() {
+    private MainView() {
         component = new BorderPane();
         BorderPane pane = new BorderPane();
-        pane.setCenter(new ImageView(new Image(getClass().getResourceAsStream("/de/apian/mathbase/images/icon.png"))));
-        changeContentTo(pane); // so sähe der Aufruf von außen aus...
+        pane.setCenter(new ImageView(new Image(getClass().getResourceAsStream(Constants.IMAGE_ROOT + "icon.png"))));
+        setContent(pane); // so sähe der Aufruf von außen aus...
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
@@ -52,7 +53,7 @@ public class MainMenu implements View {
         pythagoras.getChildren().add(new TreeItem<>("Kathetensatz"));
         pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
         treeView.getRoot().getChildren().add(pythagoras);
-        component.setLeft(treeView);
+        getComponent().setLeft(treeView);
     }
 
     /**
@@ -60,27 +61,35 @@ public class MainMenu implements View {
      *
      * @return einzige Instanz von <tt>MainMenu</tt>
      */
-    public static MainMenu getInstance() {
+    static MainView getInstance() {
         if (instance == null)
-            instance = new MainMenu();
+            instance = new MainView();
         return instance;
     }
 
     /**
-     * Nützliche Methode für das Setzen des Angezeigten Hauptinhalts
+     * Nützliche Methode für das Setzen des angezeigten Hauptinhalts
      *
      * @param content Anzuzeigender Inhalt
      */
-    public void changeContentTo(Pane content) {
+    void setContent(Parent content) {
         component.setCenter(content);
     }
 
     /**
-     * Implementierung der Interface-Methode
+     * Gettter-Methode für den momentan angezeigten Hauptinhalt
+     *
+     * @return Aktuell dargestellter Inhalt
+     */
+    Parent getContent() {
+        return (Parent) component.getCenter();
+    }
+
+    /**
+     * Implementierung und Spezialisierung der Interface-Methode
      *
      * @return Enthaltene GUI-Komponente
      */
-    @Override
     public BorderPane getComponent() {
         return component;
     }

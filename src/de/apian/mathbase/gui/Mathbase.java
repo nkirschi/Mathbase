@@ -6,7 +6,9 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.util.Constants;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
@@ -15,7 +17,7 @@ import javafx.stage.StageStyle;
 
 /**
  * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
- *
+ * <p>
  * Der Konstruktor sollte niemals explizit aufgerufen werden; ein auf diese Weise erzeugtes <tt>Mathbase</tt>-Objekt
  * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster <tt>stage</tt> hält,
  * die es einzig und allein durch die Erzeugung von JavaFX beim Programmstart höchstpersönlich erhält.
@@ -41,6 +43,8 @@ public class Mathbase extends Application {
 
     /**
      * Ghost-Konstruktor, der wegen JavaFX <tt>public</tt>-Sichtbarkeit benötigt
+     *
+     * @since 1.0
      */
     public Mathbase() {
         instance = this;
@@ -50,6 +54,7 @@ public class Mathbase extends Application {
      * Hauptmethode der Applikation
      *
      * @param args Kommandozeilenargumente
+     * @since 1.0
      */
     public static void main(String[] args) {
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
@@ -58,7 +63,8 @@ public class Mathbase extends Application {
     /**
      * Singleton-Instanzoperation
      *
-     * @return Die einzige Instanz von <tt>Mathbase</tt>
+     * @return Einzige Instanz von <tt>Mathbase</tt>
+     * @since 1.0
      */
     static Mathbase getInstance() {
         return instance;
@@ -67,7 +73,8 @@ public class Mathbase extends Application {
     /**
      * Einstiegsmethode der JavaFX-Anwendung
      *
-     * @param stage vom Framework übergebenes Hauptfenster
+     * @param stage Vom Framework übergebenes Hauptfenster
+     * @since 1.0
      */
     @Override
     public void start(Stage stage) {
@@ -77,41 +84,48 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Methode zum Wechseln der aktuellen Ansicht
+     * Methode zum Wechseln der aktuellen Szene zu einer gegebenen Komponente
      *
-     * @param view anzuzeigende <tt>View</tt>
+     * @param component Anzuzeigende <tt>Component</tt>
+     * @since 1.0
      */
-    void changeTo(View view) {
-        stage.setScene(new Scene(view.getComponent()));
+    void changeTo(Component component) {
+        stage.setScene(new Scene(component.getComponent()));
     }
 
     /**
      * Getter-Methode für die momentan auf der Bühne befindliche Szene
      *
      * @return aktuell im Hauptfenster angezeigte Szene
+     * @since 1.0
      */
-    Scene getCurrentScene() {
-        return stage.getScene();
+    Parent getCurrentComponent() {
+        return stage.getScene().getRoot();
     }
 
     /**
      * Delegierte Methode zur Initialisierung des Hauptfensters
+     *
+     * @since 1.0
      */
     private void initStage() {
-        stage.setTitle("Mathbase 1.0");
+        stage.setTitle("Mathbase " + Constants.APP_VERSION);
         stage.setWidth(800);
         stage.setHeight(600);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/de/apian/mathbase/images/icon.png")));
+        stage.getIcons().addAll(new Image(getClass().getResourceAsStream(Constants.IMAGE_ROOT + "icon.png")));
         stage.setOnCloseRequest(e -> cleanUp());
-        changeTo(MainMenu.getInstance());
+        changeTo(MainView.getInstance());
     }
 
     /**
      * Routine bei Beendigung des Programms
+     *
+     * @since 1.0
      */
     private void cleanUp() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Mathbase");
+        // Alerts ersetzen den JOptionPane-Dialog
+        Alert alert = new Alert(Alert.AlertType.WARNING); // Nur ein Test :D
+        alert.setTitle("Mathbase " + Constants.APP_VERSION);
         alert.setHeaderText("Eine Mitteilung...");
         alert.setContentText("Sie widerwärtiger Unhold!");
         alert.initOwner(stage);
