@@ -17,16 +17,16 @@
                 <content type="geogebra" path="visual.ggb"/>
             </subtopic>
         </topic>
+    </subject>
 
-        <!-- Möglichkeit 2: Themengebiet und Thema (2-gliedrig) -->
-        <subject title="Graphentheorie" icon="graf_zahl.jpg">
-            <topic title="Einfache Graphen" icon="easy.png">
-                <content type="worksheet" path="brueckenproblem.pdf"/>
-                <content type="worksheet" path="brueckenproblem.docx"/>
-                <content type="image" path="house_of_nikolaus.gif"/>
-                <content type="application" path="graph.exe"/>
-                <content type="video" path="graphitti.np4"/>
-            </topic>
-        </subject>
+    <!-- Möglichkeit 2: Themengebiet und Thema (2-gliedrig) -->
+    <subject title="Graphentheorie" icon="graf_zahl.jpg">
+        <topic title="Einfache Graphen" icon="easy.png">
+            <content type="worksheet" path="brueckenproblem.pdf"/>
+            <content type="worksheet" path="brueckenproblem.docx"/>
+            <content type="image" path="house_of_nikolaus.gif"/>
+            <content type="application" path="graph.exe"/>
+            <content type="video" path="graphitti.np4"/>
+        </topic>
     </subject>
 </mathbase>
