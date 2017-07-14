@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
+  ~ This product is licensed under the GNU General Public License v3.0.
+  ~ See LICENSE file for further information.
+  -->
+
+<!-- Der Nutzer kann zwischen zwei Möglichkeiten der thematischen Unterteilung wählen -->
+<mathbase>
+    <!-- Möglichkeit 1: Themengebiet, Thema und Unterthema (3-gliedrig) -->
+    <subject title="Kryptologie" icon="nsa.jpg">
+        <topic title="Die Cäsar-Verschlüsselung" icon="cäsar.gif">
+            <subtopic title="Häufigkeitsanalyse" icon="dagobert.png">
+                <content type="image" path="diagramm.jpg"/>
+                <content type="worksheet" path="caesar.pdf"/>
+                <content type="worksheet" path="caesar.docx"/>
+                <content type="video" path="hackerbacker.mp4"/>
+                <content type="geogebra" path="visual.ggb"/>
+            </subtopic>
+        </topic>
+
+        <!-- Möglichkeit 2: Themengebiet und Thema (2-gliedrig) -->
+        <subject title="Graphentheorie" icon="graf_zahl.jpg">
+            <topic title="Einfache Graphen" icon="easy.png">
+                <content type="worksheet" path="brueckenproblem.pdf"/>
+                <content type="worksheet" path="brueckenproblem.docx"/>
+                <content type="image" path="house_of_nikolaus.gif"/>
+                <content type="application" path="graph.exe"/>
+                <content type="video" path="graphitti.np4"/>
+            </topic>
+        </subject>
+    </subject>
+</mathbase>
