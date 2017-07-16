@@ -6,8 +6,10 @@
 
 package de.apian.mathbase.gui;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.InternalError;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logger;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
@@ -60,6 +63,7 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     public static void main(String[] args) {
+        Logger.log(Level.SEVERE, "Das Programm wurde gestartet!", new InternalError("Na i mog ned."));
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
     }
 
@@ -97,12 +101,12 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Getter-Methode für die momentan auf der Bühne befindliche Szene
+     * Getter-Methode für die in der momentan auf der Bühne befindlichen Szene enthaltene Komponente
      *
      * @return aktuell im Hauptfenster angezeigte Szene
      * @since 1.0
      */
-    Parent getCurrentComponent() {
+    Parent getRoot() {
         return stage.getScene().getRoot();
     }
 

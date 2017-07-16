@@ -37,7 +37,7 @@ class MainView implements Component {
      *
      * @since 1.0
      */
-    private BorderPane parent;
+    private final BorderPane parent;
 
     /**
      * Privater Singleton-Konstruktor
@@ -54,7 +54,6 @@ class MainView implements Component {
             e.printStackTrace();
         }
         setContent(pane); // so sähe der Aufruf von außen aus...
-
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
