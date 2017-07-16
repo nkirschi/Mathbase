@@ -12,6 +12,8 @@ import javafx.scene.text.Font;
 /**
  * Utility-Klasse mit statischen Konstanten zur universellen Anpassung bestimmter Parameter.
  *
+ * @author Nikolas Kirschstein
+ * @version 1.0
  * @since 1.0
  */
 public class Constants {

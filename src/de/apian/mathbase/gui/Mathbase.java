@@ -23,8 +23,8 @@ import java.util.logging.Level;
 /**
  * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
  * <p>
- * Der Konstruktor sollte niemals explizit aufgerufen werden; ein auf diese Weise erzeugtes <tt>Mathbase</tt>-Objekt
- * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster <tt>stage</tt> hält,
+ * Der Konstruktor sollte niemals explizit aufgerufen werden; ein auf diese Weise erzeugtes {@code Mathbase} -Objekt
+ * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster {@code stage}  hält,
  * die es einzig und allein durch die Erzeugung von JavaFX beim Programmstart höchstpersönlich erhält.
  *
  * @author Nikolas Kirschstein
@@ -34,13 +34,13 @@ import java.util.logging.Level;
 public class Mathbase extends Application {
 
     /**
-     * Statische Instanzreferenz auf das Singleton <tt>Mathbase</tt>
+     * Statische Instanzreferenz auf das Singleton {@code Mathbase}
      *
      * @since 1.0
      */
     private static Mathbase instance;
     /**
-     * Referenz auf das Hauptfenster <tt>stage</tt>
+     * Referenz auf das Hauptfenster {@code stage}
      *
      * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
      * @since 1.0
@@ -48,7 +48,7 @@ public class Mathbase extends Application {
     private Stage stage;
 
     /**
-     * Ghost-Konstruktor, der wegen JavaFX <tt>public</tt>-Sichtbarkeit benötigt
+     * Ghost-Konstruktor, der wegen JavaFX {@code public} -Sichtbarkeit benötigt
      *
      * @since 1.0
      */
@@ -70,7 +70,7 @@ public class Mathbase extends Application {
     /**
      * Singleton-Instanzoperation
      *
-     * @return Einzige Instanz von <tt>Mathbase</tt>
+     * @return Einzige Instanz von {@code Mathbase}
      * @since 1.0
      */
     static Mathbase getInstance() {
@@ -93,7 +93,7 @@ public class Mathbase extends Application {
     /**
      * Methode zum Wechseln der aktuellen Szene zu einer gegebenen Komponente
      *
-     * @param component Anzuzeigende <tt>Component</tt>
+     * @param component Anzuzeigende {@code Component}
      * @since 1.0
      */
     void changeTo(Component component) {

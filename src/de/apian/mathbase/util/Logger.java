@@ -12,14 +12,20 @@ import java.util.Date;
 import java.util.logging.*;
 
 /**
- * Hilfsklasse mit statischen Methoden zum Loggen in verschiedene Medien
+ * Hilfsklasse mit statischen Methoden zum Loggen in verschiedene Medien.
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
  */
 public class Logger {
     /**
      * Referenz auf den globalen Logger für die Applikation
      * <p>
      * Die API sieht eigentlich vor, in jeder Klasse, die etwas loggen können soll,
-     * ein eigenes <tt>Logger</tt>-Objekt zu erstellen, aber für Mathbase reicht uns der hier...
+     * ein eigenes {@code Logger} -Objekt zu erstellen, aber für Mathbase reicht uns der hier...
+     *
+     * @since 1.0
      */
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
 
@@ -46,9 +52,10 @@ public class Logger {
     /**
      * Durchschiebemethode zum Loggen
      *
-     * @param lvl Schwere des Ereignisses, z.B. <tt>Logger.INFO</tt>
+     * @param lvl Schwere des Ereignisses, z.B. {@code Logger.INFO}
      * @param msg Zu loggende Nachricht
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html">Logger</a>
+     * @since 1.0
      */
     public static void log(Level lvl, String msg) {
         logger.log(lvl, msg);
@@ -57,10 +64,11 @@ public class Logger {
     /**
      * Durchschiebemethode zum Loggen plus ein Werfbares
      *
-     * @param lvl Schwere des Ereignisses, z.B. <tt>Logger.INFO</tt>
+     * @param lvl Schwere des Ereignisses, z.B. {@code Logger.INFO}
      * @param msg Zu loggende Nachricht
-     * @param thr <tt>Throwable</tt>-Objekt, meist als <tt>Exception</tt>
+     * @param thr {@code Throwable} -Objekt, meist als {@code Exception}
      * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html">Logger</a>
+     * @since 1.0
      */
     public static void log(Level lvl, String msg, Throwable thr) {
         logger.log(lvl, msg, thr);
@@ -73,7 +81,7 @@ public class Logger {
         private SimpleDateFormat dateFormat; // Exemplar der Datumsformatierung
 
         /**
-         * Default-Konstruktor, der das <tt>DateFormat</tt> initialisiert
+         * Default-Konstruktor, der das {@code DateFormat}  initialisiert
          */
         LogFormatter() {
             dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
@@ -82,8 +90,9 @@ public class Logger {
         /**
          * Einzige Aufgabe des Formatierers... Formatieren!
          *
-         * @param record Von der Logging-API übergebener <tt>LogRecord</tt>
+         * @param record Von der Logging-API übergebener {@code LogRecord}
          * @return Formatierter String
+         * @since 1.0
          */
         @Override
         public String format(LogRecord record) {

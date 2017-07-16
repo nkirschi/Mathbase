@@ -12,7 +12,7 @@ import javafx.scene.Parent;
  * Abstraktion einer GUI-Komponente.
  * <p>
  * Im Gegensatz zu Swing sollten bei JavaFX möglichst keinerlei Bibliotheksklassen mehr beerbt werden.
- * Stattdessen wird das Prinzip der <b>Komposition</b> angewandt:
+ * Stattdessen wird das Prinzip der Komposition angewandt:
  * <p>
  * Jede für die Darstellung einer Komponente zuständige GUI-Klasse hält eine Referenz auf die betreffende Komponente
  * und bietet eine entsprechende Operation zur Rückgabe dieser.

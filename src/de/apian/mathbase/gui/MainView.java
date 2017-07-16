@@ -26,7 +26,7 @@ import java.io.IOException;
 class MainView implements Component {
 
     /**
-     * Statische Instanzreferenz auf das Singleton <tt>MainMenu</tt>
+     * Statische Instanzreferenz auf das Singleton {@code MainMenu}
      *
      * @since 1.0
      */
@@ -70,7 +70,7 @@ class MainView implements Component {
     /**
      * Singleton-Instanzoperation
      *
-     * @return einzige Instanz von <tt>MainMenu</tt>
+     * @return einzige Instanz von {@code MainMenu}
      * @since 1.0
      */
     static MainView getInstance() {

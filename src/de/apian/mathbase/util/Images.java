@@ -15,16 +15,24 @@ import java.util.Map;
 
 /**
  * Der Ressourcenlader für Bilder.
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
  */
 public class Images {
 
     /**
      * Cache für externe Bilder im Dateisystem
+     *
+     * @since 1.0
      */
     private static final Map<String, Image> externalCache = new HashMap<>();
 
     /**
      * Cache für Bilder innerhalb des Klassenpfads
+     *
+     * @since 1.0
      */
     private static final Map<String, Image> internalCache = new HashMap<>();
 
@@ -33,9 +41,10 @@ public class Images {
      *
      * @param path     Pfad des Bildes
      * @param internal Bestimmt, ob sich Bild innerhalb des Klassenpfades befindet oder nicht
-     * @return Gewünschtes Bild in Originalgröße als <tt>Image</tt>-Objekt
+     * @return Gewünschtes Bild in Originalgröße als {@code Image} -Objekt
      * @throws IOException Bei fehlender/korrupter Bilddatei bzw. unzureichenden Zugriffsrechten
      *                     oder sonstigen Dateisystemfehlern
+     * @since 1.0
      */
     public static Image fetch(String path, boolean internal) throws IOException {
         return internal ? fetchInternal(path) : fetchExternal(path);
@@ -45,9 +54,10 @@ public class Images {
      * Vereinfachung der allgemeinen Methode mit standardmäßig externem Laden
      *
      * @param path Pfad des Bildes
-     * @return Gewünschtes Bild in Originalgröße als <tt>Image</tt>-Objekt
+     * @return Gewünschtes Bild in Originalgröße als {@code Image} -Objekt
      * @throws IOException Bei fehlender/korrupter Bilddatei bzw. unzureichenden Zugriffsrechten
      *                     oder sonstigen Dateisystemfehlern
+     * @since 1.0
      */
     public static Image fetch(String path) throws IOException {
         return fetch(path, false);
@@ -57,9 +67,10 @@ public class Images {
      * Hilfsmethode für das Laden eines externen Bildes
      *
      * @param path Pfad des Bildes ausgehend vom Arbeitsverzeichnis des Programms
-     * @return Gewünschtes Bild in Originalgröße als <tt>Image</tt>-Objekt
+     * @return Gewünschtes Bild in Originalgröße als {@code Image} -Objekt
      * @throws IOException Bei fehlender/korrupter Bilddatei bzw. unzureichenden Zugriffsrechten
      *                     oder sonstigen Dateisystemfehlern
+     * @since 1.0
      */
     private static Image fetchExternal(String path) throws IOException {
         if (!externalCache.containsKey(path)) {
@@ -76,9 +87,10 @@ public class Images {
      * Hilfsmethode für das Laden eines innerhalb des Klassenpfades befindlichen Bildes
      *
      * @param path Pfad des Bildes ausgehend von der Wurzel des Klassenpfades
-     * @return Gewünschtes Bild in Originalgröße als <tt>Image</tt>-Objekt
+     * @return Gewünschtes Bild in Originalgröße als {@code Image} -Objekt
      * @throws IOException Bei fehlender/korrupter Bilddatei bzw. unzureichenden Zugriffsrechten
      *                     oder sonstigen Dateisystemfehlern
+     * @since 1.0
      */
     private static Image fetchInternal(String path) throws IOException {
         if (!internalCache.containsKey(path)) {
