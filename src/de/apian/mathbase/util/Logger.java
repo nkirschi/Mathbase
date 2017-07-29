@@ -116,11 +116,11 @@ public class Logger {
             String log = String.format(format, date, thread, level, message);
 
             if (record.getThrown() != null) {
-                String thrown = String.format("%s%n", record.getThrown());
+                StringBuilder thrown = new StringBuilder(String.format("%c%c%s%n", ' ', ' ', record.getThrown()));
                 for (StackTraceElement s : record.getThrown().getStackTrace()) {
-                    thrown += String.format("%c%c%c%c%s%n", ' ', ' ', ' ', ' ',
+                    thrown.append(String.format("%c%c%c%c%s%n", ' ', ' ', ' ', ' ',
                             "at " + s.getClassName() + "." + s.getMethodName() +
-                                    "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
+                                    "(" + s.getFileName() + ":" + s.getLineNumber() + ")"));
                 }
                 log += thrown;
             }
