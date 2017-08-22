@@ -30,3 +30,18 @@
         </topic>
     </subject>
 </mathbase>
+
+<topictree>
+<node title="Kryptologie" icon="">
+    <node title="Die Cäsar-Verschlüsselung" icon="cäsar.gif">
+        <node title="Häufigkeitsanalyse" icon="dagobert.png">
+            <content type="image" path="diagramm.jpg"/>
+            <content type="worksheet" path="caesar.pdf"/>
+            <content type="worksheet" path="caesar.docx"/>
+            <content type="video" path="hackerbacker.mp4"/>
+            <content type="geogebra" path="visual.ggb"/>
+            <content type="other" path="diggah.nfo"/>
+        </node>
+    </node>
+</node>
+</topictree>
