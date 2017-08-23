@@ -77,11 +77,13 @@ public class XMLFileHandler {
      * @since 1.0
      */
     public void saveDocToXml(String targetPath) throws IOException {
+        //Erzeut eine Quelle aus dem Document, ein Ziel aus dem Zielpfad und einen Transformer, der die XML-Datei schlussendlich erzeugt
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new File(targetPath));
         TransformerFactory tFactory = TransformerFactory.newInstance();
         try {
             Transformer transformer = tFactory.newTransformer();
+            //Parameter des Transformers werden so gesetzt, dass die XML-Datei später auch lesbar ist
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
