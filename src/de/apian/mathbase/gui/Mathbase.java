@@ -63,7 +63,7 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     public static void main(String[] args) {
-        Logger.log(Level.SEVERE, "Das Programm wurde gestartet!", new InternalError("Na i mog ned."));
+        Logger.log(Level.INFO, "Das Programm wurde gestartet!");
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
     }
 

@@ -66,18 +66,14 @@ public class XMLFileHandler {
             DocumentBuilder builder = dFactory.newDocumentBuilder();
             doc = builder.parse(filePath);
         } catch (ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
-            throw new IOException("Fehler beim Parsen der Datei");
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+            throw new IOException("Fehler beim Parsen der Datei", e);
         }
     }
 
     /**
      * Methode zum Speichern des {@code doc} -Objekts als XML-Datei
      *
-     * @param targetPath Pfad der Zieldatei
+     * @param targetPath Pfad der Zieldatei relativ zum Arbeitsverzeichnis
      * @throws IOException wenn das Speichern fehlgeschlagen ist
      * @since 1.0
      */
@@ -96,8 +92,7 @@ public class XMLFileHandler {
             //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
             transformer.transform(source, result);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Fehler beim Speichern der Datei \"" + targetPath + "\"");
+            throw new IOException("Fehler beim Speichern der Datei \"" + targetPath + "\"", e);
         }
     }
 
@@ -116,12 +111,7 @@ public class XMLFileHandler {
         NodeList tNodelist;
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
-        try {
-            tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
         return tNodelist;
     }
 
