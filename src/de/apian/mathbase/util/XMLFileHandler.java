@@ -7,6 +7,7 @@
 package de.apian.mathbase.util;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +18,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
 
@@ -70,7 +75,7 @@ public class XMLFileHandler {
     }
 
     /**
-     * Methode, die das Document Objekt in einer Datei speichert
+     * Methode zum Speichern des {@code doc} -Objekts als XML-Datei
      *
      * @param targetPath Pfad der Zieldatei
      * @throws IOException wenn das Speichern fehlgeschlagen ist
@@ -97,9 +102,33 @@ public class XMLFileHandler {
     }
 
     /**
-     * Getter-Methode für das {@code Document} -Objekt
+     * Methode zum Erzeugen eines {@code NodeList} -Objekts mithilfe des XPath-Parsers.
+     * <p>
+     * Erlaubt das leichte Herausfiltern und Bearbeiten bestimmer Inhalte der XML-Datei.
      *
-     * @return Das {@code Document} -Objekt
+     * @param myExpr XPath-Ausdruck
+     * @return {@code NodeList} -Objekt, welches vom XPath-Parser erzeugt wurde
+     * @throws XPathExpressionException wenn {@code myExpr} kein gültiger XPath-Ausdruck ist
+     * @see <a href="https://www.tutorialspoint.com/java_xml/java_xpath_parser.htm">Java XPath Parser</a>
+     * @since 1.0
+     */
+    public NodeList getNodeListXPath(String myExpr) throws XPathExpressionException {
+        NodeList tNodelist;
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        try {
+            tNodelist = (NodeList) xpath.compile(myExpr).evaluate(doc, XPathConstants.NODESET);
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return tNodelist;
+    }
+
+    /**
+     * Getter-Methode für das {@code doc} -Objekt
+     *
+     * @return Das {@code doc} -Objekt
      * @since 1.0
      */
     public Document getDoc() {
