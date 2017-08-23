@@ -99,7 +99,7 @@ class MainView implements Component {
     }
 
     /**
-     * Gettter-Methode für den momentan angezeigten Hauptinhalt
+     * Getter-Methode für den momentan angezeigten Hauptinhalt
      *
      * @return Aktuell dargestellter Inhalt
      * @since 1.0
