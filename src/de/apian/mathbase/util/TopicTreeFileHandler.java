@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
-import static de.apian.mathbase.util.Logger.*;
+import static de.apian.mathbase.util.Logger.log;
 
 /**
  * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Datein, welche die Struktur und Inhalte der Themen enthalten.
@@ -55,9 +55,26 @@ public class TopicTreeFileHandler {
      */
     private static final String BACKUP_FILEPATH = "topictree.xml.bak";
 
-    private static final String TYPE_ROOT = "topictree";
-    private static final String TYPE_NODE = "node";
-    private static final String TYPE_CONTENT = "content";
+    /**
+     * Bezeichner der Wurzel in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private static final String ROOT = "topictree";
+
+    /**
+     * Bezeichner der Knoten in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private static final String NODE = "node";
+
+    /**
+     * Bezeichner der Inhalte in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private static final String CONTENT = "content";
 
     /**
      * Privater Singleton-Konstruktor
@@ -123,13 +140,11 @@ public class TopicTreeFileHandler {
 
     /**
      * Erstellt ein Backup der originalen Datei im Pfad {@code BACKUP_FILEPATH} relativ zum Arbeitsverzeichnis
-     * <p>
-     * Kann auch aufgerufen werden, wenn der {@code TopicTreeFileHandler} noch nicht instanziert wurde
      *
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
      */
-    public static void createBackup() throws IOException{
+    public void createBackup() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_FILEPATH), Paths.get(BACKUP_FILEPATH), StandardCopyOption.REPLACE_EXISTING);
             log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_FILEPATH + "\" in \"" + BACKUP_FILEPATH + "\" erfolgreich abgeschlossen");
@@ -156,7 +171,7 @@ public class TopicTreeFileHandler {
             file.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                    "<" + TYPE_ROOT + "></" + TYPE_ROOT + ">");
+                    "<" + ROOT + "></" + ROOT + ">");
             writer.close();
             log(Level.INFO, "Datei \"" + ORIGINAL_FILEPATH + "\" wurde erfolgreich neu erstellt");
         } catch (IOException e) {
