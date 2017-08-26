@@ -75,7 +75,7 @@ public class Logger {
     }
 
     /**
-     * Eigener Formatierer fürs Logging
+     * Eigener Formatierer fürs Logging.
      */
     private static class LogFormatter extends Formatter {
         private SimpleDateFormat dateFormat; // Exemplar der Datumsformatierung

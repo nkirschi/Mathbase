@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Utility-Klasse zum Laden, Bearbeiten und Speichern von XML-Dateien
+ * Utility-Klasse zum Laden, Bearbeiten und Speichern von XML-Dateien.
  * <p>
  * Jedes Objekt dieser Klasse bearbeitet immer eine einzige XML-Datei und jede XML-Datei sollte nur von einem
  * {@code XMLFileHandler} -Objekt bearbeitet werden.
