@@ -31,7 +31,7 @@ import java.io.IOException;
  * Jedes Objekt dieser Klasse bearbeitet immer eine einzige XML-Datei und jede XML-Datei sollte nur von einem
  * {@code XMLFileHandler} -Objekt bearbeitet werden.
  * <p>
- * Die Dateien werden zuerst mit Hilfe der DOM-API eingelesen und dann als Nodelist zurückgegeben,
+ * Die Dateien werden zuerst mit Hilfe der DOM-API eingelesen und dann als NodeList zurückgegeben,
  * um die Bearbeitung der Datei für andere Klassen möglichst einfach zu gestalten.
  *
  * @author Benedikt Mödl
@@ -42,7 +42,7 @@ import java.io.IOException;
 public class XMLFileHandler {
 
     /**
-     * Dass {@code Document} -Objekt der eingelesenen XML-Datei.
+     * Das {@code Document}-Objekt der eingelesenen XML-Datei.
      *
      * @see <a href="https://docs.oracle.com/javase/7/docs/api/org/w3c/dom/Document.html">Document</a>
      * @since 1.0
@@ -97,12 +97,12 @@ public class XMLFileHandler {
     }
 
     /**
-     * Methode zum Erzeugen eines {@code NodeList} -Objekts mithilfe des XPath-Parsers.
+     * Methode zum Erzeugen eines {@code NodeList}-Objekts mithilfe des XPath-Parsers.
      * <p>
      * Erlaubt das leichte Herausfiltern und Bearbeiten bestimmer Inhalte der XML-Datei.
      *
      * @param myExpr XPath-Ausdruck
-     * @return {@code NodeList} -Objekt, welches vom XPath-Parser erzeugt wurde
+     * @return {@code NodeList}-Objekt, welches vom XPath-Parser erzeugt wurde
      * @throws XPathExpressionException wenn {@code myExpr} kein gültiger XPath-Ausdruck ist
      * @see <a href="https://www.tutorialspoint.com/java_xml/java_xpath_parser.htm">Java XPath Parser</a>
      * @since 1.0
@@ -116,9 +116,9 @@ public class XMLFileHandler {
     }
 
     /**
-     * Getter-Methode für das {@code doc} -Objekt
+     * Getter-Methode für das {@code doc}-Objekt
      *
-     * @return Das {@code doc} -Objekt
+     * @return Das {@code doc}-Objekt
      * @since 1.0
      */
     public Document getDoc() {

@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.gui;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.InternalError;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logger;
@@ -88,6 +87,18 @@ public class Mathbase extends Application {
         this.stage = stage;
         initStage();
         stage.show();
+        /* TODO Das sollte nur kommen, sobald jemand was verändern möchte
+           TODO Die Edit-Buttons sind einfach immer eingeblendet, aber solang kein gültiges pwd eingegeben wurde,
+           TODO kann der User halt nix machen
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Passwort eingeben");
+        dialog.setHeaderText("Administrator-Passwort");
+        dialog.setContentText("Um mediale Inhalte bearbeiten zu können, müssen Sie sich mit dem Admin-Passwort authentifizieren");
+        dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Benutzer", ButtonType.CANCEL.getButtonData()),
+                new ButtonType("Admin", ButtonType.OK.getButtonData()));
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(pwd -> System.out.println(pwd.equals("123456")));
+        */
     }
 
     /**

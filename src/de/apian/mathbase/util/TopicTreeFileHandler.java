@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import static de.apian.mathbase.util.Logger.log;
 
 /**
- * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Datein, welche die Struktur und Inhalte der Themen enthalten.
+ * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Dateien, welche die Struktur und Inhalte der Themen enthalten.
  *
  * @author Benedikt Mödl
  * @version 1.0
