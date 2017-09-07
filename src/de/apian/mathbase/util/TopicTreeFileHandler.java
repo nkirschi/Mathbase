@@ -40,7 +40,7 @@ public class TopicTreeFileHandler {
     /**
      * {@code XMLFileHandler} der XML-Datei
      *
-     * @see <a href="{@docRoot}/de/apian/mathbase/util/XMLFileHandler.html">Copyright</a>
+     * @see <a href="{@docRoot}/de/apian/mathbase/util/XMLFileHandler.html">XMLFileHandler</a>
      * @since 1.0
      */
     private XMLFileHandler xmlHandler;
@@ -175,10 +175,11 @@ public class TopicTreeFileHandler {
     }
 
     /**
-     * Erstellt die XML-Datei neu im Pfad {@code ORIGINAL_FILEPATH} relativ zum Arbeitsverzeichnis
+     * Erstellt die XML-Datei neu im Pfad {@code ORIGINAL_FILEPATH} relativ zum Arbeitsverzeichnis.
      * <p>
      * Kann auch aufgerufen werden, wenn der {@code TopicTreeFileHandler} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
+     * </p>
      *
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
