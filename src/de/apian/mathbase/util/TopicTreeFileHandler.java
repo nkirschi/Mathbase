@@ -6,6 +6,9 @@
 
 package de.apian.mathbase.util;
 
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -60,21 +63,35 @@ public class TopicTreeFileHandler {
      *
      * @since 1.0
      */
-    private static final String ROOT = "topictree";
+    private static final String TAG_ROOT = "topictree";
 
     /**
      * Bezeichner der Knoten in der XML-Datei
      *
      * @since 1.0
      */
-    private static final String NODE = "node";
+    private final String TAG_NODE = "node";
 
     /**
      * Bezeichner der Inhalte in der XML-Datei
      *
      * @since 1.0
      */
-    private static final String CONTENT = "content";
+    private final String TAG_CONTENT = "content";
+
+    /**
+     * Bezeichner des Attributs {@code title} in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private final String ATTR_TITLE = "title";
+
+    /**
+     * Bezeichner des Attributs {@code type} (Typ der Inhalte) in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private final String ATTR_TYPE = "type";
 
     /**
      * Privater Singleton-Konstruktor
@@ -171,7 +188,7 @@ public class TopicTreeFileHandler {
             file.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                    "<" + ROOT + "></" + ROOT + ">");
+                    "<" + TAG_ROOT + "></" + TAG_ROOT + ">");
             writer.close();
             log(Level.INFO, "Datei \"" + ORIGINAL_FILEPATH + "\" wurde erfolgreich neu erstellt");
         } catch (IOException e) {
@@ -180,5 +197,24 @@ public class TopicTreeFileHandler {
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
+    }
+
+    /**
+     * Überprüft, ob bereits ein Knoten mit diesem Titel vorhanden ist.
+     *
+     * @param title Der zu überprüfende Titel
+     * @since 1.0
+     */
+    public boolean checkNodeTitle(String title) {
+        boolean exists = false;
+        try {
+            NodeList nodeList = xmlHandler.getNodeListXPath(TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
+            if(nodeList.getLength() > 0) exists = true;
+            log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
+        } catch (XPathExpressionException e) {
+            log(Level.WARNING, "Konnte Knoten-Titel \"" + title + "\" nicht überprüfen", e);
+            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+        }
+        return exists;
     }
 }
