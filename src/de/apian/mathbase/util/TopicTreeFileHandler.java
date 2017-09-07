@@ -263,7 +263,7 @@ public class TopicTreeFileHandler {
 /**
  * Stellt ein leeres {@code NodeList}-Objekt dar.
  * <p>
- * Kann als standardmäßiges {@code NodeList}-Rückgabe-Objekt verwendet,
+ * Kann als standardmäßiges {@code NodeList}-Rückgabe-Objekt verwendet werden,
  * um eine {@code NullPointerException} zu vermeiden.
  * Dies setzt allerdings vorraus, dass alle Methoden, die evtl. dieses Objekt verarbeiten,
  * immer die Länge der Nodelist überprüfen.
