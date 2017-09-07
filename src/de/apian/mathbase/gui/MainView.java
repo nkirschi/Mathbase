@@ -83,7 +83,7 @@ class MainView implements Component {
      *
      * @since 1.0
      */
-    private void initTreeView(){
+    private void initTreeView() {
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);

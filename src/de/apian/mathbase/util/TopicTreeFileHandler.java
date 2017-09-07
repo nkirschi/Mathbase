@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.util;
 
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -101,12 +100,12 @@ public class TopicTreeFileHandler {
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten
      * @since 1.0
      */
-    private TopicTreeFileHandler() throws IOException{
+    private TopicTreeFileHandler() throws IOException {
         //Versucht zuerst die Original-Datei zu laden
         try {
             xmlHandler = new XMLFileHandler(ORIGINAL_FILEPATH);
             log(Level.INFO, "Original-Datei \"" + ORIGINAL_FILEPATH + "\" erfolgreich geladen");
-        } catch (IOException e1){
+        } catch (IOException e1) {
             log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_FILEPATH + "\" nicht laden", e1);
             try {
                 //Versucht die Backup-Datei wiederherzustellen
@@ -114,7 +113,7 @@ public class TopicTreeFileHandler {
                 xmlHandler = new XMLFileHandler(ORIGINAL_FILEPATH);
                 log(Level.INFO, "Original-Datei \"" + ORIGINAL_FILEPATH + "\" erfolgreich aus \""
                         + BACKUP_FILEPATH + "\" wiederhergestellt und geladen");
-            } catch (IOException e2){
+            } catch (IOException e2) {
                 log(Level.SEVERE, "Datei \"" + ORIGINAL_FILEPATH + "\" konnte nicht aus Backup-Datei \""
                         + BACKUP_FILEPATH + "\" wiederhergestellt werden", e2);
 
@@ -130,10 +129,10 @@ public class TopicTreeFileHandler {
      *
      * @return einzige Instanz von {@code TopicTreeFileHandler}
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten und
-     *         deswegen keine Instanz von {@code TopicTreeFileHandler} erzeugt werden konnte
+     *                     deswegen keine Instanz von {@code TopicTreeFileHandler} erzeugt werden konnte
      * @since 1.0
      */
-    public static TopicTreeFileHandler getInstance() throws IOException{
+    public static TopicTreeFileHandler getInstance() throws IOException {
         if (instance == null)
             instance = new TopicTreeFileHandler();
         return instance;
@@ -145,7 +144,7 @@ public class TopicTreeFileHandler {
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
-    public void save() throws IOException{
+    public void save() throws IOException {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_FILEPATH);
             log(Level.INFO, "Speichern von \"" + ORIGINAL_FILEPATH + "\" erfolgreich abgeschlossen");
@@ -184,7 +183,7 @@ public class TopicTreeFileHandler {
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
      */
-    public static void createNewFile() throws IOException{
+    public static void createNewFile() throws IOException {
         try {
             File file = new File(ORIGINAL_FILEPATH);
             file.createNewFile();
@@ -212,7 +211,7 @@ public class TopicTreeFileHandler {
         boolean exists = false;
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
-            if(nodeList.getLength() > 0) exists = true;
+            if (nodeList.getLength() > 0) exists = true;
             log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
         } catch (XPathExpressionException e) {
             log(Level.WARNING, "Konnte Knoten-Titel \"" + title + "\" nicht überprüfen", e);
@@ -228,7 +227,7 @@ public class TopicTreeFileHandler {
      * @return Eine {@code NodeList} aller Inhalte des Knotens
      * @since 1.0
      */
-    public NodeList getContentList(String title){
+    public NodeList getContentList(String title) {
         NodeList nodeList = new EmptyNodeList();
         try {
             nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
@@ -247,7 +246,7 @@ public class TopicTreeFileHandler {
      * @return Eine {@code Nodelist} aller direkten Kind-Knoten des Knotens
      * @since 1.0
      */
-    public NodeList getNodeChildren(String title){
+    public NodeList getNodeChildren(String title) {
         NodeList nodeList = new EmptyNodeList();
         try {
             nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
@@ -270,7 +269,7 @@ public class TopicTreeFileHandler {
 class EmptyNodeList implements NodeList {
     //Damit bei Fehler trotzdem eine leere NodeList zurückgegeben wird
 
-    EmptyNodeList(){
+    EmptyNodeList() {
 
     }
 
