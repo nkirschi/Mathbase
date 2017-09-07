@@ -63,17 +63,7 @@ class MainView implements Component {
             e.printStackTrace();
         }
         setContent(pane); // so sähe der Aufruf von außen aus...
-        TreeView<String> treeView = new TreeView<>();
-        treeView.setRoot(new TreeItem<>());
-        treeView.setShowRoot(false);
-        treeView.setEditable(true);
-        TreeItem<String> pythagoras = new TreeItem<>("Satzgruppe des Pythagoras");
-        pythagoras.setExpanded(true);
-        pythagoras.getChildren().add(new TreeItem<>("Satz des Pythagoras"));
-        pythagoras.getChildren().add(new TreeItem<>("Kathetensatz"));
-        pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
-        treeView.getRoot().getChildren().add(pythagoras);
-        getParent().setLeft(treeView);
+        initTreeView();
     }
 
     /**
@@ -86,6 +76,29 @@ class MainView implements Component {
         if (instance == null)
             instance = new MainView();
         return instance;
+    }
+
+    /**
+     * Initialisiert die Baum-Ansicht. Kann auch zum updaten der Baum-Ansicht verwendet werden
+     *
+     * @since 1.0
+     */
+    private void initTreeView(){
+        TreeView<String> treeView = new TreeView<>();
+        treeView.setRoot(new TreeItem<>());
+        treeView.setShowRoot(false);
+        treeView.setEditable(true);
+
+        //TODO Implementieren
+        TreeItem<String> pythagoras = new TreeItem<>("Satzgruppe des Pythagoras");
+        pythagoras.setExpanded(true);
+        pythagoras.getChildren().add(new TreeItem<>("Satz des Pythagoras"));
+        pythagoras.getChildren().add(new TreeItem<>("Kathetensatz"));
+        pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
+        //treeView.getSelectionModel().getSelectedItem();
+        treeView.getRoot().getChildren().add(pythagoras);
+
+        getParent().setLeft(treeView);
     }
 
     /**

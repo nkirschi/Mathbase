@@ -15,5 +15,10 @@
                 <content type="other" path="diggah.nfo"/>
             </node>
         </node>
+        <node title="Käsewurst" icon="dagobert.png">
+            <content type="image" path="diagramm.jpg"/>
+            <content type="worksheet" path="caesar.pdf"/>
+            <content type="other" path="diggah.nfo"/>
+        </node>
     </node>
 </topictree>

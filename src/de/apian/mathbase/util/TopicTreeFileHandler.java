@@ -205,6 +205,7 @@ public class TopicTreeFileHandler {
      * Überprüft, ob bereits ein Knoten mit diesem Titel vorhanden ist.
      *
      * @param title Der zu überprüfende Titel
+     * @return Ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
     public boolean checkNodeTitle(String title) {
@@ -224,20 +225,11 @@ public class TopicTreeFileHandler {
      * Gibt eine {@code NodeList} aller Inhalte eines bestimmten Knotens zurück
      *
      * @param title Der Titel des Knotens
+     * @return Eine {@code NodeList} aller Inhalte des Knotens
      * @since 1.0
      */
     public NodeList getContentList(String title){
-        NodeList nodeList = new NodeList() {
-            @Override
-            public Node item(int index) {
-                return null;
-            }
-
-            @Override
-            public int getLength() {
-                return 0;
-            }
-        }; //Damit bei Fehler trotzdem eine leere NodeList zurückgegeben wird
+        NodeList nodeList = new EmptyNodeList();
         try {
             nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
             log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
@@ -246,5 +238,49 @@ public class TopicTreeFileHandler {
             //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
         }
         return nodeList;
+    }
+
+    /**
+     * Gibt eine {@code NodeList} aller direkten Kind-Knoten eines bestimmten Knotens zurück
+     *
+     * @param title Der Titel des Knotens
+     * @return Eine {@code Nodelist} aller direkten Kind-Knoten des Knotens
+     * @since 1.0
+     */
+    public NodeList getNodeChildren(String title){
+        NodeList nodeList = new EmptyNodeList();
+        try {
+            nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
+            log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
+        } catch (XPathExpressionException e) {
+            log(Level.WARNING, "Konnte Kind-Knoten des Knotens mit Titel \"" + title + "\" nicht zurückgeben", e);
+            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+        }
+        return nodeList;
+    }
+}
+
+/**
+ * Stellt ein leeres {@NodeList}-Objekt dar.
+ *
+ * @author Benedikt Mödl
+ * @version 1.0
+ * @since 1.0
+ */
+class EmptyNodeList implements NodeList {
+    //Damit bei Fehler trotzdem eine leere NodeList zurückgegeben wird
+
+    EmptyNodeList(){
+
+    }
+
+    @Override
+    public Node item(int index) {
+        return null;
+    }
+
+    @Override
+    public int getLength() {
+        return 0;
     }
 }
