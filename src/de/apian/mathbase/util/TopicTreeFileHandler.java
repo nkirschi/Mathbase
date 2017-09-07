@@ -6,6 +6,8 @@
 
 package de.apian.mathbase.util;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -208,7 +210,7 @@ public class TopicTreeFileHandler {
     public boolean checkNodeTitle(String title) {
         boolean exists = false;
         try {
-            NodeList nodeList = xmlHandler.getNodeListXPath(TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
             if(nodeList.getLength() > 0) exists = true;
             log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
         } catch (XPathExpressionException e) {
@@ -216,5 +218,33 @@ public class TopicTreeFileHandler {
             //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
         }
         return exists;
+    }
+
+    /**
+     * Gibt eine {@code NodeList} aller Inhalte eines bestimmten Knotens zurück
+     *
+     * @param title Der Titel des Knotens
+     * @since 1.0
+     */
+    public NodeList getContentList(String title){
+        NodeList nodeList = new NodeList() {
+            @Override
+            public Node item(int index) {
+                return null;
+            }
+
+            @Override
+            public int getLength() {
+                return 0;
+            }
+        }; //Damit bei Fehler trotzdem eine leere NodeList zurückgegeben wird
+        try {
+            nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
+            log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
+        } catch (XPathExpressionException e) {
+            log(Level.WARNING, "Konnte Inhalte des Knotens mit Titel \"" + title + "\" nicht zurückgeben", e);
+            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+        }
+        return nodeList;
     }
 }
