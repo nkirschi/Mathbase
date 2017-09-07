@@ -261,24 +261,47 @@ public class TopicTreeFileHandler {
 }
 
 /**
- * Stellt ein leeres {@NodeList}-Objekt dar.
+ * Stellt ein leeres {@code NodeList}-Objekt dar.
+ * <p>
+ * Kann als standardmäßiges {@code NodeList}-Rückgabe-Objekt verwendet,
+ * um eine {@code NullPointerException} zu vermeiden.
+ * Dies setzt allerdings vorraus, dass alle Methoden, die evtl. dieses Objekt verarbeiten,
+ * immer die Länge der Nodelist überprüfen.
+ * </p>
  *
  * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
 class EmptyNodeList implements NodeList {
-    //Damit bei Fehler trotzdem eine leere NodeList zurückgegeben wird
-
+    /**
+     * Leerer Konstruktor, damit überhaupt eine {@code EmptyNodeList} erzeugt werden kann
+     *
+     * @since 1.0
+     */
     EmptyNodeList() {
 
     }
 
+    /**
+     * Implementierung der {@code item}-Methode des Interfaces {@code NodeList}.
+     * Gibt immer {@code NULL} zurück, da dies ja eine leere {@code NodeList} sein soll.
+     *
+     * @return Immer null
+     * @since 1.0
+     */
     @Override
     public Node item(int index) {
         return null;
     }
 
+    /**
+     * Implementierung der {@code getLength}-Methode des Interfaces {@code NodeList}.
+     * Gibt immer '0' zurück, da dies ja eine leere {@code NodeList} sein soll.
+     *
+     * @return immer '0'
+     * @since 1.0
+     */
     @Override
     public int getLength() {
         return 0;
