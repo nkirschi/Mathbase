@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<topictree>
+<!--
+  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
+  ~ This product is licensed under the GNU General Public License v3.0.
+  ~ See LICENSE file for further information.
+  -->
+
+<topic_tree>
     <node title="Kryptologie" icon="">
         <node title="Die Cäsar-Verschlüsselung" icon="cäsar.gif">
             <content type="image" path="diagramm.jpg"/>
@@ -21,4 +27,4 @@
             <content type="other" path="diggah.nfo"/>
         </node>
     </node>
-</topictree>
+</topic_tree>

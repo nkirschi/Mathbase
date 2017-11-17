@@ -28,14 +28,14 @@ import static de.apian.mathbase.util.Logger.log;
  * @version 1.0
  * @since 1.0
  */
-public class TopicTreeFileHandler {
+public class TopicTreeController {
 
     /**
-     * Statische Instanzreferenz auf das Singleton {@code TopicTreeFileHandler}
+     * Statische Instanzreferenz auf das Singleton {@code TopicTreeController}
      *
      * @since 1.0
      */
-    private static TopicTreeFileHandler instance;
+    private static TopicTreeController instance;
 
     /**
      * {@code XMLFileHandler} der XML-Datei
@@ -50,21 +50,21 @@ public class TopicTreeFileHandler {
      *
      * @since 1.0
      */
-    private static final String ORIGINAL_FILEPATH = "topictree.xml";
+    private static final String ORIGINAL_PATH = "topic_tree.xml";
 
     /**
      * Pfad der Backup-Datei relativ zum Arbeitsverzeichnis
      *
      * @since 1.0
      */
-    private static final String BACKUP_FILEPATH = "topictree.xml.bak";
+    private static final String BACKUP_PATH = "topic_tree.xml.bak";
 
     /**
      * Bezeichner der Wurzel in der XML-Datei
      *
      * @since 1.0
      */
-    private static final String TAG_ROOT = "topictree";
+    private static final String TAG_ROOT = "topic_tree";
 
     /**
      * Bezeichner der Knoten in der XML-Datei
@@ -100,22 +100,22 @@ public class TopicTreeFileHandler {
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten
      * @since 1.0
      */
-    private TopicTreeFileHandler() throws IOException {
+    private TopicTreeController() throws IOException {
         //Versucht zuerst die Original-Datei zu laden
         try {
-            xmlHandler = new XMLFileHandler(ORIGINAL_FILEPATH);
-            log(Level.INFO, "Original-Datei \"" + ORIGINAL_FILEPATH + "\" erfolgreich geladen");
+            xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
+            log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
         } catch (IOException e1) {
-            log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_FILEPATH + "\" nicht laden", e1);
+            log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_PATH + "\" nicht laden", e1);
             try {
                 //Versucht die Backup-Datei wiederherzustellen
-                Files.copy(Paths.get(BACKUP_FILEPATH), Paths.get(ORIGINAL_FILEPATH), StandardCopyOption.REPLACE_EXISTING);
-                xmlHandler = new XMLFileHandler(ORIGINAL_FILEPATH);
-                log(Level.INFO, "Original-Datei \"" + ORIGINAL_FILEPATH + "\" erfolgreich aus \""
-                        + BACKUP_FILEPATH + "\" wiederhergestellt und geladen");
+                Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
+                xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
+                log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
+                        + BACKUP_PATH + "\" wiederhergestellt und geladen");
             } catch (IOException e2) {
-                log(Level.SEVERE, "Datei \"" + ORIGINAL_FILEPATH + "\" konnte nicht aus Backup-Datei \""
-                        + BACKUP_FILEPATH + "\" wiederhergestellt werden", e2);
+                log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
+                        + BACKUP_PATH + "\" wiederhergestellt werden", e2);
 
                 //Wirf IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht geladen werden konnte.
                 //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
@@ -127,29 +127,29 @@ public class TopicTreeFileHandler {
     /**
      * Singleton-Instanzoperation
      *
-     * @return einzige Instanz von {@code TopicTreeFileHandler}
+     * @return einzige Instanz von {@code TopicTreeController}
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten und
-     *                     deswegen keine Instanz von {@code TopicTreeFileHandler} erzeugt werden konnte
+     *                     deswegen keine Instanz von {@code TopicTreeController} erzeugt werden konnte
      * @since 1.0
      */
-    public static TopicTreeFileHandler getInstance() throws IOException {
+    public static TopicTreeController getInstance() throws IOException {
         if (instance == null)
-            instance = new TopicTreeFileHandler();
+            instance = new TopicTreeController();
         return instance;
     }
 
     /**
-     * Speichert die Datei als XML-Datei im Pfad {@code ORIGINAL_FILEPATH} relativ zum Arbeitsverzeichnis
+     * Speichert die Datei als XML-Datei im Pfad {@code ORIGINAL_PATH} relativ zum Arbeitsverzeichnis
      *
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
     public void save() throws IOException {
         try {
-            xmlHandler.saveDocToXml(ORIGINAL_FILEPATH);
-            log(Level.INFO, "Speichern von \"" + ORIGINAL_FILEPATH + "\" erfolgreich abgeschlossen");
+            xmlHandler.saveDocToXml(ORIGINAL_PATH);
+            log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
-            log(Level.WARNING, "Fehler beim speichern von \"" + ORIGINAL_FILEPATH + "\"", e);
+            log(Level.WARNING, "Fehler beim speichern von \"" + ORIGINAL_PATH + "\"", e);
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht gespeichert werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
@@ -157,17 +157,17 @@ public class TopicTreeFileHandler {
     }
 
     /**
-     * Erstellt ein Backup der originalen Datei im Pfad {@code BACKUP_FILEPATH} relativ zum Arbeitsverzeichnis
+     * Erstellt ein Backup der originalen Datei im Pfad {@code BACKUP_PATH} relativ zum Arbeitsverzeichnis
      *
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
      */
     public void createBackup() throws IOException {
         try {
-            Files.copy(Paths.get(ORIGINAL_FILEPATH), Paths.get(BACKUP_FILEPATH), StandardCopyOption.REPLACE_EXISTING);
-            log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_FILEPATH + "\" in \"" + BACKUP_FILEPATH + "\" erfolgreich abgeschlossen");
+            Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
+            log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
-            log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_FILEPATH + "\"", e);
+            log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass das Backup nicht erstellt werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
@@ -175,9 +175,9 @@ public class TopicTreeFileHandler {
     }
 
     /**
-     * Erstellt die XML-Datei neu im Pfad {@code ORIGINAL_FILEPATH} relativ zum Arbeitsverzeichnis.
+     * Erstellt die XML-Datei neu im Pfad {@code ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
      * <p>
-     * Kann auch aufgerufen werden, wenn der {@code TopicTreeFileHandler} noch nicht instanziert wurde,
+     * Kann auch aufgerufen werden, wenn der {@code TopicTreeController} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
      * </p>
      *
@@ -186,15 +186,15 @@ public class TopicTreeFileHandler {
      */
     public static void createNewFile() throws IOException {
         try {
-            File file = new File(ORIGINAL_FILEPATH);
+            File file = new File(ORIGINAL_PATH);
             file.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                     "<" + TAG_ROOT + "></" + TAG_ROOT + ">");
             writer.close();
-            log(Level.INFO, "Datei \"" + ORIGINAL_FILEPATH + "\" wurde erfolgreich neu erstellt");
+            log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" wurde erfolgreich neu erstellt");
         } catch (IOException e) {
-            log(Level.SEVERE, "Konnte Datei \"" + ORIGINAL_FILEPATH + "\" nicht neu erstellen");
+            log(Level.SEVERE, "Konnte Datei \"" + ORIGINAL_PATH + "\" nicht neu erstellen");
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht erstellt werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
