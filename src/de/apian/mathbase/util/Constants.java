@@ -46,4 +46,7 @@ public class Constants {
      * @since 1.0
      */
     public static final Color DEFAULT_COLOR = Color.BLACK;
+
+    public static final String FATAL_ERROR_MESSAGE = "Uh-Oh! Das schaut nicht gut aus. Kontaktieren Sie umgehend " +
+            "Ihren Systemadministrator!";
 }

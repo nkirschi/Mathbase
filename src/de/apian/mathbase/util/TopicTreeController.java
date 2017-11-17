@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.util;
 
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -18,8 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
-
-import static de.apian.mathbase.util.Logger.log;
 
 /**
  * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Dateien, welche die Struktur und Inhalte der Themen enthalten.
@@ -104,17 +101,17 @@ public class TopicTreeController {
         //Versucht zuerst die Original-Datei zu laden
         try {
             xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
-            log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
+            Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
         } catch (IOException e1) {
-            log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_PATH + "\" nicht laden", e1);
+            Logger.log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_PATH + "\" nicht laden", e1);
             try {
                 //Versucht die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
-                log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
+                Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
                         + BACKUP_PATH + "\" wiederhergestellt und geladen");
             } catch (IOException e2) {
-                log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
+                Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
                         + BACKUP_PATH + "\" wiederhergestellt werden", e2);
 
                 //Wirf IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht geladen werden konnte.
@@ -147,9 +144,9 @@ public class TopicTreeController {
     public void save() throws IOException {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_PATH);
-            log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
+            Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
-            log(Level.WARNING, "Fehler beim speichern von \"" + ORIGINAL_PATH + "\"", e);
+            Logger.log(Level.WARNING, "Fehler beim speichern von \"" + ORIGINAL_PATH + "\"", e);
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht gespeichert werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
@@ -165,9 +162,9 @@ public class TopicTreeController {
     public void createBackup() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
-            log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH + "\" erfolgreich abgeschlossen");
+            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
-            log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
+            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass das Backup nicht erstellt werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
@@ -192,9 +189,9 @@ public class TopicTreeController {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                     "<" + TAG_ROOT + "></" + TAG_ROOT + ">");
             writer.close();
-            log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" wurde erfolgreich neu erstellt");
+            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" wurde erfolgreich neu erstellt");
         } catch (IOException e) {
-            log(Level.SEVERE, "Konnte Datei \"" + ORIGINAL_PATH + "\" nicht neu erstellen");
+            Logger.log(Level.SEVERE, "Konnte Datei \"" + ORIGINAL_PATH + "\" nicht neu erstellen");
             //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht erstellt werden konnte
             //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
             throw e;
@@ -212,11 +209,11 @@ public class TopicTreeController {
         boolean exists = false;
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
-            if (nodeList.getLength() > 0) exists = true;
-            log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
-        } catch (XPathExpressionException e) {
-            log(Level.WARNING, "Konnte Knoten-Titel \"" + title + "\" nicht überprüfen", e);
-            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+            if (nodeList.getLength() > 0)
+                exists = true;
+            Logger.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
+        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
         }
         return exists;
     }
@@ -229,15 +226,14 @@ public class TopicTreeController {
      * @since 1.0
      */
     public NodeList getContentList(String title) {
-        NodeList nodeList = new EmptyNodeList();
         try {
-            nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
-            log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
-        } catch (XPathExpressionException e) {
-            log(Level.WARNING, "Konnte Inhalte des Knotens mit Titel \"" + title + "\" nicht zurückgeben", e);
-            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
+            Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
+            return nodeList;
+        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
-        return nodeList;
     }
 
     /**
@@ -248,60 +244,19 @@ public class TopicTreeController {
      * @since 1.0
      */
     public NodeList getNodeChildren(String title) {
-        NodeList nodeList = new EmptyNodeList();
         try {
-            nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
-            log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
-        } catch (XPathExpressionException e) {
-            log(Level.WARNING, "Konnte Kind-Knoten des Knotens mit Titel \"" + title + "\" nicht zurückgeben", e);
-            //Sollte eigentlich nie vorkommen, da die Expression hier ja von uns definiert wurde
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
+            Logger.log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
+            return nodeList;
+        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
-        return nodeList;
     }
 
-    /**
-     * Stellt ein leeres {@code NodeList}-Objekt dar.
-     * <p>
-     * Kann als standardmäßiges {@code NodeList}-Rückgabe-Objekt verwendet werden,
-     * um eine {@code NullPointerException} zu vermeiden.
-     * Dies setzt allerdings vorraus, dass alle Methoden, die evtl. dieses Objekt verarbeiten,
-     * immer die Länge der Nodelist überprüfen.
-     * </p>
-     *
-     * @since 1.0
-     */
-    class EmptyNodeList implements NodeList {
-        /**
-         * Leerer Konstruktor, damit überhaupt eine {@code EmptyNodeList} erzeugt werden kann
-         *
-         * @since 1.0
-         */
-        EmptyNodeList() {
-
-        }
-
-        /**
-         * Implementierung der {@code item}-Methode des Interfaces {@code NodeList}.
-         * Gibt immer {@code NULL} zurück, da dies ja eine leere {@code NodeList} sein soll.
-         *
-         * @return Immer null
-         * @since 1.0
-         */
-        @Override
-        public Node item(int index) {
-            return null;
-        }
-
-        /**
-         * Implementierung der {@code getLength}-Methode des Interfaces {@code NodeList}.
-         * Gibt immer '0' zurück, da dies ja eine leere {@code NodeList} sein soll.
-         *
-         * @return immer '0'
-         * @since 1.0
-         */
-        @Override
-        public int getLength() {
-            return 0;
-        }
+    public static void main(String[] args) throws Exception {
+        TopicTreeController controller = new TopicTreeController();
+        NodeList nodeList = controller.getContentList("Häufigkeitsanalyse");
+        System.out.println(nodeList.item(0).getAttributes().getNamedItem("type"));
     }
 }
