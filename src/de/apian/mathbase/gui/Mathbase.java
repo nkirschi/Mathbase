@@ -13,6 +13,7 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -47,7 +48,7 @@ public class Mathbase extends Application {
     private Stage stage;
 
     /**
-     * Ghost-Konstruktor, der wegen JavaFX {@code public} -Sichtbarkeit benötigt
+     * Ghost-Konstruktor, der wegen JavaFX {@code public}-Sichtbarkeit benötigt
      *
      * @since 1.0
      */
@@ -102,13 +103,13 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Methode zum Wechseln der aktuellen Szene zu einer gegebenen Komponente
+     * Wechseln der aktuellen Szene
      *
-     * @param component Anzuzeigende {@code Component}
+     * @param pane Anzuzeigendes {@code Pane}
      * @since 1.0
      */
-    void changeTo(Component component) {
-        stage.setScene(new Scene(component.getParent()));
+    void changeTo(Pane pane) {
+        stage.setScene(new Scene(pane));
     }
 
     /**
@@ -122,7 +123,7 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Delegierte Methode zur Initialisierung des Hauptfensters
+     * Initialisierung des Hauptfensters
      *
      * @since 1.0
      */
@@ -136,11 +137,11 @@ public class Mathbase extends Application {
             e.printStackTrace();
         }
         stage.setOnCloseRequest(e -> cleanUp());
-        changeTo(MainView.getInstance());
+        changeTo(MainPane.getInstance());
     }
 
     /**
-     * Routine bei Beendigung des Programms
+     * Aufräumen vor Beendigung des Programms
      *
      * @since 1.0
      */
