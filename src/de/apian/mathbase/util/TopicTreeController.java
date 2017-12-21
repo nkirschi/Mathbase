@@ -212,7 +212,7 @@ public class TopicTreeController {
      * @return Ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public boolean checkNodeTitle(String title) {
+    public boolean alreadyExists(String title) {
         boolean exists = false;
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
@@ -232,7 +232,7 @@ public class TopicTreeController {
      * @return Eine {@code NodeList} aller Inhalte des Knotens
      * @since 1.0
      */
-    public NodeList getContentList(String title) {
+    public NodeList getContents(String title) {
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
             Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
@@ -255,7 +255,7 @@ public class TopicTreeController {
      * @return Eine {@code Nodelist} aller direkten Kind-Knoten des Knotens
      * @since 1.0
      */
-    public NodeList getNodeChildren(String title) {
+    public NodeList getChildNodes(String title) {
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
             Logger.log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
@@ -268,7 +268,7 @@ public class TopicTreeController {
 
     public static void main(String[] args) throws Exception {
         TopicTreeController controller = new TopicTreeController();
-        NodeList nodeList = controller.getContentList("Häufigkeitsanalyse");
+        NodeList nodeList = controller.getContents("Häufigkeitsanalyse");
         System.out.println(nodeList.item(3).getAttributes().getNamedItem("type"));
     }
 }
