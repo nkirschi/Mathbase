@@ -10,16 +10,17 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
 /**
- * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Dateien, welche die Struktur und Inhalte der Themen enthalten.
+ * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Dateien,
+ * welche die Struktur und Inhalte der Themen enthalten.
  *
  * @author Benedikt Mödl
  * @version 1.0
@@ -98,25 +99,25 @@ public class TopicTreeController {
      * @since 1.0
      */
     private TopicTreeController() throws IOException {
-        //Versucht zuerst die Original-Datei zu laden
-        try {
+        try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
-        } catch (IOException e1) {
-            Logger.log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_PATH + "\" nicht laden", e1);
-            try {
-                //Versucht die Backup-Datei wiederherzustellen
+        } catch (IOException ex1) {
+            Logger.log(Level.WARNING, "Konnte Original-Datei \"" + ORIGINAL_PATH + "\" nicht laden", ex1);
+
+            try { // Versuche im Fehlerfall die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
                 Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
                         + BACKUP_PATH + "\" wiederhergestellt und geladen");
-            } catch (IOException e2) {
+            } catch (IOException ex2) {
                 Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
-                        + BACKUP_PATH + "\" wiederhergestellt werden", e2);
+                        + BACKUP_PATH + "\" wiederhergestellt werden", ex2);
 
-                //Wirf IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht geladen werden konnte.
-                //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
-                throw new IOException("Laden der Datei nicht Möglich!");
+                // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+                // dass die Datei nicht geladen werden konnte; diese sollen dann weiter verfahren!
+                // TODO Errorhandling in den anderen Klassen implementieren
+                throw new IOException("Keine Datei konnte geladen werden!");
             }
         }
     }
@@ -124,7 +125,7 @@ public class TopicTreeController {
     /**
      * Singleton-Instanzoperation
      *
-     * @return einzige Instanz von {@code TopicTreeController}
+     * @return einzigste Instanz von {@code TopicTreeController}
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten und
      *                     deswegen keine Instanz von {@code TopicTreeController} erzeugt werden konnte
      * @since 1.0
@@ -136,7 +137,7 @@ public class TopicTreeController {
     }
 
     /**
-     * Speichert die Datei als XML-Datei im Pfad {@code ORIGINAL_PATH} relativ zum Arbeitsverzeichnis
+     * Speichern der Daten als XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis
      *
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
@@ -145,56 +146,62 @@ public class TopicTreeController {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
-        } catch (IOException e) {
-            Logger.log(Level.WARNING, "Fehler beim speichern von \"" + ORIGINAL_PATH + "\"", e);
-            //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht gespeichert werden konnte
-            //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
-            throw e;
+        } catch (IOException ex) {
+            Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", ex);
+            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // dass die Datei nicht geladen werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
+            throw ex;
         }
     }
 
     /**
-     * Erstellt ein Backup der originalen Datei im Pfad {@code BACKUP_PATH} relativ zum Arbeitsverzeichnis
+     * Erstellen eines Backups der originalen Datei im Pfad {@code BACKUP_PATH} relativ zum Arbeitsverzeichnis
      *
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
      */
-    public void createBackup() throws IOException {
+    public void backUp() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
             Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH + "\" erfolgreich abgeschlossen");
-        } catch (IOException e) {
-            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
-            //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass das Backup nicht erstellt werden konnte
-            //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
-            throw e;
+        } catch (IOException ex) {
+            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", ex);
+            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
+            throw ex;
         }
     }
 
     /**
-     * Erstellt die XML-Datei neu im Pfad {@code ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
+     * Neuerstellung der XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
      * <p>
      * Kann auch aufgerufen werden, wenn der {@code TopicTreeController} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
      * </p>
      *
-     * @throws IOException wenn das Erstellen und nicht erfolgreich war
+     * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
     public static void createNewFile() throws IOException {
         try {
-            File file = new File(ORIGINAL_PATH);
-            file.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                    "<" + TAG_ROOT + "></" + TAG_ROOT + ">");
+            Path path = Paths.get(ORIGINAL_PATH);
+            Files.createFile(path);
+            BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
+            writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
+                    "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
+                    "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
+                    "  ~ See LICENSE file for further information.\n  -->\n\n" +
+                    "<%s></%s>", TAG_ROOT, TAG_ROOT));
             writer.close();
-            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" wurde erfolgreich neu erstellt");
-        } catch (IOException e) {
-            Logger.log(Level.SEVERE, "Konnte Datei \"" + ORIGINAL_PATH + "\" nicht neu erstellen");
-            //Wirft IOException, um den aufrufenden Klassen mitzuteilen, dass die Datei nicht erstellt werden konnte
-            //Diese sollten dann weiter verfahren! TODO Errorhandling in den anderen Klassen implementieren
-            throw e;
+            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
+        } catch (IOException ex) {
+            Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
+            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
+            throw ex;
         }
     }
 
@@ -212,8 +219,8 @@ public class TopicTreeController {
             if (nodeList.getLength() > 0)
                 exists = true;
             Logger.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
-        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
-            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+        } catch (XPathExpressionException ex) { // Kann eigentlich niemals vorkommen
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, ex);
         }
         return exists;
     }
@@ -231,6 +238,11 @@ public class TopicTreeController {
             Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
             return nodeList;
         } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
@@ -257,6 +269,6 @@ public class TopicTreeController {
     public static void main(String[] args) throws Exception {
         TopicTreeController controller = new TopicTreeController();
         NodeList nodeList = controller.getContentList("Häufigkeitsanalyse");
-        System.out.println(nodeList.item(0).getAttributes().getNamedItem("type"));
+        System.out.println(nodeList.item(3).getAttributes().getNamedItem("type"));
     }
 }

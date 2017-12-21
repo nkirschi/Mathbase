@@ -38,14 +38,16 @@ public class Logger {
         try {
             FileHandler fileHandler = new FileHandler("log.txt", true);
             fileHandler.setFormatter(formatter);
+            fileHandler.setLevel(Level.ALL);
             logger.addHandler(fileHandler);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Konsolenoutput (falls zu nervig, einfach die letzte Zeile auskommentieren)
+        // Konsolenoutput (falls zu nervig, einfach das Level ändern)
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(formatter);
+        consoleHandler.setLevel(Level.WARNING);
         logger.addHandler(consoleHandler);
     }
 
