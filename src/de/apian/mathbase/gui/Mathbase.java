@@ -13,7 +13,6 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -39,6 +38,7 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     private static Mathbase instance;
+
     /**
      * Referenz auf das Hauptfenster {@code stage}
      *
@@ -105,11 +105,11 @@ public class Mathbase extends Application {
     /**
      * Wechseln der aktuellen Szene
      *
-     * @param pane Anzuzeigendes {@code Pane}
+     * @param parent Anzuzeigende {@code Komponente}
      * @since 1.0
      */
-    void changeTo(Pane pane) {
-        stage.setScene(new Scene(pane));
+    void changeTo(Parent parent) {
+        stage.setScene(new Scene(parent));
     }
 
     /**
@@ -137,7 +137,7 @@ public class Mathbase extends Application {
             e.printStackTrace();
         }
         stage.setOnCloseRequest(e -> cleanUp());
-        changeTo(MainPane.getInstance());
+        changeTo(new MainPane());
     }
 
     /**

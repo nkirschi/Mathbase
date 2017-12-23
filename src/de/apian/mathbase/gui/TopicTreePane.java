@@ -6,12 +6,23 @@
 
 package de.apian.mathbase.gui;
 
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
 
-public class TopicTreePane extends BorderPane {
-    TopicTreePane() {
+/**
+ * Themenbaum in der Sidebar
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
+public class TopicTreePane extends ScrollPane {
+    private MainPane mainPane;
+
+    TopicTreePane(MainPane mainPane) {
+        this.mainPane = mainPane;
+
         TreeView<String> treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
@@ -25,6 +36,8 @@ public class TopicTreePane extends BorderPane {
         pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
         //treeView.getSelectionModel().getSelectedItem();
         treeView.getRoot().getChildren().add(pythagoras);
-        setCenter(treeView);
+        setContent(treeView);
+        setFitToHeight(true);
+        setFitToWidth(true);
     }
 }

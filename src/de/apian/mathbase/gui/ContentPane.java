@@ -15,6 +15,13 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
+/**
+ * Anzeigefläche für die Inhalte des gewählten Themas
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
 public class ContentPane extends VBox {
     ContentPane() {
         try {

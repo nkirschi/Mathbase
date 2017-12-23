@@ -29,13 +29,6 @@ import java.util.logging.Level;
 public class TopicTreeController {
 
     /**
-     * Statische Instanzreferenz auf das Singleton {@code TopicTreeController}
-     *
-     * @since 1.0
-     */
-    private static TopicTreeController instance;
-
-    /**
      * {@code XMLFileHandler} der XML-Datei
      *
      * @see <a href="{@docRoot}/de/apian/mathbase/util/XMLFileHandler.html">XMLFileHandler</a>
@@ -93,12 +86,12 @@ public class TopicTreeController {
     private final String ATTR_TYPE = "type";
 
     /**
-     * Privater Singleton-Konstruktor
+     * Konstruktor
      *
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten
      * @since 1.0
      */
-    private TopicTreeController() throws IOException {
+    public TopicTreeController() throws IOException {
         try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
@@ -120,20 +113,6 @@ public class TopicTreeController {
                 throw new IOException("Keine Datei konnte geladen werden!");
             }
         }
-    }
-
-    /**
-     * Singleton-Instanzoperation
-     *
-     * @return einzigste Instanz von {@code TopicTreeController}
-     * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten und
-     *                     deswegen keine Instanz von {@code TopicTreeController} erzeugt werden konnte
-     * @since 1.0
-     */
-    public static TopicTreeController getInstance() throws IOException {
-        if (instance == null)
-            instance = new TopicTreeController();
-        return instance;
     }
 
     /**

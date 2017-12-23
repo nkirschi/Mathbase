@@ -6,30 +6,22 @@
 
 package de.apian.mathbase.gui;
 
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.SplitPane;
 
-public class MainPane extends BorderPane {
-    /**
-     * Statische Instanzreferenz auf das Singleton {@code MainMenu}
-     *
-     * @since 1.0
-     */
-    private static MainPane instance;
-
-    private MainPane() {
-        setCenter(new ContentPane());
-        setLeft(new TopicTreePane());
-    }
-
-    /**
-     * Singleton-Instanzoperation
-     *
-     * @return einzige Instanz von {@code MainMenu}
-     * @since 1.0
-     */
-    static MainPane getInstance() {
-        if (instance == null)
-            instance = new MainPane();
-        return instance;
+/**
+ * Hauptanzeigefläche der GUI
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
+public class MainPane extends SplitPane {
+    public MainPane() {
+        //setCenter(new ContentPane());
+        //setLeft(new TopicTreePane(this));
+        SidebarPane sidebarPane = new SidebarPane(this);
+        sidebarPane.setMinWidth(200);
+        getItems().addAll(sidebarPane, new ContentPane());
+        SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
     }
 }
