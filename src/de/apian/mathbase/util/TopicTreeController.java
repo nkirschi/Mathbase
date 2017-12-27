@@ -253,8 +253,7 @@ public class TopicTreeController {
      * @since 1.0
      */
     private String normalizeFilename(String fileName) {
-        String output = "";
-        return output;
+        return fileName.toLowerCase().replaceAll("[^a-zäöüß0-9\\.\\-]", "_");
     }
 
     public static void main(String[] args) throws Exception {
