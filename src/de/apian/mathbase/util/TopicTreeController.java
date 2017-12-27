@@ -245,6 +245,18 @@ public class TopicTreeController {
         }
     }
 
+    /**
+     * Erzeugt aus einem beliebigen {@code String} einen unseren Standards entsprechenden Dateinamen
+     *
+     * @param fileName Ausgangs-{@code String}
+     * @return Einen unseren Standards entsprechenden Dateinamen als {@code String}
+     * @since 1.0
+     */
+    private String normalizeFilename(String fileName) {
+        String output = "";
+        return output;
+    }
+
     public static void main(String[] args) throws Exception {
         TopicTreeController controller = new TopicTreeController();
         NodeList nodeList = controller.getContents("Häufigkeitsanalyse");
