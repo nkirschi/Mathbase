@@ -185,7 +185,7 @@ public class TopicTreeController {
     }
 
     /**
-     * Überprüft, ob bereits ein Knoten mit diesem Titel vorhanden ist.
+     * Überprüft, ob bereits ein Knoten mit diesem Titel vorhanden ist. Titel sind global einzigartig.
      *
      * @param title Der zu überprüfende Titel
      * @return Ob ein Knoten mit diesem Titel existiert
