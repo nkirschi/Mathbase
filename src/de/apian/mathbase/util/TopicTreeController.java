@@ -6,6 +6,9 @@
 
 package de.apian.mathbase.util;
 
+import de.apian.mathbase.exceptions.NodeMissingException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -27,6 +30,13 @@ import java.util.logging.Level;
  * @since 1.0
  */
 public class TopicTreeController {
+
+    /**
+     * Pfad des Topic-Ordners relativ zum Arbeitsverzeichnis. Hier werden die eigentlichen Dateien gespeichert
+     *
+     * @since 1.0
+     */
+    private static final String TOPICS_PATH = "topics";
 
     /**
      * {@code XMLFileHandler} der XML-Datei
@@ -86,7 +96,7 @@ public class TopicTreeController {
     private final String ATTR_TYPE = "type";
 
     /**
-     * Bezeichner des Attributs {@code path} (Dateipfad einer Datei relativ zum Arbeitsverzeichnis) in der XML-Datei
+     * Bezeichner des Attributs {@code path} (Dateipfad einer Datei relativ zum Ordner des Elternknoten) in der XML-Datei
      *
      * @since 1.0
      */
@@ -199,7 +209,7 @@ public class TopicTreeController {
      * @return Ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public boolean alreadyExists(String title) {
+    private boolean alreadyExists(String title) {
         boolean exists = false;
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
@@ -257,6 +267,65 @@ public class TopicTreeController {
             Logger.log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
             return nodeList;
         } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Gibt alle Titel der Knoten der ersten Ebene der XML-Datei zurück
+     *
+     * @return Ein {@code String}-Array, welches alle Titel der Knoten in der ersten Ebene der XML-Datei
+     * @since 1.0
+     */
+    public String[] getTopNodes() {
+        try {
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT + "/" + TAG_NODE);
+            String result[] = new String[nodeList.getLength()];
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                result[i] = nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getTextContent();
+            }
+            Logger.log(Level.INFO, "Titel der Top-Level-Knoten zurückgegeben");
+            return result;
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem gegebenen Eltern-Knoten
+     *
+     * @param parent Titel des Eltern-Knotens
+     * @param title  Titel des Knotens
+     */
+    public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException {
+        if (alreadyExists(title))
+            throw new TitleCollisionException();
+
+        try {
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
+                    + "']");
+            if (nodeList.getLength() == 0)
+                throw new NodeMissingException();
+            else if (nodeList.getLength() > 1)
+                throw new TitleCollisionException();
+            Node parentNode = nodeList.item(0);
+            Node node = xmlHandler.getDoc().createTextNode("");
+            //NamedAttributeItem titleAttributeItem = new
+            //node.getAttributes().setNamedItem();
+            parentNode.appendChild(node);
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
