@@ -8,7 +8,7 @@ package de.apian.mathbase.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
 
@@ -43,9 +43,9 @@ public class FileUtils {
      *
      * @param from Urpfad
      * @param to   Zielpfad
-     * @throws IOException
+     * @throws IOException wenn das Verschieben fehlschlägt
      */
-    public static void move(String from, String to) throws IOException {
-        Files.move(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
+    public static void move(Path from, Path to) throws IOException {
+        Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 }

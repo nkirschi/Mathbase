@@ -15,7 +15,28 @@ package de.apian.mathbase.model;
  * @since 1.0
  */
 public class Content {
-    
+
+    /**
+     * Titel dieses Inhalts
+     *
+     *@since 1.0
+     */
+    private String title;
+
+    /**
+     * Typ dieses Inhalts
+     *
+     * @since 1.0
+     */
+    private Type type;
+
+    /**
+     * Pfad der Datei dieses Inhalts relativ zum Arbeitsverzeichnis
+     *
+     * @since 1.0
+     */
+    private String path;
+
     /**
      * Festgelegte Kontent-Typen
      *
