@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
@@ -22,10 +23,15 @@ public class SidebarPane extends BorderPane {
     public SidebarPane(MainPane mainPane) {
         this.mainPane = mainPane;
 
-        setCenter(new TopicTreePane(mainPane));
+        TopicTreePane topicTreePane = new TopicTreePane(mainPane);
+        setCenter(topicTreePane);
 
-        TextField textField = new TextField();
-        textField.setPromptText("Suche...");
-        setBottom(textField);
+        TextField searchField = new TextField();
+        searchField.setPromptText("Suche...");
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+        });
+        BorderPane borderPane = new BorderPane(searchField);
+        setBottom(borderPane);
+        borderPane.setPadding(new Insets(4, 4, 4, 4));
     }
 }

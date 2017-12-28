@@ -8,6 +8,8 @@ package de.apian.mathbase.gui;
 
 import javafx.scene.control.*;
 
+import java.util.Optional;
+
 /**
  * Themenbaum in der Sidebar
  *
@@ -17,11 +19,12 @@ import javafx.scene.control.*;
  */
 public class TopicTreePane extends ScrollPane {
     private MainPane mainPane;
+    private TreeView<String> treeView;
 
     TopicTreePane(MainPane mainPane) {
         this.mainPane = mainPane;
 
-        TreeView<String> treeView = new TreeView<>();
+        treeView = new TreeView<>();
         treeView.setRoot(new TreeItem<>());
         treeView.setShowRoot(false);
         treeView.setEditable(true);
@@ -38,8 +41,45 @@ public class TopicTreePane extends ScrollPane {
         setFitToHeight(true);
         setFitToWidth(true);
 
-        // TODO gscheides Kontextmenü
-        ContextMenu contextMenu = new ContextMenu(new MenuItem("Hinzufügen..."), new MenuItem("Löschen"));
+        ContextMenu contextMenu = createContextMenu();
         treeView.setContextMenu(contextMenu);
+
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            mainPane.getItems().set(1, new ContentPane(newValue.getValue()));
+        });
+    }
+
+    TreeView<String> getTreeView() {
+        return treeView;
+    }
+
+    private ContextMenu createContextMenu() { // TODO Abbildung auf XML
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem addItem = new MenuItem("Hinzufügen...");
+        addItem.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog();
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(title -> {
+                TreeItem<String> newItem = new TreeItem<>(title);
+                TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
+                System.out.println(selectedItem);
+                if (selectedItem == null)
+                    treeView.getRoot().getChildren().add(newItem);
+                else
+                    selectedItem.getChildren().add(newItem);
+            });
+        });
+
+        MenuItem removeItem = new MenuItem("Entfernen");
+        removeItem.setOnAction(e -> {
+            TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null)
+                selectedItem.getParent().getChildren().remove(selectedItem);
+            treeView.getSelectionModel().select(null);
+        });
+
+        contextMenu.getItems().addAll(addItem, removeItem);
+        return contextMenu;
     }
 }
