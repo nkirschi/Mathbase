@@ -79,11 +79,9 @@ public class TopicTreePane extends ScrollPane {
             if (selectedItem != null) {
                 PasswordDialog dialog = new PasswordDialog(mainPane);
                 Optional<String> result = dialog.showAndWait();
-                result.ifPresent(pw -> {
-                    if (pw.equals("scheisse")) {
-                        selectedItem.getParent().getChildren().remove(selectedItem);
-                        treeView.getSelectionModel().select(null);
-                    }
+                result.ifPresent(p -> {
+                    selectedItem.getParent().getChildren().remove(selectedItem);
+                    treeView.getSelectionModel().select(null);
                 });
             }
         });

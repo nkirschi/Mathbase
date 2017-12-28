@@ -48,6 +48,13 @@ public class Constants {
     public static final Color DEFAULT_COLOR = Color.BLACK;
 
     /**
+     * Gehashtes Admin-Passwort
+     *
+     * @since 1.0
+     */
+    public static final String HASHED_PASSWORD = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
+
+    /**
      * Für den Wurst Case
      *
      * @since 1.0

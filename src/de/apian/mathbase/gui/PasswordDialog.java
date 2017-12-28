@@ -8,6 +8,7 @@ package de.apian.mathbase.gui;
 
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -17,6 +18,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static de.apian.mathbase.util.Constants.FATAL_ERROR_MESSAGE;
+import static de.apian.mathbase.util.Constants.HASHED_PASSWORD;
 
 /**
  * Passworteingabedialog bei administrativen Operationen
@@ -54,7 +63,27 @@ public class PasswordDialog extends TextInputDialog {
 
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
         okButton.addEventFilter(ActionEvent.ACTION, e -> {
-            if (!passwordField.getText().equals("123456")) {
+            okButton.setDisable(true);
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                private int counter = 5;
+                private String text = okButton.getText();
+
+                @Override
+                public void run() {
+                    if (counter > 0) {
+                        Platform.runLater(() -> okButton.setText(text + " (" + counter-- + ")"));
+                    } else {
+                        Platform.runLater(() -> {
+                            okButton.setDisable(false);
+                            okButton.setText(text);
+                        });
+                        timer.cancel();
+                    }
+                }
+            }, 0, 1000);
+
+            if (!hash(passwordField.getText()).equals(HASHED_PASSWORD)) {
                 e.consume();
                 incorrectLabel.setVisible(true);
             }
@@ -64,5 +93,25 @@ public class PasswordDialog extends TextInputDialog {
             ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();
             return data == ButtonBar.ButtonData.OK_DONE ? passwordField.getText() : null;
         });
+    }
+
+    private String hash(String s) {
+        try {
+            MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+            byte[] bytes = sha256.digest(s.getBytes(StandardCharsets.UTF_8));
+
+            // Überführung des byte-Arrays in einen Hexadezimalstring
+            StringBuilder hash = new StringBuilder();
+            for (byte b : bytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1)
+                    hash.append('0');
+                hash.append(hex);
+            }
+
+            return hash.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new InternalError(FATAL_ERROR_MESSAGE); // Weltuntergang!
+        }
     }
 }
