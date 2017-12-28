@@ -171,7 +171,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public static void createNewFile() throws IOException {
+    public static void recreateFile() throws IOException {
         try {
             Path path = Paths.get(ORIGINAL_PATH);
             Files.createFile(path);
@@ -256,51 +256,9 @@ public class TopicTreeController {
                     + "']/" + TAG_NODE);
             Logger.log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
             return nodeList;
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
+        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
-    }
-
-    /**
-     * Gibt alle Titel der Knoten der ersten Ebene der XML-Datei zurück
-     *
-     * @return Ein {@code String}-Array, welches alle Titel der Knoten in der ersten Ebene der XML-Datei
-     * @since 1.0
-     */
-    public String[] getTopNodes() {
-        try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT + "/" + TAG_NODE);
-            String result[] = new String[nodeList.getLength()];
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                result[i] = nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getTextContent();
-            }
-            Logger.log(Level.INFO, "Titel der Top-Level-Knoten zurückgegeben");
-            return result;
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Erzeugt aus einem beliebigen {@code String} einen unseren Standards entsprechenden Dateinamen
-     *
-     * @param fileName Ausgangs-{@code String}
-     * @return Einen unseren Standards entsprechenden Dateinamen als {@code String}
-     * @since 1.0
-     */
-    private String normalizeFilename(String fileName) {
-        return fileName.toLowerCase().replaceAll("[^a-zäöüß0-9\\.\\-]", "_");
     }
 }
