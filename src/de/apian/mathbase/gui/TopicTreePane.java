@@ -25,7 +25,7 @@ public class TopicTreePane extends ScrollPane {
         this.mainPane = mainPane;
 
         treeView = new TreeView<>();
-        treeView.setRoot(new TreeItem<>());
+        treeView.setRoot(new TreeItem<>(""));
         treeView.setShowRoot(false);
         treeView.setEditable(true);
 
@@ -45,7 +45,9 @@ public class TopicTreePane extends ScrollPane {
         treeView.setContextMenu(contextMenu);
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            mainPane.getItems().set(1, new ContentPane(newValue.getValue()));
+            String title = newValue != null ? newValue.getValue() : "";
+            ContentPane contentPane = new ContentPane(title);
+            mainPane.getItems().set(1, contentPane);
         });
     }
 
@@ -65,18 +67,25 @@ public class TopicTreePane extends ScrollPane {
                 TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
                 System.out.println(selectedItem);
                 if (selectedItem == null)
-                    treeView.getRoot().getChildren().add(newItem);
-                else
-                    selectedItem.getChildren().add(newItem);
+                    selectedItem = treeView.getRoot();
+                selectedItem.getChildren().add(newItem);
+                selectedItem.setExpanded(true);
             });
         });
 
         MenuItem removeItem = new MenuItem("Entfernen");
         removeItem.setOnAction(e -> {
             TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null)
-                selectedItem.getParent().getChildren().remove(selectedItem);
-            treeView.getSelectionModel().select(null);
+            if (selectedItem != null) {
+                PasswordDialog dialog = new PasswordDialog(mainPane);
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(pw -> {
+                    if (pw.equals("scheisse")) {
+                        selectedItem.getParent().getChildren().remove(selectedItem);
+                        treeView.getSelectionModel().select(null);
+                    }
+                });
+            }
         });
 
         contextMenu.getItems().addAll(addItem, removeItem);
