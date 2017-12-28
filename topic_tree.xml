@@ -1,35 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
 <!--
   ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
   ~ This product is licensed under the GNU General Public License v3.0.
   ~ See LICENSE file for further information.
   -->
-
 <topic_tree>
-    <node title="Kryptologie" icon="">
-        <node title="Die Cäsar-Verschlüsselung" icon="cäsar.gif">
-            <content type="image" path="diagramm.jpg"/>
-            <content type="worksheet" path="caesar.pdf"/>
-            <content type="worksheet" path="caesar.docx"/>
-            <node title="Häufigkeitsanalyse" icon="dagobert.png">
-                <content type="image" path="diagramm.jpg"/>
-                <content type="worksheet" path="caesar.pdf"/>
-                <content type="worksheet" path="caesar.docx"/>
-                <content type="video" path="hackerbacker.mp4"/>
-                <content type="geogebra" path="visual.ggb"/>
-                <content type="other" path="diggah.nfo"/>
-            </node>
+    <node title="Schiefe Bananen"/>
+    <node title="Säfte">
+        <node title="Birenensaft"/>
+        <node title="Bananensaft">
+            <node title="(Schiefe Bananen)-Saft"/>
+            <node title="(Gerade Bananen)-Saft"/>
         </node>
-        <node title="Käsesoße" icon="dagobert.png">
-            <content type="image" path="diagramm.jpg"/>
-            <content type="worksheet" path="caesar.pdf"/>
-            <content type="other" path="diggah.nfo"/>
-        </node>
-    </node>
-    <node title="Käsewurst" icon="dagobert.png">
-        <content type="image" path="diagramm.jpg"/>
-        <content type="worksheet" path="caesar.pdf"/>
-        <content type="other" path="diggah.nfo"/>
+        <node title="Kiwisaft"/>
     </node>
 </topic_tree>

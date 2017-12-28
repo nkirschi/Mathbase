@@ -196,7 +196,7 @@ public class TopicController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public void recreateFile() throws IOException {
+    public static void recreateFile() throws IOException {
         try {
             //Erstellt XML-Datei
             {
@@ -272,7 +272,7 @@ public class TopicController {
      * @throws NodeMissingException wenn der Knoten nicht exisiert
      * @since 1.0
      */
-    public String getNodePath(String title) throws NodeMissingException {
+    String getNodePath(String title) throws NodeMissingException {
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title +
                     "']");
@@ -282,7 +282,7 @@ public class TopicController {
                 throw new NodeMissingException();
             }
             Node node = nodeList.item(0);
-            String path = TOPICS_PATH + getNodePath(node);
+            String path = getNodePath(node);
             Logger.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
             return path;
         } catch (XPathExpressionException e) {
@@ -303,9 +303,9 @@ public class TopicController {
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
      */
     private String getNodePath(Node node) {
+        if (node.getNodeName().equals(TAG_ROOT))
+            return TOPICS_PATH;
         String path = "/" + FileUtils.normalize(node.getAttributes().getNamedItem(ATTR_TITLE).getTextContent());
-        if (node.getParentNode().getNodeName().equals(TAG_ROOT))
-            return path;
         return getNodePath(node.getParentNode()) + path;
     }
 
@@ -388,39 +388,96 @@ public class TopicController {
     }
 
     /**
-     * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem gegebenen Eltern-Knoten
+     * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem als Objekt gegebenen Eltern-Knoten
+     *
+     * @param parentNode Eltern-Knoten
+     * @param title Titel des Knotens
+     * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
+     * @throws IOException wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @since 1.0
+     */
+    private void createNode(Node parentNode, String title) throws TitleCollisionException, IOException {
+        if (alreadyExists(title)) {
+            Logger.log(Level.WARNING, "Knoten \"" + title + "\" existiert bereits!");
+            throw new TitleCollisionException();
+        }
+
+        //Knoten wird erstellt und zum Elternknoten hinzugefügt
+        Element element = xmlHandler.getDoc().createElement(TAG_NODE);
+        element.setAttribute(ATTR_TITLE, title);
+        parentNode.appendChild(element);
+
+        //Ordner wird erstellt
+        String sPath = getNodePath(parentNode) + "/" + FileUtils.normalize(title);
+        Path path = Paths.get(sPath);
+        Files.createDirectory(path);
+        Logger.log(Level.INFO, "Ordner des Knotens \"" + title + "\" wurde erstellt.");
+
+        //XML-Datei wird gespeichert
+        save();
+    }
+
+    /**
+     * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem per Titel gegebenen Eltern-Knoten
      *
      * @param parent Titel des Eltern-Knotens
      * @param title  Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
-     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners
-     *                                 fehlschlägt
+     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
      * @since 1.0
      */
     public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException,
             IOException {
-        if (alreadyExists(title))
-            throw new TitleCollisionException();
-        if (!alreadyExists(parent))
-            throw new NodeMissingException();
-
         try {
-            //Knoten wird erstellt und zum Elternknoten hinzugefügt
+            //Eltern-Knoten wird herrausgesucht
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
                     + "']");
+            if (nodeList.getLength() == 0) {
+                Logger.log(Level.WARNING, "Knoten \"" + title + "\" konnte nicht gefunden werden!");
+                throw new NodeMissingException();
+            }
             Node parentNode = nodeList.item(0);
-            Element element = xmlHandler.getDoc().createElement(TAG_NODE);
-            element.setAttribute(ATTR_TITLE, title);
-            parentNode.appendChild(element);
+            Logger.log(Level.INFO, "Knoten \"" + parent + "\" gefunden.");
 
-            //Ordner wird erstellt
-            String sPath = ""; //TODO IMPL + LOGGING
-            Path path = Paths.get(sPath);
-            Files.createDirectory(path);
+            //Knoten wird unter dem gefundenen Elternknoten erzeugt
+            createNode(parentNode, title);
+            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter dem Knoten \"" + parent + "\" eingefügt");
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
 
-            //XML-Datei wird gespeichert
-            save();
+    /**
+     * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter der Wurzel {@value TAG_ROOT}
+     *
+     * @param title Titel des Knotens
+     * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
+     * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
+     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @since 1.0
+     */
+    public void createNode(String title) throws TitleCollisionException, NodeMissingException,
+            IOException {
+        try {
+            //Wurzel wird herrausgesucht
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT);
+            if (nodeList.getLength() == 0) {
+                Logger.log(Level.WARNING, "Wurzel \"" + TAG_ROOT + "\" konnte nicht gefunden werden!! *PANIC*");
+                throw new NodeMissingException();
+            }
+            Node parentNode = nodeList.item(0);
+            Logger.log(Level.INFO, "Wurzel \"" + TAG_ROOT + "\" gefunden.");
+
+            //Knoten wird unter dem gefundenen Elternknoten erzeugt
+            createNode(parentNode, title);
+            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter der Wurzel \"" + TAG_ROOT + "\" eingefügt");
         } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
