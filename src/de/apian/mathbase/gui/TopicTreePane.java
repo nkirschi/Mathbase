@@ -6,9 +6,7 @@
 
 package de.apian.mathbase.gui;
 
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 
 /**
  * Themenbaum in der Sidebar
@@ -39,5 +37,9 @@ public class TopicTreePane extends ScrollPane {
         setContent(treeView);
         setFitToHeight(true);
         setFitToWidth(true);
+
+        // TODO gscheides Kontextmenü
+        ContextMenu contextMenu = new ContextMenu(new MenuItem("Hinzufügen..."), new MenuItem("Löschen"));
+        treeView.setContextMenu(contextMenu);
     }
 }
