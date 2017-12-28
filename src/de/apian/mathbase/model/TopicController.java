@@ -33,7 +33,7 @@ import java.util.logging.Level;
  * @version 1.0
  * @since 1.0
  */
-public class TopicTreeController {
+public class TopicController {
 
     /**
      * Pfad des Topic-Ordners relativ zum Arbeitsverzeichnis. Hier werden die eigentlichen Dateien gespeichert
@@ -112,7 +112,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Laden der XML-Datei fehlschlägt oder der Topics-Ordner nicht existiert
      * @since 1.0
      */
-    public TopicTreeController() throws IOException {
+    public TopicController() throws IOException {
         load();
     }
 
@@ -189,7 +189,7 @@ public class TopicTreeController {
      * Neuerstellung der XML-Datei im Pfad {@value #ORIGINAL_PATH} und des Topic-Ordners im Pfad {@value #TOPICS_PATH}
      * relativ zum Arbeitsverzeichnis. Bereits existierende Dateien/Ordner werden mit der Endung .old erweitert.
      * <p>
-     * Kann auch aufgerufen werden, wenn der {@code TopicTreeController} noch nicht instanziert wurde,
+     * Kann auch aufgerufen werden, wenn der {@code TopicController} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
      * </p>
      *
