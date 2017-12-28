@@ -86,6 +86,13 @@ public class TopicTreeController {
     private final String ATTR_TYPE = "type";
 
     /**
+     * Bezeichner des Attributs {@code path} (Dateipfad einer Datei relativ zum Arbeitsverzeichnis) in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private final String ATTR_PATH = "path";
+
+    /**
      * Konstruktor
      *
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten
@@ -143,7 +150,8 @@ public class TopicTreeController {
     public void backUp() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
-            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH + "\" erfolgreich abgeschlossen");
+            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
+                    + "\" erfolgreich abgeschlossen");
         } catch (IOException ex) {
             Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", ex);
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
@@ -194,12 +202,19 @@ public class TopicTreeController {
     public boolean alreadyExists(String title) {
         boolean exists = false;
         try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']");
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
+                    + "']");
             if (nodeList.getLength() > 0)
                 exists = true;
             Logger.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
-        } catch (XPathExpressionException ex) { // Kann eigentlich niemals vorkommen
-            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, ex);
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
         return exists;
     }
@@ -213,10 +228,11 @@ public class TopicTreeController {
      */
     public NodeList getContents(String title) {
         try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT);
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
+                    + "']/" + TAG_CONTENT);
             Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
             return nodeList;
-        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+        } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
              * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
@@ -236,10 +252,42 @@ public class TopicTreeController {
      */
     public NodeList getChildNodes(String title) {
         try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE);
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
+                    + "']/" + TAG_NODE);
             Logger.log(Level.INFO, "Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
             return nodeList;
-        } catch (XPathExpressionException e) { // Kann eigentlich niemals vorkommen
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Gibt alle Titel der Knoten der ersten Ebene der XML-Datei zurück
+     *
+     * @return Ein {@code String}-Array, welches alle Titel der Knoten in der ersten Ebene der XML-Datei
+     * @since 1.0
+     */
+    public String[] getTopNodes() {
+        try {
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT + "/" + TAG_NODE);
+            String result[] = new String[nodeList.getLength()];
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                result[i] = nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getTextContent();
+            }
+            Logger.log(Level.INFO, "Titel der Top-Level-Knoten zurückgegeben");
+            return result;
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
@@ -254,11 +302,5 @@ public class TopicTreeController {
      */
     private String normalizeFilename(String fileName) {
         return fileName.toLowerCase().replaceAll("[^a-zäöüß0-9\\.\\-]", "_");
-    }
-
-    public static void main(String[] args) throws Exception {
-        TopicTreeController controller = new TopicTreeController();
-        NodeList nodeList = controller.getContents("Häufigkeitsanalyse");
-        System.out.println(nodeList.item(3).getAttributes().getNamedItem("type"));
     }
 }
