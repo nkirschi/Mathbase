@@ -8,6 +8,7 @@ package de.apian.mathbase.util;
 
 import de.apian.mathbase.exceptions.NodeMissingException;
 import de.apian.mathbase.exceptions.TitleCollisionException;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -133,20 +134,20 @@ public class TopicTreeController {
     }
 
     /**
-     * Speichern der Daten als XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis
+     * Speichern der Daten als XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
+     * Wird von den die XML-Datei bearbeitenden Methoden (welche sich nur in dieser Klasse befinden) selbst aufgerufen.
      *
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
-    public void save() throws IOException {
+    private void save() throws IOException {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException ex) {
             Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", ex);
-            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // Schmeiß eine IOException, um den aufrufenden Methoden mitzuteilen,
             // dass die Datei nicht geladen werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
             throw ex;
         }
     }
@@ -309,6 +310,7 @@ public class TopicTreeController {
             throw new TitleCollisionException();
 
         try {
+            //Knoten wird erstellt und zum Elternknoten hinzugefügt
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
                     + "']");
             if (nodeList.getLength() == 0)
@@ -316,10 +318,13 @@ public class TopicTreeController {
             else if (nodeList.getLength() > 1)
                 throw new TitleCollisionException();
             Node parentNode = nodeList.item(0);
-            Node node = xmlHandler.getDoc().createTextNode("");
-            //NamedAttributeItem titleAttributeItem = new
-            //node.getAttributes().setNamedItem();
-            parentNode.appendChild(node);
+            Element element = xmlHandler.getDoc().createElement(TAG_NODE);
+            element.setAttribute(ATTR_TITLE, title);
+            parentNode.appendChild(element);
+
+            //Ordner wird erstellt
+
+            //XML-Datei wird gespeichert
         } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
