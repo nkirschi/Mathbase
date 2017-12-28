@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. MathBox P-Seminar 16/18. All rights reserved.
+ * Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
  * This product is licensed under the GNU General Public License v3.0.
  * See LICENSE file for further information.
  */
@@ -113,11 +113,6 @@ public class TopicTreeController {
      * @since 1.0
      */
     public TopicTreeController() throws IOException {
-        if (!Files.exists(Paths.get(TOPICS_PATH))) {
-            Logger.log(Level.SEVERE, TOPICS_PATH + "-Ordner existiert nicht, sollte also zusammen mit der " +
-                    "XML-Datei neu erstellt werden!");
-            throw new IOException(TOPICS_PATH + "-Ordner existiert nicht!");
-        }
         load();
     }
 
@@ -201,7 +196,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public static void recreateFile() throws IOException {
+    public void recreateFile() throws IOException {
         try {
             //Erstellt XML-Datei
             {
@@ -278,17 +273,17 @@ public class TopicTreeController {
      * @since 1.0
      */
     public String getNodePath(String title) throws NodeMissingException {
-        if (!alreadyExists(title)) {
-            Logger.log(Level.WARNING, "Konnte Knoten " + title + " nicht finden !");
-            throw new NodeMissingException();
-        }
         try {
-            String path = TOPICS_PATH;
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title +
                     "']");
+
+            if (nodeList.getLength() == 0) {
+                Logger.log(Level.WARNING, "Knoten \"" + title + "\" konnte nicht gefunden werden!");
+                throw new NodeMissingException();
+            }
             Node node = nodeList.item(0);
-            path += getNodePathRecursive(node);
-            Logger.log(Level.INFO, "Pfad zum Ordner des Knotens " + title + " gefunden.");
+            String path = TOPICS_PATH + getNodePath(node);
+            Logger.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
             return path;
         } catch (XPathExpressionException e) {
             /*
@@ -307,11 +302,11 @@ public class TopicTreeController {
      * @param node Der Ausgangsknoten
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
      */
-    private String getNodePathRecursive(Node node) {
+    private String getNodePath(Node node) {
         String path = "/" + FileUtils.normalize(node.getAttributes().getNamedItem(ATTR_TITLE).getTextContent());
         if (node.getParentNode().getNodeName().equals(TAG_ROOT))
             return path;
-        return getNodePathRecursive(node.getParentNode()) + path;
+        return getNodePath(node.getParentNode()) + path;
     }
 
     /**
