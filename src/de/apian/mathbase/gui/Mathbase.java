@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -145,8 +144,6 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     private void cleanUp() {
-        PasswordDialog passwordDialog = new PasswordDialog();
-        Optional<String> result = passwordDialog.showAndWait();
-        result.ifPresent(p -> System.out.println(p));
+
     }
 }
