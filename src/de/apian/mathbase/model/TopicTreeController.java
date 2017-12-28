@@ -9,6 +9,7 @@ package de.apian.mathbase.model;
 import de.apian.mathbase.exceptions.NodeMissingException;
 import de.apian.mathbase.exceptions.TitleCollisionException;
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,7 +40,7 @@ public class TopicTreeController {
      *
      * @since 1.0
      */
-    private static final String TOPICS_PATH = "topics";
+    static final String TOPICS_PATH = "topics";
 
     /**
      * {@code XMLFileHandler} der XML-Datei
@@ -108,10 +109,15 @@ public class TopicTreeController {
     /**
      * Konstruktor
      *
-     * @throws IOException wenn das Laden der XML-Datei fehlschlägt
+     * @throws IOException wenn das Laden der XML-Datei fehlschlägt oder der Topics-Ordner nicht existiert
      * @since 1.0
      */
     public TopicTreeController() throws IOException {
+        if (!Files.exists(Paths.get(TOPICS_PATH))) {
+            Logger.log(Level.SEVERE, TOPICS_PATH + "-Ordner existiert nicht, sollte also zusammen mit der " +
+                    "XML-Datei neu erstellt werden!");
+            throw new IOException(TOPICS_PATH + "-Ordner existiert nicht!");
+        }
         load();
     }
 
@@ -185,7 +191,8 @@ public class TopicTreeController {
     }
 
     /**
-     * Neuerstellung der XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
+     * Neuerstellung der XML-Datei im Pfad {@value #ORIGINAL_PATH} und des Topic-Ordners im Pfad {@value #TOPICS_PATH}
+     * relativ zum Arbeitsverzeichnis. Bereits existierende Dateien/Ordner werden mit der Endung .old erweitert.
      * <p>
      * Kann auch aufgerufen werden, wenn der {@code TopicTreeController} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
@@ -196,16 +203,36 @@ public class TopicTreeController {
      */
     public static void recreateFile() throws IOException {
         try {
-            Path path = Paths.get(ORIGINAL_PATH);
-            Files.createFile(path);
-            BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
-            writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
-                    "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
-                    "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
-                    "  ~ See LICENSE file for further information.\n  -->\n\n" +
-                    "<%s></%s>", TAG_ROOT, TAG_ROOT));
-            writer.close();
-            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
+            //Erstellt XML-Datei
+            {
+                Path path = Paths.get(ORIGINAL_PATH);
+                if (Files.exists(path)) {
+                    FileUtils.move(path, Paths.get(ORIGINAL_PATH + ".old"));
+                    Logger.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden. Wurde vor " +
+                            "Neuerstellung umbenannt!");
+                }
+                Files.createFile(path);
+                BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
+                writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
+                        "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
+                        "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
+                        "  ~ See LICENSE file for further information.\n  -->\n\n" +
+                        "<%s></%s>", TAG_ROOT, TAG_ROOT));
+                writer.close();
+                Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
+            }
+
+            //Erstellt Topics-Ordner
+            {
+                Path path = Paths.get(TOPICS_PATH);
+                if (Files.exists(path)) {
+                    FileUtils.move(path, Paths.get(TOPICS_PATH + ".old"));
+                    Logger.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden. Wurde vor " +
+                            "Neuerstellung umbenannt!");
+                }
+                Files.createDirectory(path);
+            }
+
         } catch (IOException ex) {
             Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
@@ -240,6 +267,51 @@ public class TopicTreeController {
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
         return exists;
+    }
+
+    /**
+     * Gibt den Pfad des Ordners des Knotens mit einem bestimmten Titel relativ zum Arbeitsverzeichnis zurück
+     *
+     * @param title Titel des Knotens
+     * @return Pfad des Ordners des Knotens relativ zum Arbeitsverzeichnis
+     * @throws NodeMissingException wenn der Knoten nicht exisiert
+     * @since 1.0
+     */
+    public String getNodePath(String title) throws NodeMissingException {
+        if (!alreadyExists(title)) {
+            Logger.log(Level.WARNING, "Konnte Knoten " + title + " nicht finden !");
+            throw new NodeMissingException();
+        }
+        try {
+            String path = TOPICS_PATH;
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title +
+                    "']");
+            Node node = nodeList.item(0);
+            path += getNodePathRecursive(node);
+            Logger.log(Level.INFO, "Pfad zum Ordner des Knotens " + title + " gefunden.");
+            return path;
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Rekursive Hilfmethode zum Finden von Pfaden des Ordners eines Knoten
+     *
+     * @param node Der Ausgangsknoten
+     * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
+     */
+    private String getNodePathRecursive(Node node) {
+        String path = "/" + FileUtils.normalize(node.getAttributes().getNamedItem(ATTR_TITLE).getTextContent());
+        if (node.getParentNode().getNodeName().equals(TAG_ROOT))
+            return path;
+        return getNodePathRecursive(node.getParentNode()) + path;
     }
 
     /**
@@ -327,26 +399,30 @@ public class TopicTreeController {
      * @param title  Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
-     * @throws IOException             wenn speichern der XML-Datei fehlschlägt
+     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners
+     *                                 fehlschlägt
      * @since 1.0
      */
-    public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException, IOException {
+    public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException,
+            IOException {
         if (alreadyExists(title))
             throw new TitleCollisionException();
+        if (!alreadyExists(parent))
+            throw new NodeMissingException();
 
         try {
             //Knoten wird erstellt und zum Elternknoten hinzugefügt
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
                     + "']");
-            if (nodeList.getLength() == 0)
-                throw new NodeMissingException();
             Node parentNode = nodeList.item(0);
             Element element = xmlHandler.getDoc().createElement(TAG_NODE);
             element.setAttribute(ATTR_TITLE, title);
             parentNode.appendChild(element);
 
             //Ordner wird erstellt
-
+            String sPath = ""; //TODO IMPL + LOGGING
+            Path path = Paths.get(sPath);
+            Files.createDirectory(path);
 
             //XML-Datei wird gespeichert
             save();

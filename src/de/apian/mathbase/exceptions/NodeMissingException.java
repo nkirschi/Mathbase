@@ -11,5 +11,5 @@ package de.apian.mathbase.exceptions;
  *
  * @since 1.0
  */
-public class NodeMissingException extends Throwable {
+public class NodeMissingException extends Exception {
 }
