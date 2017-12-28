@@ -6,7 +6,7 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.model.TopicTreeController;
+import de.apian.mathbase.model.TopicController;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import javafx.geometry.Pos;
@@ -28,7 +28,7 @@ public class ContentPane extends VBox {
         System.out.println(title);
 
         try {
-            TopicTreeController controller = new TopicTreeController();
+            TopicController controller = new TopicController();
 
             if (controller.getContents(title).getLength() == 0) { // TODO
                 try {
