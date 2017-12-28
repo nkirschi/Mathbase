@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.model.TopicTreeController;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import javafx.geometry.Pos;
@@ -23,15 +24,25 @@ import java.io.IOException;
  * @since 1.0
  */
 public class ContentPane extends VBox {
-    ContentPane() {
+    ContentPane(String title) {
+        System.out.println(title);
+
         try {
-            getChildren().add(new ImageView(Images.fetch(Constants.IMAGE_ROOT + "icon.png", true)));
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            TopicTreeController controller = new TopicTreeController();
+
+            if (controller.getContents(title).getLength() == 0) { // TODO
+                try {
+                    getChildren().add(new ImageView(Images.fetch(Constants.IMAGE_ROOT + "icon.png", true)));
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                setAlignment(Pos.CENTER);
+                Label label = new Label("Mathbase " + Constants.APP_VERSION);
+                label.setFont(Constants.DEFAULT_FONT);
+                getChildren().add(label);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
-        setAlignment(Pos.CENTER);
-        Label label = new Label("Mathbase " + Constants.APP_VERSION);
-        label.setFont(Constants.DEFAULT_FONT);
-        getChildren().add(label);
     }
 }

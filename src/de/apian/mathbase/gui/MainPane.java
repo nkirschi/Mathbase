@@ -21,7 +21,7 @@ public class MainPane extends SplitPane {
         //setLeft(new TopicTreePane(this));
         SidebarPane sidebarPane = new SidebarPane(this);
         sidebarPane.setMinWidth(225);
-        getItems().addAll(sidebarPane, new ContentPane());
+        getItems().addAll(sidebarPane, new ContentPane(""));
         SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
     }
 }
