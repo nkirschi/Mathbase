@@ -163,7 +163,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public static void createNewFile() throws IOException {
+    public static void recreateFile() throws IOException {
         try {
             Path path = Paths.get(ORIGINAL_PATH);
             Files.createFile(path);
@@ -243,17 +243,6 @@ public class TopicTreeController {
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
-    }
-
-    /**
-     * Erzeugt aus einem beliebigen {@code String} einen unseren Standards entsprechenden Dateinamen
-     *
-     * @param fileName Ausgangs-{@code String}
-     * @return Einen unseren Standards entsprechenden Dateinamen als {@code String}
-     * @since 1.0
-     */
-    private String normalizeFilename(String fileName) {
-        return fileName.toLowerCase().replaceAll("[^a-zäöüß0-9\\.\\-]", "_");
     }
 
     public static void main(String[] args) throws Exception {
