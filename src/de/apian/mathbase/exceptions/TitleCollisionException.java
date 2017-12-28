@@ -11,5 +11,5 @@ package de.apian.mathbase.exceptions;
  *
  * @since 1.0
  */
-public class TitleCollisionException extends Throwable {
+public class TitleCollisionException extends Exception {
 }

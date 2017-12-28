@@ -270,6 +270,51 @@ public class TopicTreeController {
     }
 
     /**
+     * Gibt den Pfad des Ordners des Knotens mit einem bestimmten Titel relativ zum Arbeitsverzeichnis zurück
+     *
+     * @param title Titel des Knotens
+     * @return Pfad des Ordners des Knotens relativ zum Arbeitsverzeichnis
+     * @throws NodeMissingException wenn der Knoten nicht exisiert
+     * @since 1.0
+     */
+    public String getNodePath(String title) throws NodeMissingException {
+        if (!alreadyExists(title)) {
+            Logger.log(Level.WARNING, "Konnte Knoten " + title + " nicht finden !");
+            throw new NodeMissingException();
+        }
+        try {
+            String path = TOPICS_PATH;
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title +
+                    "']");
+            Node node = nodeList.item(0);
+            path += getNodePathRecursive(node);
+            Logger.log(Level.INFO, "Pfad zum Ordner des Knotens " + title + " gefunden.");
+            return path;
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Rekursive Hilfmethode zum Finden von Pfaden des Ordners eines Knoten
+     *
+     * @param node Der Ausgangsknoten
+     * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
+     */
+    private String getNodePathRecursive(Node node) {
+        String path = "/" + FileUtils.normalize(node.getAttributes().getNamedItem(ATTR_TITLE).getTextContent());
+        if (node.getParentNode().getNodeName().equals(TAG_ROOT))
+            return path;
+        return getNodePathRecursive(node.getParentNode()) + path;
+    }
+
+    /**
      * Gibt eine {@code NodeList} aller Inhalte eines bestimmten Knotens zurück
      *
      * @param title Der Titel des Knotens
@@ -353,29 +398,29 @@ public class TopicTreeController {
      * @param parent Titel des Eltern-Knotens
      * @param title  Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
-     * @throws NodeMissingException wenn der Elternknoten nicht exisiert
-     * @throws IOException wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners
-     *                     fehlschlägt
+     * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
+     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners
+     *                                 fehlschlägt
      * @since 1.0
      */
     public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException,
             IOException {
         if (alreadyExists(title))
             throw new TitleCollisionException();
+        if (!alreadyExists(parent))
+            throw new NodeMissingException();
 
         try {
             //Knoten wird erstellt und zum Elternknoten hinzugefügt
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
                     + "']");
-            if (nodeList.getLength() == 0)
-                throw new NodeMissingException();
             Node parentNode = nodeList.item(0);
             Element element = xmlHandler.getDoc().createElement(TAG_NODE);
             element.setAttribute(ATTR_TITLE, title);
             parentNode.appendChild(element);
 
             //Ordner wird erstellt
-            String sPath = ""; //TODO impl
+            String sPath = ""; //TODO IMPL + LOGGING
             Path path = Paths.get(sPath);
             Files.createDirectory(path);
 
