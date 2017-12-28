@@ -12,11 +12,10 @@ import de.apian.mathbase.util.Logger;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -146,13 +145,8 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     private void cleanUp() {
-        // Alerts ersetzen den JOptionPane-Dialog
-        Alert alert = new Alert(Alert.AlertType.WARNING); // Nur ein Test :D
-        alert.setTitle("Mathbase " + Constants.APP_VERSION);
-        alert.setHeaderText("Eine Mitteilung...");
-        alert.setContentText("Sie widerwärtiger Unhold!");
-        alert.initOwner(stage);
-        alert.initStyle(StageStyle.DECORATED);
-        alert.showAndWait();
+        PasswordDialog passwordDialog = new PasswordDialog();
+        Optional<String> result = passwordDialog.showAndWait();
+        result.ifPresent(p -> System.out.println(p));
     }
 }

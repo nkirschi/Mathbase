@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -20,6 +21,11 @@ public class SidebarPane extends BorderPane {
 
     public SidebarPane(MainPane mainPane) {
         this.mainPane = mainPane;
+
         setCenter(new TopicTreePane(mainPane));
+
+        TextField textField = new TextField();
+        textField.setPromptText("Suche...");
+        setBottom(textField);
     }
 }
