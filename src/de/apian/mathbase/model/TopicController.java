@@ -334,6 +334,7 @@ public class TopicController {
      */
     public NodeList getContents(String title) {
         try {
+            //TODO REMAKE
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
                     + "']/" + TAG_CONTENT);
             Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
@@ -550,10 +551,12 @@ public class TopicController {
         //Verschiebt Knoten
         node.getParentNode().removeChild(node);
         newParent.appendChild(node);
+        //Logger.log(Level.INFO, "Knoten verschoben!");
 
         //Verschiebe Ordner
         Path newPath = Paths.get(getNodePath(node));
         FileUtils.move(oldPath, newPath);
+        //Logger.log(Level.INFO, "Ordner verschoben!");
 
         //XML-Datei wird gespeichert
         save();
@@ -562,29 +565,102 @@ public class TopicController {
     /**
      * Verschiebt einen per Titel gegebenen Knoten unter einen anderen per Titel gegebenen Knoten
      *
-     * @param newParent Der neue Elternknoten (Darf nicht {@code node} sein)
-     * @param node      Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @param newParentTitle Der neue Elternknoten (Darf nicht {@code node} sein)
+     * @param nodeTitle Titel des zu verschiebenden Knotens
      * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
      * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist oder {@code newParent} gleich
      *                                  {@code node} ist
      * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    public void moveNode(String newParent, String node) throws NodeMissingException, IllegalArgumentException,
+    public void moveNode(String newParentTitle, String nodeTitle) throws NodeMissingException, IllegalArgumentException,
             IOException {
-        //TODO impl
+        try {
+            //Elternknoten wird herrausgesucht
+            Node parentNode;
+            {
+                NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" +
+                        newParentTitle + "']");
+
+                if (nodeList.getLength() == 0) {
+                    throw new NodeMissingException("Knoten \"" + newParentTitle + "\" konnte nicht gefunden werden!");
+                }
+                parentNode = nodeList.item(0);
+            }
+
+            //Knoten wird herrausgesucht
+            Node node;
+            {
+                NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" +
+                        nodeTitle + "']");
+
+                if (nodeList.getLength() == 0) {
+                    throw new NodeMissingException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
+                }
+                node = nodeList.item(0);
+            }
+
+            //Knoten wird unter den gefundenen Elternknoten geschoben
+            moveNode(parentNode, node);
+            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" wurde unter den Knoten \"" + newParentTitle +
+                    "\" verschoben");
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
     }
 
     /**
      * Verschiebt einen per Titel gegebenen Knoten unter die Wurzel {@value TAG_ROOT}
      *
-     * @param node Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @param nodeTitle Titel des zu verschiebenden Knotens
      * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
      * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
      * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    public void moveNode(String node) throws NodeMissingException, IllegalArgumentException, IOException {
-        //TODO impl
+    public void moveNode(String nodeTitle) throws NodeMissingException, IllegalArgumentException, IOException {
+        try {
+            //Wurzel wird herrausgesucht
+            Node parentNode;
+            {
+                NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT);
+                if (nodeList.getLength() == 0) {
+                    throw new NodeMissingException("Wurzel \"" + TAG_ROOT + "\" konnte nicht gefunden werden!! " +
+                            "*PANIC*");
+                }
+                parentNode = nodeList.item(0);
+            }
+
+            //Knoten wird herrausgesucht
+            Node node;
+            {
+                NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" +
+                        nodeTitle + "']");
+
+                if (nodeList.getLength() == 0) {
+                    throw new NodeMissingException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
+                }
+                node = nodeList.item(0);
+            }
+
+            //Knoten wird unter den gefundenen Elternknoten geschoben
+            moveNode(parentNode, node);
+            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" wurde unter die Wurzel \"" + TAG_ROOT +
+                    "\" verschoben");
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
     }
 }
