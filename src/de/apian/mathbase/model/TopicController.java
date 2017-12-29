@@ -40,7 +40,7 @@ public class TopicController {
      *
      * @since 1.0
      */
-    static final String TOPICS_PATH = "topics";
+    private static final String TOPICS_PATH = "topics";
 
     /**
      * {@code XMLFileHandler} der XML-Datei
