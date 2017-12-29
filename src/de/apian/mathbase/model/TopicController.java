@@ -301,8 +301,9 @@ public class TopicController {
      *
      * @param node Der Ausgangsknoten
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
-     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
-     *                                  keiner "unserer" Knoten sein kann oder wenn der Knoten NULL ist. Dazu muss schon einiges schieflaufen ...
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. kein Titel-Attribut besitzt und damit
+     *                                 eigentlich auch keiner "unserer" Knoten sein kann. Dazu muss schon einiges
+     *                                 schieflaufen ...
      */
     private String getNodePath(Node node) throws IllegalArgumentException {
         if (node == null)
@@ -355,8 +356,9 @@ public class TopicController {
      *
      * @param title Der Titel des Knotens
      * @return Ein {@code String}-Array der Titel aller direkten Kind-Knoten des Knotens
-     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
-     *                                  keiner "unserer" Knoten sein kann. Dazu muss schon einiges schieflaufen ...
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. kein Titel-Attribut besitzt und damit
+     *                                  eigentlich auch keiner "unserer" Knoten sein kann. Dazu muss schon einiges
+     *                                  schieflaufen ...
      * @since 1.0
      */
     public String[] getChildNodes(String title) throws IllegalArgumentException {
@@ -397,8 +399,9 @@ public class TopicController {
      * Gibt alle Titel der Knoten der ersten Ebene der XML-Datei zurück
      *
      * @return Ein {@code String}-Array, welches alle Titel der Knoten in der ersten Ebene der XML-Datei
-     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
-     *                                  keiner "unserer" Knoten sein kann. Dazu muss schon einiges schieflaufen ...
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. kein Titel-Attribut besitzt und damit
+     *                                  eigentlich auch keiner "unserer" Knoten sein kann. Dazu muss schon einiges
+     *                                  schieflaufen ...
      * @since 1.0
      */
     public String[] getTopNodes() throws IllegalArgumentException {
@@ -438,14 +441,10 @@ public class TopicController {
      *
      * @param parentNode Eltern-Knoten
      * @param title      Titel des Knotens
-     * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    private void createNode(Node parentNode, String title) throws TitleCollisionException, IOException {
-        if (alreadyExists(title)) {
-            throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
-        }
+    private void createNode(Node parentNode, String title) throws IOException {
 
         //Knoten wird erstellt und zum Elternknoten hinzugefügt
         Element element = xmlHandler.getDoc().createElement(TAG_NODE);
@@ -465,27 +464,31 @@ public class TopicController {
     /**
      * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem per Titel gegebenen Eltern-Knoten
      *
-     * @param parent Titel des Eltern-Knotens
+     * @param parentTitle Titel des Eltern-Knotens
      * @param title  Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException,
+    public void createNode(String parentTitle, String title) throws TitleCollisionException, NodeMissingException,
             IOException {
+        if (alreadyExists(title)) {
+            throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
+        }
         try {
             //Eltern-Knoten wird herrausgesucht
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
-                    + "']");
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" +
+                    parentTitle + "']");
             if (nodeList.getLength() == 0) {
-                throw new NodeMissingException("Knoten \"" + title + "\" konnte nicht gefunden werden!");
+                throw new NodeMissingException("Knoten \"" + parentTitle + "\" konnte nicht gefunden werden!");
             }
             Node parentNode = nodeList.item(0);
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
             createNode(parentNode, title);
-            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter dem Knoten \"" + parent + "\" eingefügt");
+            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter dem Knoten \"" + parentTitle +
+                    "\" eingefügt");
         } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
@@ -508,6 +511,9 @@ public class TopicController {
      */
     public void createNode(String title) throws TitleCollisionException, NodeMissingException,
             IOException {
+        if (alreadyExists(title)) {
+            throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
+        }
         try {
             //Wurzel wird herrausgesucht
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT);
@@ -662,5 +668,45 @@ public class TopicController {
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
+    }
+
+    /**
+     * Löscht einen per Titel gegebenen Knoten und seinen Ordner
+     *
+     * @param nodeTitle Titel des zu löschenden Knotens
+     * @throws NodeMissingException wenn der Knoten nicht existiert
+     * @throws IOException          wenn es einen Fehler beim Löschen gab
+     * @since 1.0
+     */
+    public void deleteNode(String nodeTitle) throws NodeMissingException, IOException {
+        try {
+            //Knoten wird herrausgesucht
+            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle
+                    + "']");
+            if (nodeList.getLength() == 0) {
+                throw new NodeMissingException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
+            }
+            Node node = nodeList.item(0);
+            Path path = Paths.get(getNodePath(node));
+
+            //Knoten wird gelöscht
+            node.getParentNode().removeChild(node);
+
+            //Ordner wird gelöscht
+            Files.deleteIfExists(path); //TODO gucken ob dat auch für nicht leere Ordner funzt, wenn nein muss Ersatz her!!!
+            //TODO Manche sagen nämlich ja, manche nein, Java halt :\
+            //XML-Datei wird gespeichert
+            save();
+            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" wurde gelöscht");
+        } catch (XPathExpressionException e) {
+            /*
+             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
+             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
+             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
+             */
+            Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        }
+
     }
 }
