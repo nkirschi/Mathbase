@@ -100,7 +100,8 @@ public class TopicController {
     private final String ATTR_TYPE = "type";
 
     /**
-     * Bezeichner des Attributs {@code path} (Dateipfad einer Datei relativ zum Ordner des Elternknoten) in der XML-Datei
+     * Bezeichner des Attributs {@code path} (Dateipfad einer Datei relativ zum Ordner des Elternknoten) in der
+     * XML-Datei
      *
      * @since 1.0
      */
@@ -300,11 +301,27 @@ public class TopicController {
      *
      * @param node Der Ausgangsknoten
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
+     *                                  keiner "unserer" Knoten sein kann oder wenn der Knoten NULL ist. Dazu muss schon einiges schieflaufen ...
      */
-    private String getNodePath(Node node) {
+    private String getNodePath(Node node) throws IllegalArgumentException {
+        if (node == null)
+            throw new IllegalArgumentException("Knoten ist null!");
+
         if (node.getNodeName().equals(TAG_ROOT))
             return TOPICS_PATH;
-        String path = "/" + FileUtils.normalize(node.getAttributes().getNamedItem(ATTR_TITLE).getTextContent());
+
+        //Bringe Titel des Knoten in Erfahrung
+        String nodeTitle = "";
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
+        }
+        if (nodeTitle.equals("")) {
+            throw new IllegalArgumentException("Knoten, welcher kein Element ist bzw keinen Titel hat, gefunden! " +
+                    "*PANIK*");
+        }
+
+        String path = "/" + FileUtils.normalize(nodeTitle);
         return getNodePath(node.getParentNode()) + path;
     }
 
@@ -337,17 +354,32 @@ public class TopicController {
      *
      * @param title Der Titel des Knotens
      * @return Ein {@code String}-Array der Titel aller direkten Kind-Knoten des Knotens
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
+     *                                  keiner "unserer" Knoten sein kann. Dazu muss schon einiges schieflaufen ...
      * @since 1.0
      */
-    public String[] getChildNodes(String title) {
+    public String[] getChildNodes(String title) throws IllegalArgumentException {
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title
                     + "']/" + TAG_NODE);
             String[] result = new String[nodeList.getLength()];
             for (int i = 0; i < nodeList.getLength(); i++) {
-                result[i] = nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getTextContent();
+                Node node = nodeList.item(i);
+
+                //Bringe Titel des Knoten in Erfahrung
+                String nodeTitle = "";
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
+                }
+                if (nodeTitle.equals("")) {
+                    throw new IllegalArgumentException("Knoten, welcher kein Element ist bzw keinen Titel hat, " +
+                            "gefunden! *PANIK*");
+                }
+
+                result[i] = nodeTitle;
             }
-            Logger.log(Level.INFO, "Titel aller Kind-Knoten des Knotens mit dem Titel \"" + title + "\" zurückgegeben");
+            Logger.log(Level.INFO, "Titel aller Kind-Knoten des Knotens mit dem Titel \"" + title
+                    + "\" zurückgegeben");
             return result;
         } catch (XPathExpressionException e) {
             /*
@@ -364,14 +396,28 @@ public class TopicController {
      * Gibt alle Titel der Knoten der ersten Ebene der XML-Datei zurück
      *
      * @return Ein {@code String}-Array, welches alle Titel der Knoten in der ersten Ebene der XML-Datei
+     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. keinen Titel hat und damit eigentlich auch
+     *                                  keiner "unserer" Knoten sein kann. Dazu muss schon einiges schieflaufen ...
      * @since 1.0
      */
-    public String[] getTopNodes() {
+    public String[] getTopNodes() throws IllegalArgumentException {
         try {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT + "/" + TAG_NODE);
             String[] result = new String[nodeList.getLength()];
             for (int i = 0; i < nodeList.getLength(); i++) {
-                result[i] = nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getTextContent();
+                Node node = nodeList.item(i);
+
+                //Bringe Titel des Knoten in Erfahrung
+                String nodeTitle = "";
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
+                }
+                if (nodeTitle.equals("")) {
+                    throw new IllegalArgumentException("Knoten, welcher kein Element ist bzw keinen Titel hat, " +
+                            "gefunden! *PANIK*");
+                }
+
+                result[i] = nodeTitle;
             }
             Logger.log(Level.INFO, "Titel der Top-Level-Knoten zurückgegeben");
             return result;
@@ -392,7 +438,7 @@ public class TopicController {
      * @param parentNode Eltern-Knoten
      * @param title      Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
-     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
     private void createNode(Node parentNode, String title) throws TitleCollisionException, IOException {
@@ -407,8 +453,7 @@ public class TopicController {
         Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde erstellt.");
 
         //Ordner wird erstellt
-        String sPath = getNodePath(parentNode) + "/" + FileUtils.normalize(title);
-        Path path = Paths.get(sPath);
+        Path path = Paths.get(getNodePath(element));
         Files.createDirectory(path);
         Logger.log(Level.INFO, "Ordner des Knotens \"" + title + "\" wurde erstellt.");
 
@@ -423,7 +468,7 @@ public class TopicController {
      * @param title  Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
-     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
     public void createNode(String parent, String title) throws TitleCollisionException, NodeMissingException,
@@ -457,7 +502,7 @@ public class TopicController {
      * @param title Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
-     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
     public void createNode(String title) throws TitleCollisionException, NodeMissingException,
@@ -472,7 +517,8 @@ public class TopicController {
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
             createNode(parentNode, title);
-            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter der Wurzel \"" + TAG_ROOT + "\" eingefügt");
+            Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter der Wurzel \"" + TAG_ROOT +
+                    "\" eingefügt");
         } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
@@ -485,16 +531,60 @@ public class TopicController {
     }
 
     /**
-     * Verschiebt einen Knoten unter einen per Objekt gegebenen Knoten
+     * Verschiebt einen als Objekt gegebenen Knoten unter einen anderen als Objekt gegebenen Knoten
      *
      * @param newParent Der neue Elternknoten (Darf nicht {@code node} sein)
      * @param node      Zu verschiebender Knoten (Darf nicht Wurzel sein)
-     * @throws IllegalArgumentException wenn {@code newParent} gleich {@code node} ist, oder {@code node} die Wurzel
-     *                                  {@value TAG_ROOT} ist
-     * @throws NodeMissingException     wenn eine der beiden Knoten nicht vorhanden ist
+     * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
+     * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    private void moveNode(Node newParent, Node node) throws IllegalArgumentException, NodeMissingException {
+    private void moveNode(Node newParent, Node node) throws IllegalArgumentException, IOException {
+        //Überprüft auf illegale Parameter
+        if (node.getNodeName().equals(TAG_ROOT)) {
+            throw new IllegalArgumentException("Zu verschiebender Knoten darf nicht die Wurzel \"" + TAG_ROOT
+                    + "\" sein!");
+        }
+        Path oldPath = Paths.get(getNodePath(node));
+
+        //Verschiebt Knoten
+        node.getParentNode().removeChild(node);
+        newParent.appendChild(node);
+
+        //Verschiebe Ordner
+        Path newPath = Paths.get(getNodePath(node));
+        FileUtils.move(oldPath, newPath);
+
+        //XML-Datei wird gespeichert
+        save();
+    }
+
+    /**
+     * Verschiebt einen per Titel gegebenen Knoten unter einen anderen per Titel gegebenen Knoten
+     *
+     * @param newParent Der neue Elternknoten (Darf nicht {@code node} sein)
+     * @param node      Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
+     * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist oder {@code newParent} gleich
+     *                                  {@code node} ist
+     * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
+     * @since 1.0
+     */
+    public void moveNode(String newParent, String node) throws NodeMissingException, IllegalArgumentException,
+            IOException {
+        //TODO impl
+    }
+
+    /**
+     * Verschiebt einen per Titel gegebenen Knoten unter die Wurzel {@value TAG_ROOT}
+     *
+     * @param node Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
+     * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
+     * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
+     * @since 1.0
+     */
+    public void moveNode(String node) throws NodeMissingException, IllegalArgumentException, IOException {
         //TODO impl
     }
 }

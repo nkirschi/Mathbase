@@ -9,6 +9,8 @@ package de.apian.mathbase.exceptions;
 /**
  * Wird geworfen, falls es zu einer Kollision der Titel zweier Knoten kommen würde
  *
+ * @author Benedikt Mödl
+ * @version 1.0
  * @since 1.0
  */
 public class TitleCollisionException extends Exception {
