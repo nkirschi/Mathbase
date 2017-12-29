@@ -278,8 +278,7 @@ public class TopicController {
                     "']");
 
             if (nodeList.getLength() == 0) {
-                Logger.log(Level.WARNING, "Knoten \"" + title + "\" konnte nicht gefunden werden!");
-                throw new NodeMissingException();
+                throw new NodeMissingException("Knoten \"" + title + "\" konnte nicht gefunden werden!");
             }
             Node node = nodeList.item(0);
             String path = getNodePath(node);
@@ -391,21 +390,21 @@ public class TopicController {
      * Erstellt einen neuen Knoten (sofern Titel nicht schon vergeben) unter einem als Objekt gegebenen Eltern-Knoten
      *
      * @param parentNode Eltern-Knoten
-     * @param title Titel des Knotens
+     * @param title      Titel des Knotens
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
-     * @throws IOException wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
+     * @throws IOException             wenn speichern der XML-Datei fehlschlägt, bzw wenn erstellen des Ordners fehlschlägt
      * @since 1.0
      */
     private void createNode(Node parentNode, String title) throws TitleCollisionException, IOException {
         if (alreadyExists(title)) {
-            Logger.log(Level.WARNING, "Knoten \"" + title + "\" existiert bereits!");
-            throw new TitleCollisionException();
+            throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
         }
 
         //Knoten wird erstellt und zum Elternknoten hinzugefügt
         Element element = xmlHandler.getDoc().createElement(TAG_NODE);
         element.setAttribute(ATTR_TITLE, title);
         parentNode.appendChild(element);
+        Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde erstellt.");
 
         //Ordner wird erstellt
         String sPath = getNodePath(parentNode) + "/" + FileUtils.normalize(title);
@@ -434,11 +433,9 @@ public class TopicController {
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent
                     + "']");
             if (nodeList.getLength() == 0) {
-                Logger.log(Level.WARNING, "Knoten \"" + title + "\" konnte nicht gefunden werden!");
-                throw new NodeMissingException();
+                throw new NodeMissingException("Knoten \"" + title + "\" konnte nicht gefunden werden!");
             }
             Node parentNode = nodeList.item(0);
-            Logger.log(Level.INFO, "Knoten \"" + parent + "\" gefunden.");
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
             createNode(parentNode, title);
@@ -469,11 +466,9 @@ public class TopicController {
             //Wurzel wird herrausgesucht
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_ROOT);
             if (nodeList.getLength() == 0) {
-                Logger.log(Level.WARNING, "Wurzel \"" + TAG_ROOT + "\" konnte nicht gefunden werden!! *PANIC*");
-                throw new NodeMissingException();
+                throw new NodeMissingException("Wurzel \"" + TAG_ROOT + "\" konnte nicht gefunden werden!! *PANIC*");
             }
             Node parentNode = nodeList.item(0);
-            Logger.log(Level.INFO, "Wurzel \"" + TAG_ROOT + "\" gefunden.");
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
             createNode(parentNode, title);
@@ -487,5 +482,19 @@ public class TopicController {
             Logger.log(Level.WARNING, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
+    }
+
+    /**
+     * Verschiebt einen Knoten unter einen per Objekt gegebenen Knoten
+     *
+     * @param newParent Der neue Elternknoten (Darf nicht {@code node} sein)
+     * @param node      Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @throws IllegalArgumentException wenn {@code newParent} gleich {@code node} ist, oder {@code node} die Wurzel
+     *                                  {@value TAG_ROOT} ist
+     * @throws NodeMissingException     wenn eine der beiden Knoten nicht vorhanden ist
+     * @since 1.0
+     */
+    private void moveNode(Node newParent, Node node) throws IllegalArgumentException, NodeMissingException {
+        //TODO impl
     }
 }

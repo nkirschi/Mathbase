@@ -12,4 +12,44 @@ package de.apian.mathbase.exceptions;
  * @since 1.0
  */
 public class NodeMissingException extends Exception {
+
+    /**
+     * Standard-Konstruktor
+     *
+     * @since 1.0
+     */
+    public NodeMissingException() {
+        super();
+    }
+
+    /**
+     * Standard-Konstruktor mit Nachricht
+     *
+     * @param message Nachricht
+     * @since 1.0
+     */
+    public NodeMissingException(String message) {
+        super(message);
+    }
+
+    /**
+     * Standard-Konstruktor mit Nachricht und Grund für diese Ausnahme
+     *
+     * @param message Nachricht
+     * @param cause   Grund für Ausnahme
+     * @since 1.0
+     */
+    public NodeMissingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Standard-Konstruktor mit Grund für diese Ausnahme
+     *
+     * @param cause Grund für Ausnahme
+     * @since 1.0
+     */
+    public NodeMissingException(Throwable cause) {
+        super(cause);
+    }
 }
