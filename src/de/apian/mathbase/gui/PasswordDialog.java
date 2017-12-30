@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,20 +27,46 @@ import static de.apian.mathbase.util.Constants.FATAL_ERROR_MESSAGE;
 import static de.apian.mathbase.util.Constants.HASHED_PASSWORD;
 
 /**
- * Passworteingabedialog bei administrativen Operationen
+ * Passworteingabedialog für administrative Operationen
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
  */
 public class PasswordDialog extends TextInputDialog {
+    private TextField passwordField;
+    private Label incorrectLabel;
+
+    /**
+     * Konstruktion des Passworteingabedialogs
+     *
+     * @param mainPane Basisanzeigefläche
+     * @since 1.0
+     */
     public PasswordDialog(MainPane mainPane) {
         initOwner(mainPane.getScene().getWindow());
         setTitle("Administrator");
         setHeaderText("Authentifikation erforderlich!");
         setResizable(false);
         try {
-            setGraphic(new ImageView(Images.fetch(Constants.IMAGE_ROOT + "password.png", true)));
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            setGraphic(new ImageView(Images.fetch("password.png", true)));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        getDialogPane().setContent(createGrid());
+        initOkButton();
+        setResultConverter(buttonType -> (buttonType == null ? null : buttonType.getButtonData())
+                == ButtonBar.ButtonData.OK_DONE ? passwordField.getText() : null);
+    }
+
+    /**
+     * Kreation des Dialoggitters
+     *
+     * @return Dialoggitter
+     * @since 1.0
+     */
+    private GridPane createGrid() {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setMaxWidth(Double.MAX_VALUE);
@@ -49,20 +74,27 @@ public class PasswordDialog extends TextInputDialog {
 
         Label passwordLabel = new Label("Passwort:");
         gridPane.add(passwordLabel, 0, 0);
-        PasswordField passwordField = new PasswordField();
+        passwordField = new PasswordField();
         passwordField.setPrefColumnCount(20);
         GridPane.setHgrow(passwordField, Priority.ALWAYS);
         GridPane.setFillWidth(passwordField, true);
         gridPane.add(passwordField, 1, 0);
-        Label incorrectLabel = new Label("Passwort inkorrekt!");
+        incorrectLabel = new Label("Passwort inkorrekt!");
         incorrectLabel.setTextFill(Color.RED);
         incorrectLabel.setVisible(false);
         gridPane.add(incorrectLabel, 1, 1);
-        getDialogPane().setContent(gridPane);
 
+        return gridPane;
+    }
 
+    /**
+     * Initialisierung des OK-Buttons
+     *
+     * @since 1.0
+     */
+    private void initOkButton() {
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
-        okButton.addEventFilter(ActionEvent.ACTION, e -> {
+        okButton.addEventFilter(ActionEvent.ACTION, a -> {
             okButton.setDisable(true);
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -84,17 +116,19 @@ public class PasswordDialog extends TextInputDialog {
             }, 0, 1000);
 
             if (!hash(passwordField.getText()).equals(HASHED_PASSWORD)) {
-                e.consume();
+                a.consume();
                 incorrectLabel.setVisible(true);
             }
         });
-
-        setResultConverter(buttonType -> {
-            ButtonBar.ButtonData data = buttonType == null ? null : buttonType.getButtonData();
-            return data == ButtonBar.ButtonData.OK_DONE ? passwordField.getText() : null;
-        });
     }
 
+    /**
+     * Hashing einer Zeichenkette
+     *
+     * @param s Klartext
+     * @return Hashwert
+     * @since 1.0
+     */
     private String hash(String s) {
         try {
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");

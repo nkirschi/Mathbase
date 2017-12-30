@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. MathBox P-Seminar 16/18. All rights reserved.
+ * Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
  * This product is licensed under the GNU General Public License v3.0.
  * See LICENSE file for further information.
  */
@@ -66,8 +66,8 @@ public class XMLFileHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(filePath);
-        } catch (ParserConfigurationException | SAXException ex) {
-            throw new IOException("Fehler beim Parsen der Datei", ex);
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new IOException("Fehler beim Parsen der Datei", e);
         }
     }
 
@@ -98,9 +98,9 @@ public class XMLFileHandler {
             // transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
 
             transformer.transform(source, result); // Erzeugung der finalen XML-Datei
-        } catch (Exception ex) {
+        } catch (Exception e) {
             throw new IOException(String.format("Fehler beim Speichern der Datei \"%s\"",
-                    Paths.get(targetPath).toAbsolutePath().toString()), ex);
+                    Paths.get(targetPath).toAbsolutePath().toString()), e);
         }
     }
 

@@ -130,11 +130,11 @@ public class Mathbase extends Application {
         stage.setWidth(800);
         stage.setHeight(600);
         try {
-            stage.getIcons().add(Images.fetch(Constants.IMAGE_ROOT + "icon.png", true));
+            stage.getIcons().add(Images.fetch("icon.png", true));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stage.setOnCloseRequest(e -> cleanUp());
+        stage.setOnCloseRequest(a -> cleanUp());
         changeTo(new MainPane());
     }
 

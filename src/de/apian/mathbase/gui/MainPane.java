@@ -6,22 +6,34 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.model.TopicTreeController;
 import javafx.scene.control.SplitPane;
 
+import java.io.IOException;
+
 /**
- * Hauptanzeigefläche der GUI
+ * Basisanzeigefläche der GUI
  *
  * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */
 public class MainPane extends SplitPane {
+
+    /**
+     * Konstruktion der Basisanzeigefläche
+     *
+     * @since 1.0
+     */
     public MainPane() {
-        //setCenter(new ContentPane());
-        //setLeft(new TopicTreePane(this));
-        SidebarPane sidebarPane = new SidebarPane(this);
-        sidebarPane.setMinWidth(225);
-        getItems().addAll(sidebarPane, new ContentPane(""));
-        SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
+        try {
+            TopicTreeController topicTreeController = new TopicTreeController();
+            SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);
+            sidebarPane.setMinWidth(225);
+            getItems().addAll(sidebarPane, new ContentPane(null, topicTreeController));
+            SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
+        } catch (IOException e) { // TODO Fehlerbehandlung
+            e.printStackTrace();
+        }
     }
 }

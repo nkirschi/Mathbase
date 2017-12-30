@@ -6,8 +6,12 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.exceptions.NodeMissingException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.model.TopicTreeController;
 import javafx.scene.control.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -18,70 +22,128 @@ import java.util.Optional;
  * @since 1.0
  */
 public class TopicTreePane extends ScrollPane {
+
+    /**
+     * Basisanzeigefläche
+     *
+     * @since 1.0
+     */
     private MainPane mainPane;
+
+    /**
+     * Themenbaumkontrolleur
+     *
+     * @since 1.0
+     */
+    private TopicTreeController topicTreeController;
+
+    /**
+     * GUI-Baumkomponente
+     *
+     * @since 1.0
+     */
     private TreeView<String> treeView;
 
-    TopicTreePane(MainPane mainPane) {
+    /**
+     * Konstruktion der Themenbaumscheibe
+     *
+     * @param mainPane            Basisanzeigefläche
+     * @param topicTreeController Themenbaumkontrolleur
+     */
+    TopicTreePane(MainPane mainPane, TopicTreeController topicTreeController) {
         this.mainPane = mainPane;
+        this.topicTreeController = topicTreeController;
 
-        treeView = new TreeView<>();
-        treeView.setRoot(new TreeItem<>(""));
-        treeView.setShowRoot(false);
-        treeView.setEditable(true);
-
-        //TODO Implementieren
-        TreeItem<String> pythagoras = new TreeItem<>("Satzgruppe des Pythagoras");
-        pythagoras.setExpanded(true);
-        pythagoras.getChildren().add(new TreeItem<>("Satz des Pythagoras"));
-        pythagoras.getChildren().add(new TreeItem<>("Kathetensatz"));
-        pythagoras.getChildren().add(new TreeItem<>("Höhensatz"));
-        //treeView.getSelectionModel().getSelectedItem();
-        treeView.getRoot().getChildren().add(pythagoras);
-        setContent(treeView);
         setFitToHeight(true);
         setFitToWidth(true);
 
-        ContextMenu contextMenu = createContextMenu();
-        treeView.setContextMenu(contextMenu);
-
-        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            String title = newValue != null ? newValue.getValue() : "";
-            ContentPane contentPane = new ContentPane(title);
-            mainPane.getItems().set(1, contentPane);
-        });
+        treeView = constructTree();
+        setContent(treeView);
     }
 
-    TreeView<String> getTreeView() {
+    /**
+     * Konstruktion des Themenbaums selbst
+     *
+     * @return Themenbaum als GUI-Komponente
+     * @since 1.0
+     */
+    private TreeView<String> constructTree() {
+        treeView = new TreeView<>();
+        treeView.setShowRoot(false);
+        treeView.setEditable(true);
+        treeView.setRoot(new TreeItem<>());
+        treeView.setContextMenu(createContextMenu());
+        treeView.setCellFactory(param -> new DraggableTreeCell(topicTreeController));
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            String title = newValue != null ? newValue.getValue() : null;
+            ContentPane contentPane = new ContentPane(title, topicTreeController);
+            mainPane.getItems().set(1, contentPane);
+        });
+
+        for (String s : topicTreeController.getTopNodes()) {
+            TreeItem<String> treeItem = new TreeItem<>(s);
+            treeView.getRoot().getChildren().add(treeItem);
+            constructTree(treeItem);
+        }
+
         return treeView;
     }
 
-    private ContextMenu createContextMenu() { // TODO Abbildung auf XML
+    /**
+     * Rekursive Konstruktion ab der ersten Ebene
+     *
+     * @param parent Jeweiliger Elternknoten im Themenbaum
+     */
+    private void constructTree(TreeItem<String> parent) {
+        for (String s : topicTreeController.getChildNodes(parent.getValue())) {
+            TreeItem<String> child = new TreeItem<>(s);
+            parent.getChildren().add(child);
+            constructTree(child);
+        }
+    }
+
+    /**
+     * Kreation des Kontextmenüs im Baum
+     *
+     * @return Nigelnagelschniekes Kontextmenü (mit Senf)
+     */
+    private ContextMenu createContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem addItem = new MenuItem("Hinzufügen...");
-        addItem.setOnAction(e -> {
+        addItem.setOnAction(a -> {
             TextInputDialog dialog = new TextInputDialog();
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(title -> {
-                TreeItem<String> newItem = new TreeItem<>(title);
                 TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
-                System.out.println(selectedItem);
                 if (selectedItem == null)
                     selectedItem = treeView.getRoot();
-                selectedItem.getChildren().add(newItem);
-                selectedItem.setExpanded(true);
+
+                try {
+                    topicTreeController.addNode(selectedItem.getValue(), title);
+                    TreeItem<String> newItem = new TreeItem<>(title);
+                    selectedItem.getChildren().add(newItem);
+                    selectedItem.setExpanded(true);
+                } catch (NodeMissingException | IOException | TitleCollisionException e) {
+                    e.printStackTrace();
+                }
             });
         });
 
         MenuItem removeItem = new MenuItem("Entfernen");
-        removeItem.setOnAction(e -> {
+        removeItem.setOnAction(a -> {
             TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 PasswordDialog dialog = new PasswordDialog(mainPane);
                 Optional<String> result = dialog.showAndWait();
-                result.ifPresent(p -> {
-                    selectedItem.getParent().getChildren().remove(selectedItem);
-                    treeView.getSelectionModel().select(null);
+                result.ifPresent(pw -> {
+                    try {
+                        topicTreeController.removeNode(selectedItem.getValue());
+                        selectedItem.getParent().getChildren().remove(selectedItem);
+                        treeView.getSelectionModel().select(null);
+                    } catch (NodeMissingException | IOException e) {
+                        e.printStackTrace();
+                    }
                 });
             }
         });

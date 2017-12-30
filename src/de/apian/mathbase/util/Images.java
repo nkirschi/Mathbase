@@ -47,7 +47,7 @@ public class Images {
      * @since 1.0
      */
     public static Image fetch(String path, boolean internal) throws IOException {
-        return internal ? fetchInternal(path) : fetchExternal(path);
+        return internal ? fetchInternal(Constants.IMAGE_ROOT + path) : fetchExternal(path);
     }
 
     /**

@@ -26,14 +26,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
 /**
- * Utility-Klasse zum Laden, Bearbeiten und Speichern der XML-Dateien,
- * welche die Struktur und Inhalte der Themen enthalten.
+ * Laden, Bearbeiten und Speichern der XML-Datei,
+ * welche die Struktur und Inhalte der Themen enthält.
  *
  * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
-public class TopicController {
+public class TopicTreeController {
 
     /**
      * Pfad des Topic-Ordners relativ zum Arbeitsverzeichnis. Hier werden die eigentlichen Dateien gespeichert
@@ -113,8 +113,8 @@ public class TopicController {
      * @throws IOException wenn das Laden der XML-Datei fehlschlägt oder der Topics-Ordner nicht existiert
      * @since 1.0
      */
-    public TopicController() throws IOException {
-        load();
+    public TopicTreeController() throws IOException {
+        loadFile();
     }
 
     /**
@@ -124,7 +124,7 @@ public class TopicController {
      * @throws IOException wenn die Datei sowie die Backup-Datei nicht geladen werden konnten
      * @since 1.0
      */
-    private void load() throws IOException {
+    private void loadFile() throws IOException {
         try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XMLFileHandler(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
@@ -154,35 +154,15 @@ public class TopicController {
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
-    private void save() throws IOException {
+    private void saveFile() throws IOException {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_PATH);
             Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
-        } catch (IOException ex) {
-            Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", ex);
+        } catch (IOException e) {
+            Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", e);
             // Schmeiß eine IOException, um den aufrufenden Methoden mitzuteilen,
             // dass die Datei nicht gespeichert werden konnte
-            throw ex;
-        }
-    }
-
-    /**
-     * Erstellen eines Backups der originalen Datei im Pfad {@code BACKUP_PATH} relativ zum Arbeitsverzeichnis
-     *
-     * @throws IOException wenn das Erstellen und nicht erfolgreich war
-     * @since 1.0
-     */
-    public void backUp() throws IOException {
-        try {
-            Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
-            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
-                    + "\" erfolgreich abgeschlossen");
-        } catch (IOException ex) {
-            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", ex);
-            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
-            // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
-            throw ex;
+            throw e;
         }
     }
 
@@ -190,7 +170,7 @@ public class TopicController {
      * Neuerstellung der XML-Datei im Pfad {@value #ORIGINAL_PATH} und des Topic-Ordners im Pfad {@value #TOPICS_PATH}
      * relativ zum Arbeitsverzeichnis. Bereits existierende Dateien/Ordner werden mit der Endung .old erweitert.
      * <p>
-     * Kann auch aufgerufen werden, wenn der {@code TopicController} noch nicht instanziert wurde,
+     * Kann auch aufgerufen werden, wenn der {@code TopicTreeController} noch nicht instanziert wurde,
      * damit das Programm trotz Fehlen der XML-Datei + Backup funktionstüchtig bleibt.
      * </p>
      *
@@ -229,12 +209,32 @@ public class TopicController {
                 Files.createDirectory(path);
             }
 
-        } catch (IOException ex) {
+        } catch (IOException e) {
             Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
             // TODO Errorhandling in den anderen Klassen implementieren
-            throw ex;
+            throw e;
+        }
+    }
+
+    /**
+     * Erstellen eines Backups der originalen Datei im Pfad {@code BACKUP_PATH} relativ zum Arbeitsverzeichnis
+     *
+     * @throws IOException wenn das Erstellen und nicht erfolgreich war
+     * @since 1.0
+     */
+    public void backUp() throws IOException {
+        try {
+            Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
+            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
+                    + "\" erfolgreich abgeschlossen");
+        } catch (IOException e) {
+            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
+            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
+            throw e;
         }
     }
 
@@ -444,7 +444,7 @@ public class TopicController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    private void createNode(Node parentNode, String title) throws IOException {
+    private void addNode(Node parentNode, String title) throws IOException {
 
         //Knoten wird erstellt und zum Elternknoten hinzugefügt
         Element element = xmlHandler.getDoc().createElement(TAG_NODE);
@@ -458,7 +458,7 @@ public class TopicController {
         Logger.log(Level.INFO, "Ordner des Knotens \"" + title + "\" wurde erstellt.");
 
         //XML-Datei wird gespeichert
-        save();
+        saveFile();
     }
 
     /**
@@ -471,7 +471,7 @@ public class TopicController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    public void createNode(String parentTitle, String title) throws TitleCollisionException, NodeMissingException,
+    public void addNode(String parentTitle, String title) throws TitleCollisionException, NodeMissingException,
             IOException {
         if (alreadyExists(title)) {
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
@@ -486,7 +486,7 @@ public class TopicController {
             Node parentNode = nodeList.item(0);
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
-            createNode(parentNode, title);
+            addNode(parentNode, title);
             Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter dem Knoten \"" + parentTitle +
                     "\" eingefügt");
         } catch (XPathExpressionException e) {
@@ -509,7 +509,7 @@ public class TopicController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    public void createNode(String title) throws TitleCollisionException, NodeMissingException,
+    public void addNode(String title) throws TitleCollisionException, NodeMissingException,
             IOException {
         if (alreadyExists(title)) {
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
@@ -523,7 +523,7 @@ public class TopicController {
             Node parentNode = nodeList.item(0);
 
             //Knoten wird unter dem gefundenen Elternknoten erzeugt
-            createNode(parentNode, title);
+            addNode(parentNode, title);
             Logger.log(Level.INFO, "Knoten \"" + title + "\" wurde unter der Wurzel \"" + TAG_ROOT +
                     "\" eingefügt");
         } catch (XPathExpressionException e) {
@@ -565,7 +565,7 @@ public class TopicController {
         //Logger.log(Level.INFO, "Ordner verschoben!");
 
         //XML-Datei wird gespeichert
-        save();
+        saveFile();
     }
 
     /**
@@ -671,14 +671,14 @@ public class TopicController {
     }
 
     /**
-     * Löscht einen per Titel gegebenen Knoten und seinen Ordner
+     * Entfernt einen per Titel gegebenen Knoten und seinen Ordner
      *
-     * @param nodeTitle Titel des zu löschenden Knotens
+     * @param nodeTitle Titel des zu entfernenden Knotens
      * @throws NodeMissingException wenn der Knoten nicht existiert
-     * @throws IOException          wenn es einen Fehler beim Löschen gab
+     * @throws IOException          wenn es einen Fehler beim Entfernen gab
      * @since 1.0
      */
-    public void deleteNode(String nodeTitle) throws NodeMissingException, IOException {
+    public void removeNode(String nodeTitle) throws NodeMissingException, IOException {
         try {
             //Knoten wird herrausgesucht
             NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle
@@ -689,15 +689,18 @@ public class TopicController {
             Node node = nodeList.item(0);
             Path path = Paths.get(getNodePath(node));
 
-            //Knoten wird gelöscht
+            //Knoten wird entfernt
             node.getParentNode().removeChild(node);
 
-            //Ordner wird gelöscht
+            //Ordner wird entfernt
             Files.deleteIfExists(path); //TODO gucken ob dat auch für nicht leere Ordner funzt, wenn nein muss Ersatz her!!!
             //TODO Manche sagen nämlich ja, manche nein, Java halt :\
+
+            // TODO Nein, funzt es nicht. Stattdessen kassiere ich eine kolossale DirectoryNotEmptyException o_O
+
             //XML-Datei wird gespeichert
-            save();
-            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" wurde gelöscht");
+            saveFile();
+            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" wurde entfernt");
         } catch (XPathExpressionException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
