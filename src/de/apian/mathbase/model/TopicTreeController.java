@@ -371,15 +371,15 @@ public class TopicTreeController {
         }
     }
 
+    //TODO ALLE Inhalts-Operationen anpassen + impelmentieren
     /**
      * Ermitteln aller Inhalte eines bestimmten Knotens
      *
      * @param title Titel des betreffenden Knotens
-     * @return {@code Content}-Array raller Inhalte des Knotens
+     * @return {@code Content}-Array aller Inhalte des Knotens
      * @since 1.0
      */
     public Content[] getContents(String title) {
-        // TODO Bene, guck am besten nochmal drüber
         try {
             String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
             NodeList nodeList = xmlHandler.getNodeListXPath(expr);
@@ -474,14 +474,17 @@ public class TopicTreeController {
      * Verschieben eines Knotens unter einen anderen
      *
      * @param from Titel des zu verschiebenden Knotens
-     * @param to   Titel des neuen Elternknotens (Darf nicht {@code node} sein)
+     * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein)
      * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
-     * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
-     *                                  oder {@code newParent} gleich {@code node} ist
+     * @throws IllegalArgumentException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
+     *                                  oder {@code from} gleich {@code to} ist
      * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
     public void moveNode(String from, String to) throws NodeMissingException, IllegalArgumentException, IOException {
+        if (from.equals(to)) {
+            throw new IllegalArgumentException("from und to dürfen nicht gleich sein!");
+        }
         try {
             // Ermitteln des Elternknotens
             Node parentNode;
@@ -573,12 +576,9 @@ public class TopicTreeController {
             node.getParentNode().removeChild(node);
 
             // Entfernen des Ordners
-            // Files.deleteIfExists(path); //TODO gucken ob dat auch für nicht leere Ordner funzt, wenn nein muss Ersatz her!!!
-            //TODO Manche sagen nämlich ja, manche nein, Java halt :\
 
-            // TODO Nein, funzt es nicht. Stattdessen kassiere ich eine kolossale DirectoryNotEmptyException o_O
-
-            // Das hier sollte aber funzen ;)
+            // Files.deleteIfExists(path);
+            // Das hier sollte funzen, muss aber überarbeitet werden!!!
             Files.walk(path, FileVisitOption.FOLLOW_LINKS)
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
