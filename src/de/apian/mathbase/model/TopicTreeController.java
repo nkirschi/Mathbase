@@ -412,7 +412,7 @@ public class TopicTreeController {
      * Einfügen eines neuen Knotens (sofern Titel nicht schon vergeben) unter einem bestimmten Eltern-Knoten
      *
      * @param title  Titel des einzufügenden Knotens
-     * @param parent Titel des gewünschten Elternknotens
+     * @param parent Titel des gewünschten Elternknotens. Wenn {@code NULL}, dann wird die Wurzel verwendet.
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeMissingException    wenn der Elternknoten nicht exisiert
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
@@ -428,7 +428,7 @@ public class TopicTreeController {
             String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
             NodeList nodeList = xmlHandler.getNodeListXPath(expr);
             if (nodeList.getLength() == 0) {
-                throw new NodeMissingException("Knoten \"" + parent + "\" konnte nicht gefunden werden!");
+                throw new NodeMissingException("Knoten / Wurzel konnte nicht gefunden werden!");
             }
             Node parentNode = nodeList.item(0);
 
@@ -475,7 +475,8 @@ public class TopicTreeController {
      * Verschieben eines Knotens unter einen anderen
      *
      * @param from Titel des zu verschiebenden Knotens
-     * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein)
+     * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein). Wenn {@code NULL}, dann wird die Wurzel
+     *             verwendet.
      * @throws NodeMissingException     wenn einer der beiden Knoten nicht existiert
      * @throws IllegalArgumentException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
      *                                  oder {@code from} gleich {@code to} ist
@@ -493,7 +494,7 @@ public class TopicTreeController {
                 String expr = to != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + to + "']" : "//" + TAG_ROOT;
                 NodeList nodeList = xmlHandler.getNodeListXPath(expr);
                 if (nodeList.getLength() == 0) {
-                    throw new NodeMissingException("Knoten \"" + to + "\" konnte nicht gefunden werden!");
+                    throw new NodeMissingException("Knoten / Wurzel konnte nicht gefunden werden!");
                 }
                 parentNode = nodeList.item(0);
             }
