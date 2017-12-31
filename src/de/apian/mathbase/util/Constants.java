@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.util;
 
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -37,15 +36,8 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final Font DEFAULT_FONT = Font.loadFont(
+    public static final Font TITLE_FONT = Font.loadFont(
             Constants.class.getResourceAsStream("/de/apian/mathbase/ADAM.CG_PRO.otf"), 11.0);
-
-    /**
-     * Standard-Schriftfarbe
-     *
-     * @since 1.0
-     */
-    public static final Color DEFAULT_COLOR = Color.BLACK;
 
     /**
      * Gehashtes Admin-Passwort

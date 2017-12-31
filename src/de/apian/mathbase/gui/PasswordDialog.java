@@ -43,7 +43,7 @@ public class PasswordDialog extends TextInputDialog {
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    public PasswordDialog(MainPane mainPane) {
+    public PasswordDialog(BasePane mainPane) {
         initOwner(mainPane.getScene().getWindow());
         setTitle("Administrator");
         setHeaderText("Authentifikation erforderlich!");

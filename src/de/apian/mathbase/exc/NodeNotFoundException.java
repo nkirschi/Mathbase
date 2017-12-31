@@ -7,20 +7,20 @@
 package de.apian.mathbase.exc;
 
 /**
- * Wird geworfen, falls es zu einer Kollision der Titel zweier Knoten kommen würde
+ * Nichtvorhandensein eines bestimmten Knotens
  *
  * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
-public class NodeMissingException extends Exception {
+public class NodeNotFoundException extends RuntimeException {
 
     /**
      * Standard-Konstruktor
      *
      * @since 1.0
      */
-    public NodeMissingException() {
+    public NodeNotFoundException() {
         super();
     }
 
@@ -30,7 +30,7 @@ public class NodeMissingException extends Exception {
      * @param message Nachricht
      * @since 1.0
      */
-    public NodeMissingException(String message) {
+    public NodeNotFoundException(String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class NodeMissingException extends Exception {
      * @param cause   Grund für Ausnahme
      * @since 1.0
      */
-    public NodeMissingException(String message, Throwable cause) {
+    public NodeNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -51,7 +51,7 @@ public class NodeMissingException extends Exception {
      * @param cause Grund für Ausnahme
      * @since 1.0
      */
-    public NodeMissingException(Throwable cause) {
+    public NodeNotFoundException(Throwable cause) {
         super(cause);
     }
 }

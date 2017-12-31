@@ -7,13 +7,13 @@
 package de.apian.mathbase.exc;
 
 /**
- * Wird geworfen, falls es zu einer Kollision der Titel zweier Knoten kommen würde
+ * Kollision der Titel zweier Knoten
  *
  * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
-public class TitleCollisionException extends Exception {
+public class TitleCollisionException extends RuntimeException {
 
     /**
      * Standard-Konstruktor

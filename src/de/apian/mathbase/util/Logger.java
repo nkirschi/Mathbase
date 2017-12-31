@@ -100,6 +100,7 @@ public class Logger {
         public String format(LogRecord record) {
             // Datum in lesbarer Form, da die API nur die seit 1970 vergangenen Millisekunden anbietet
             String date = dateFormat.format(new Date(record.getMillis()));
+
             // Ermitteln des den LogRecord verursachenden Threads
             String thread = "";
             for (Thread t : Thread.getAllStackTraces().keySet())
@@ -114,7 +115,7 @@ public class Logger {
             if (record.getMessage() != null)
                 message = formatMessage(record);
 
-            String format = "%s [%s] %s: %s%n";
+            String format = "%s [%s] %s> %s%n";
             String log = String.format(format, date, thread, level, message);
 
             if (record.getThrown() != null) {

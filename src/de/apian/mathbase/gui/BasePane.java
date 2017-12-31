@@ -18,14 +18,14 @@ import java.io.IOException;
  * @version 1.0
  * @since 1.0
  */
-public class MainPane extends SplitPane {
+public class BasePane extends SplitPane {
 
     /**
      * Konstruktion der Basisanzeigefläche
      *
      * @since 1.0
      */
-    public MainPane() {
+    public BasePane() {
         try {
             TopicTreeController topicTreeController = new TopicTreeController();
             SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);

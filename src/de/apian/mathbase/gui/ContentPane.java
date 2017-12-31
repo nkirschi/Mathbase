@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 /**
- * Inhaltsanzeige des gewählten Themas
+ * Inhaltsanzeige eines gewählten Themas
  *
  * @author Nikolas Kirschstein
  * @version 1.0
@@ -49,9 +49,8 @@ public class ContentPane extends VBox {
             }
             setAlignment(Pos.CENTER);
             Label label = new Label("Mathbase " + Constants.APP_VERSION);
-            label.setFont(Constants.DEFAULT_FONT);
+            label.setFont(Constants.TITLE_FONT);
             getChildren().add(label);
         }
-
     }
 }

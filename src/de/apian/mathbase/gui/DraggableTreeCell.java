@@ -6,7 +6,7 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.exc.NodeMissingException;
+import de.apian.mathbase.exc.NodeNotFoundException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -18,9 +18,10 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
- * Mittels Drag and Drop verschiebbarer Themenbaumeintrag
+ * Ziehbarer Themenbaumeintrag für Drag and Drop
  *
  * @author Nikolas Kirschstein
  * @version 1.0
@@ -40,7 +41,7 @@ class DraggableTreeCell extends TreeCell<String> {
      *
      * @since 1.0
      */
-    DraggableTreeCell(TopicTreeController topicTreeController) {
+    DraggableTreeCell(BasePane mainPane, TopicTreeController topicTreeController) {
 
         // Drücken der linken Maustaste und Bewegung des Mauszeigers
         setOnDragDetected(a -> {
@@ -80,20 +81,24 @@ class DraggableTreeCell extends TreeCell<String> {
             System.out.println("target: " + targetItem);
             System.out.println("source: " + sourceItem);
 
-            if (targetItem == null)
-                targetItem = getTreeView().getRoot();
+            PasswordDialog dialog = new PasswordDialog(mainPane);
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(pw -> {
+                if (targetItem == null)
+                    targetItem = getTreeView().getRoot();
 
-            if (sourceItem.getParent() != targetItem && sourceItem != targetItem && !isChild(targetItem, sourceItem)) {
-                try {
-                    topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
-                    sourceItem.getParent().getChildren().remove(sourceItem);
-                    targetItem.getChildren().add(sourceItem);
-                    targetItem.setExpanded(true);
-                    targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                } catch (NodeMissingException | IOException e) {
-                    e.printStackTrace();
+                if (sourceItem.getParent() != targetItem && sourceItem != targetItem && !isChild(targetItem, sourceItem)) {
+                    try {
+                        topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
+                        sourceItem.getParent().getChildren().remove(sourceItem);
+                        targetItem.getChildren().add(sourceItem);
+                        targetItem.setExpanded(true);
+                        targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                    } catch (NodeNotFoundException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
+            });
         });
     }
 

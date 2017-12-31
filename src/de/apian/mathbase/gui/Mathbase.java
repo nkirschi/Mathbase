@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 /**
- * Hauptklasse des Programms mit umfassenden Kontrollmöglichkeiten.
+ * Hauptklasse des Programms
  * <p>
  * Der Konstruktor sollte niemals explizit aufgerufen werden; ein auf diese Weise erzeugtes {@code Mathbase} -Objekt
  * besitzt keinen realen Nutzen, weil es keinerlei Referenz auf das Hauptfenster {@code stage}  hält,
@@ -55,13 +55,13 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Hauptmethode der Applikation
+     * Einstiegspunkt der Applikation
      *
      * @param args Kommandozeilenargumente
      * @since 1.0
      */
     public static void main(String[] args) {
-        Logger.log(Level.INFO, "Das Programm wurde gestartet!");
+        Logger.log(Level.INFO, "Programm gestartet");
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
     }
 
@@ -76,7 +76,7 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Einstiegsmethode der JavaFX-Anwendung
+     * Start der JavaFX-Anwendung
      *
      * @param stage Vom Framework übergebenes Hauptfenster
      * @since 1.0
@@ -86,38 +86,6 @@ public class Mathbase extends Application {
         this.stage = stage;
         initStage();
         stage.show();
-        /* TODO Das sollte nur kommen, sobald jemand was verändern möchte
-           TODO Die Edit-Buttons sind einfach immer eingeblendet, aber solang kein gültiges pwd eingegeben wurde,
-           TODO kann der User halt nix machen
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Passwort eingeben");
-        dialog.setHeaderText("Administrator-Passwort");
-        dialog.setContentText("Um mediale Inhalte bearbeiten zu können, müssen Sie sich mit dem Admin-Passwort authentifizieren");
-        dialog.getDialogPane().getButtonTypes().setAll(new ButtonType("Benutzer", ButtonType.CANCEL.getButtonData()),
-                new ButtonType("Admin", ButtonType.OK.getButtonData()));
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(pwd -> System.out.println(pwd.equals("123456")));
-        */
-    }
-
-    /**
-     * Wechseln der aktuellen Szene
-     *
-     * @param parent Anzuzeigende {@code Komponente}
-     * @since 1.0
-     */
-    void changeTo(Parent parent) {
-        stage.setScene(new Scene(parent));
-    }
-
-    /**
-     * Getter-Methode für die in der momentan auf der Bühne befindlichen Szene enthaltene Komponente
-     *
-     * @return aktuell im Hauptfenster angezeigte Szene
-     * @since 1.0
-     */
-    Parent getRoot() {
-        return stage.getScene().getRoot();
     }
 
     /**
@@ -135,7 +103,17 @@ public class Mathbase extends Application {
             e.printStackTrace();
         }
         stage.setOnCloseRequest(a -> cleanUp());
-        changeTo(new MainPane());
+        changeTo(new BasePane());
+    }
+
+    /**
+     * Wechseln der aktuellen Szene
+     *
+     * @param parent Anzuzeigende {@code Komponente}
+     * @since 1.0
+     */
+    void changeTo(Parent parent) {
+        stage.setScene(new Scene(parent));
     }
 
     /**
