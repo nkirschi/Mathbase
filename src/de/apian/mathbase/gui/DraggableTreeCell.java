@@ -85,7 +85,7 @@ class DraggableTreeCell extends TreeCell<String> {
 
             if (sourceItem.getParent() != targetItem && sourceItem != targetItem && !isChild(targetItem, sourceItem)) {
                 try {
-                    topicTreeController.moveNode(targetItem.getValue(), sourceItem.getValue());
+                    topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
                     sourceItem.getParent().getChildren().remove(sourceItem);
                     targetItem.getChildren().add(sourceItem);
                     targetItem.setExpanded(true);

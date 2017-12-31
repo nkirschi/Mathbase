@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. MathBox P-Seminar 16/18. All rights reserved.
+ * Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
  * This product is licensed under the GNU General Public License v3.0.
  * See LICENSE file for further information.
  */
@@ -7,8 +7,7 @@
 package de.apian.mathbase.model;
 
 /**
- * Wird erzeugt, wenn die Contents aus der XML-Datei ausgelesen werden, um die benötigten Informationen an andere
- * Klassen weiterzugeben
+ * Repräsentation eines Themeninhalts
  *
  * @author Benedikt Mödl
  * @version 1.0
@@ -17,55 +16,82 @@ package de.apian.mathbase.model;
 public class Content {
 
     /**
-     * Titel dieses Inhalts
-     *
-     *@since 1.0
-     */
-    private String title;
-
-    /**
-     * Typ dieses Inhalts
+     * Typ dieses Inhalts als {@code Type}-Objekt
      *
      * @since 1.0
      */
     private Type type;
 
     /**
-     * Pfad der Datei dieses Inhalts relativ zum Arbeitsverzeichnis
+     * Pfad der diesem Inhalt angehörigen Datei relativ zum Arbeitsverzeichnis
      *
      * @since 1.0
      */
     private String path;
 
     /**
-     * Festgelegte Kontent-Typen
+     * Optionaler Titel des Inhalts
+     *
+     * @since 1.0
+     */
+    private String title;
+
+    /**
+     * Wohldefinierte Typen (in der Definitionsphase...)
      *
      * @author Benedikt Mödl
+     * @author Nikolas Kirschstein
      * @version 1.0
      * @since 1.0
      */
     public enum Type {
-        IMAGE("image"),
-        WORKSHEET("worksheet"),
-        VIDEO("video"),
-        GEOGEBRA("geogebra"),
-        DESCRIPTION("description"),
-        OTHER("other");
+        IMAGE, WORKSHEET, VIDEO, GEOGEBRA, DESCRIPTION, OTHER;
 
         /**
-         * Wert des Kontent-Typs in der XML-Datei
+         * Ermitteln des Typs für einen vorgegebenen Namen
          *
-         * @since 1.0
+         * @param name Typbezeichner
+         * @return Gesuchte Enum-Typkonstante
+         * @throws IllegalArgumentException bei ungültigem Namen
          */
-        public final String ATTR_VALUE;
-
-        /**
-         * Konstruktor
-         *
-         * @since 1.0
-         */
-        Type(String ATTR_VALUE) {
-            this.ATTR_VALUE = ATTR_VALUE;
+        public static Type forName(String name) throws IllegalArgumentException {
+            for (Type type : values())
+                if (type.name().equalsIgnoreCase(name))
+                    return type;
+            throw new IllegalArgumentException("No enum constant " + Type.class.getCanonicalName() + "." + name);
         }
+
+        /**
+         * Konvertierung des Typs in eine Zeichenkette
+         *
+         * @return Typbezeichner in Kleinbuchstaben
+         */
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
+
+    /**
+     * Konstruktion eines neuen Inhaltes
+     *
+     * @param type  Typ des Inhalts
+     * @param path  Pfad des Inhalts
+     * @param title Titel des Inhalts
+     */
+    public Content(Type type, String path, String title) {
+        this.type = type;
+        this.path = path;
+        this.title = title;
+    }
+
+    /**
+     * Konstruktion eines neuen Inhalts
+     *
+     * @param type Typ des Inhalts
+     * @param path Pfad des Inhalts
+     */
+    public Content(Type type, String path) {
+        this(type, path, null);
     }
 }

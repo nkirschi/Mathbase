@@ -80,12 +80,7 @@ public class TopicTreePane extends ScrollPane {
             mainPane.getItems().set(1, contentPane);
         });
 
-        for (String s : topicTreeController.getTopNodes()) {
-            TreeItem<String> treeItem = new TreeItem<>(s);
-            treeView.getRoot().getChildren().add(treeItem);
-            constructTree(treeItem);
-        }
-
+        constructTree(treeView.getRoot());
         return treeView;
     }
 
@@ -95,7 +90,7 @@ public class TopicTreePane extends ScrollPane {
      * @param parent Jeweiliger Elternknoten im Themenbaum
      */
     private void constructTree(TreeItem<String> parent) {
-        for (String s : topicTreeController.getChildNodes(parent.getValue())) {
+        for (String s : topicTreeController.getChildren(parent.getValue())) {
             TreeItem<String> child = new TreeItem<>(s);
             parent.getChildren().add(child);
             constructTree(child);
@@ -113,6 +108,10 @@ public class TopicTreePane extends ScrollPane {
         MenuItem addItem = new MenuItem("Hinzufügen...");
         addItem.setOnAction(a -> {
             TextInputDialog dialog = new TextInputDialog();
+            dialog.initOwner(mainPane.getScene().getWindow());
+            dialog.setTitle("Themenverwaltung");
+            dialog.setHeaderText("Neues Thema hinzufügen");
+            dialog.setContentText("Titel:");
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(title -> {
                 TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
@@ -120,7 +119,7 @@ public class TopicTreePane extends ScrollPane {
                     selectedItem = treeView.getRoot();
 
                 try {
-                    topicTreeController.addNode(selectedItem.getValue(), title);
+                    topicTreeController.addNode(title, selectedItem.getValue());
                     TreeItem<String> newItem = new TreeItem<>(title);
                     selectedItem.getChildren().add(newItem);
                     selectedItem.setExpanded(true);
