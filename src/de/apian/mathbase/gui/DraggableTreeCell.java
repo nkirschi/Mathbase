@@ -6,8 +6,8 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.exceptions.NodeMissingException;
-import de.apian.mathbase.model.TopicTreeController;
+import de.apian.mathbase.exc.NodeMissingException;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.effect.InnerShadow;

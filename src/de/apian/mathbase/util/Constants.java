@@ -30,7 +30,7 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final String IMAGE_ROOT = "de/apian/mathbase/images/";
+    public static final String IMAGE_ROOT = "de/apian/mathbase/img/";
 
     /**
      * Standard-Schriftart
@@ -38,7 +38,7 @@ public class Constants {
      * @since 1.0
      */
     public static final Font DEFAULT_FONT = Font.loadFont(
-            Constants.class.getResourceAsStream("/de/apian/mathbase/fonts/ADAM.CG_PRO.otf"), 11.0);
+            Constants.class.getResourceAsStream("/de/apian/mathbase/ADAM.CG_PRO.otf"), 11.0);
 
     /**
      * Standard-Schriftfarbe

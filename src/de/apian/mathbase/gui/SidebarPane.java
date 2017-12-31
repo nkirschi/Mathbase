@@ -6,7 +6,7 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.model.TopicTreeController;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;

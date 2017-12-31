@@ -4,10 +4,10 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.model;
+package de.apian.mathbase.xml;
 
-import de.apian.mathbase.exceptions.NodeMissingException;
-import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.exc.NodeMissingException;
+import de.apian.mathbase.exc.TitleCollisionException;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logger;

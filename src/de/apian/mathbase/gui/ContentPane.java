@@ -6,9 +6,9 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.model.TopicTreeController;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;

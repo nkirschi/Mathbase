@@ -4,7 +4,7 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.model;
+package de.apian.mathbase.xml;
 
 /**
  * Repräsentation eines Themeninhalts

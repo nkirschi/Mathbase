@@ -4,7 +4,7 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.model;
+package de.apian.mathbase.xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

@@ -6,9 +6,9 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.exceptions.NodeMissingException;
-import de.apian.mathbase.exceptions.TitleCollisionException;
-import de.apian.mathbase.model.TopicTreeController;
+import de.apian.mathbase.exc.NodeMissingException;
+import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.*;
 
 import java.io.IOException;
