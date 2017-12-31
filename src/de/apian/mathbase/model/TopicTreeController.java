@@ -576,14 +576,13 @@ public class TopicTreeController {
             node.getParentNode().removeChild(node);
 
             // Entfernen des Ordners
+            // Files.deleteIfExists(path); //TODO gucken ob dat auch für nicht leere Ordner funzt, wenn nein muss Ersatz her!!!
+            //TODO Manche sagen nämlich ja, manche nein, Java halt :\
 
-            // Files.deleteIfExists(path);
-            // Das hier sollte funzen, muss aber überarbeitet werden!!!
-            Files.walk(path, FileVisitOption.FOLLOW_LINKS)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(System.out::println)
-                    .forEach(File::delete);
+            // TODO Nein, funzt es nicht. Stattdessen kassiere ich eine kolossale DirectoryNotEmptyException o_O
+
+            // Das hier sollte aber funzen ;)
+            FileUtils.delete(path);
 
             // Speichern der XML-Datei
             saveFile();

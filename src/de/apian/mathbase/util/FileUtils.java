@@ -6,11 +6,14 @@
 
 package de.apian.mathbase.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
+import java.util.Comparator;
 
 /**
  * Nützlichkeiten für Dateioperationen
@@ -20,6 +23,7 @@ import java.text.Normalizer;
  * @since 1.0
  */
 public class FileUtils {
+
     /**
      * Normalisierung eines beliebigen {@code String} zu einem unseren Standards entsprechenden Datei-/Ordnernamen
      *
@@ -44,8 +48,22 @@ public class FileUtils {
      * @param from Urpfad
      * @param to   Zielpfad
      * @throws IOException wenn das Verschieben fehlschlägt
+     * @since 1.0
      */
     public static void move(Path from, Path to) throws IOException {
+        if (Files.exists(to, LinkOption.NOFOLLOW_LINKS))
+            delete(to);
         Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    /**
+     * Löschen eines kompletten Verzeichnises samt Inhalt
+     *
+     * @param path Pfad
+     * @throws IOException wenn das Löschen fehlschlägt
+     * @since 1.0
+     */
+    public static void delete(Path path) throws IOException {
+        Files.walk(path).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
     }
 }
