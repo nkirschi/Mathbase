@@ -18,11 +18,12 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.util.Comparator;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
 /**
@@ -576,12 +577,6 @@ public class TopicTreeController {
             node.getParentNode().removeChild(node);
 
             // Entfernen des Ordners
-            // Files.deleteIfExists(path); //TODO gucken ob dat auch für nicht leere Ordner funzt, wenn nein muss Ersatz her!!!
-            //TODO Manche sagen nämlich ja, manche nein, Java halt :\
-
-            // TODO Nein, funzt es nicht. Stattdessen kassiere ich eine kolossale DirectoryNotEmptyException o_O
-
-            // Das hier sollte aber funzen ;)
             FileUtils.delete(path);
 
             // Speichern der XML-Datei
