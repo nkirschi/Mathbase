@@ -18,11 +18,12 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.util.Comparator;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 
 /**
@@ -579,11 +580,7 @@ public class TopicTreeController {
             // TODO Nein, funzt es nicht. Stattdessen kassiere ich eine kolossale DirectoryNotEmptyException o_O
 
             // Das hier sollte aber funzen ;)
-            Files.walk(path, FileVisitOption.FOLLOW_LINKS)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .peek(System.out::println)
-                    .forEach(File::delete);
+            FileUtils.delete(path);
 
             // Speichern der XML-Datei
             saveFile();
