@@ -505,7 +505,7 @@ public class TopicTreeController {
     }
 
     /**
-     * Ändern des Titels eines Knotens
+     * Umbenennen eines Knotens
      *
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
