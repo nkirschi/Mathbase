@@ -6,10 +6,10 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.exceptions.NodeNotFoundException;
-import de.apian.mathbase.exceptions.TitleCollisionException;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
+import de.apian.mathbase.xml.NodeNotFoundException;
+import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;

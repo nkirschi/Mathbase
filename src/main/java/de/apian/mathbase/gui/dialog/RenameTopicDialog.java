@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
-public class AddTopicDialog extends TextInputDialog {
+public class RenameTopicDialog extends TextInputDialog {
 
     /**
      * Basisanzeigefläche
@@ -52,12 +52,12 @@ public class AddTopicDialog extends TextInputDialog {
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    public AddTopicDialog(MainPane mainPane, TopicTreeController topicTreeController) {
+    public RenameTopicDialog(MainPane mainPane, TopicTreeController topicTreeController) {
         this.mainPane = mainPane;
         this.topicTreeController = topicTreeController;
         initOwner(mainPane.getScene().getWindow());
         setTitle("Themenverwaltung");
-        setHeaderText("Neues Thema hinzufügen");
+        setHeaderText("Thema umbenennen");
         setResizable(false);
 
         getDialogPane().setContent(createGrid());

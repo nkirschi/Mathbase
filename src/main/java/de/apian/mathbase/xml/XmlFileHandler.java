@@ -6,8 +6,14 @@
 
 package de.apian.mathbase.xml;
 
+import com.sun.javafx.stage.StageHelper;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Logger;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,6 +34,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -131,14 +138,34 @@ public class XmlFileHandler {
     public NodeList generateNodeListFrom(String expr) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList nodeList = (NodeList) xPath.compile(expr).evaluate(document, XPathConstants.NODESET);
-            return nodeList;
+            return (NodeList) xPath.compile(expr).evaluate(document, XPathConstants.NODESET);
         } catch (XPathException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
              * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
              * wäre das gesamte Programm sowieso erstmal unbrauchbar!
              */
+            for (Stage stage : StageHelper.getStages()) {
+                stage.hide();
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.FINISH);
+                alert.initOwner(stage);
+                alert.setHeaderText("Fatal Error");
+
+                ScrollPane scrollPane = new ScrollPane();
+                scrollPane.setFitToWidth(true);
+                scrollPane.setFitToHeight(true);
+                scrollPane.setPrefHeight(600);
+
+                Text text = new Text(e.getMessage() + "\n");
+                for (StackTraceElement element : e.getStackTrace())
+                    text.setText(text.getText() + "\n" + element);
+
+                scrollPane.setContent(text);
+                alert.getDialogPane().setContent(scrollPane);
+
+                Optional<ButtonType> opt = alert.showAndWait();
+                opt.ifPresent(buttonType -> System.exit(1));
+            }
             Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }

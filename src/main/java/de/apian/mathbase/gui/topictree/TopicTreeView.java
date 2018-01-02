@@ -6,19 +6,19 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.exceptions.NodeNotFoundException;
-import de.apian.mathbase.exceptions.TitleCollisionException;
 import de.apian.mathbase.gui.ContentPane;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.AddTopicDialog;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
+import de.apian.mathbase.gui.dialog.RenameTopicDialog;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.xml.NodeNotFoundException;
+import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -175,6 +175,7 @@ public class TopicTreeView extends TreeView<String> {
 
         MenuItem renameItem = new MenuItem("Umbenennen");
         renameItem.setGraphic(new ImageView(Images.getInternal("rename.png")));
+        renameItem.setOnAction(a -> renameSelected());
 
         MenuItem removeItem = new MenuItem("Entfernen");
         removeItem.setGraphic(new ImageView(Images.getInternal("remove.png")));
@@ -203,14 +204,10 @@ public class TopicTreeView extends TreeView<String> {
     private void addUnderSelected() {
         AddTopicDialog dialog = new AddTopicDialog(mainPane, topicTreeController);
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(value -> {
-            String title = value.substring(0, value.indexOf(';'));
-            String path = value.substring(value.indexOf(';') + 1);
-
+        result.ifPresent(title -> {
             TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-            if (selectedItem == null) {
+            if (selectedItem == null)
                 selectedItem = getRoot();
-            }
 
             try {
                 topicTreeController.addNode(title, selectedItem.getValue());
@@ -219,14 +216,23 @@ public class TopicTreeView extends TreeView<String> {
                 selectedItem.setExpanded(true);
             } catch (NodeNotFoundException | IOException | TitleCollisionException e) {
                 e.printStackTrace();
-            } catch (InternalError e) {
-                Window window = mainPane.getScene().getWindow();
-                window.hide();
-                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.FINISH);
-                alert.setHeaderText("Fatal Error");
-                alert.initOwner(window);
-                Optional<ButtonType> opt = alert.showAndWait();
-                opt.ifPresent(buttonType -> System.exit(1));
+            }
+        });
+    }
+
+    private void renameSelected() {
+        TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
+        if (selectedItem == null)
+            return;
+
+        RenameTopicDialog dialog = new RenameTopicDialog(mainPane, topicTreeController);
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(title -> {
+            try {
+                topicTreeController.renameNode(selectedItem.getValue(), title);
+                selectedItem.setValue(title);
+            } catch (NodeNotFoundException | IOException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -240,19 +246,21 @@ public class TopicTreeView extends TreeView<String> {
      */
     private void removeSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            PasswordDialog dialog = new PasswordDialog(mainPane);
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(pw -> {
-                try {
-                    selectedItem.getParent().getChildren().remove(selectedItem);
-                    topicTreeController.removeNode(selectedItem.getValue());
-                    getSelectionModel().select(null);
-                } catch (NodeNotFoundException | IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+        if (selectedItem == null)
+            return;
+
+        PasswordDialog dialog = new PasswordDialog(mainPane);
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(pw -> {
+            try {
+                selectedItem.getParent().getChildren().remove(selectedItem);
+                topicTreeController.removeNode(selectedItem.getValue());
+                getSelectionModel().select(null);
+            } catch (NodeNotFoundException | IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     private void setExpandedAll(TreeItem<String> parent, boolean expanded) {

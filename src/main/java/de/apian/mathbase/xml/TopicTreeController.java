@@ -6,8 +6,6 @@
 
 package de.apian.mathbase.xml;
 
-import de.apian.mathbase.exceptions.NodeNotFoundException;
-import de.apian.mathbase.exceptions.TitleCollisionException;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logger;
 import org.w3c.dom.Element;
@@ -514,28 +512,21 @@ public class TopicTreeController {
      * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public void changeNodeTitle(String from, String to) throws NodeNotFoundException {
+    public void renameNode(String from, String to) throws NodeNotFoundException, IOException {
         // Ermitteln des Knotens
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
         NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+
         if (nodeList.getLength() == 0) {
             throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
         }
+
         Node node = nodeList.item(0);
         //Ändern des Titels
-        changeNodeTitle(node, to);
-    }
-
-    /**
-     * Ändern des Titels eines Knotens, welcher als Objekt gegeben ist
-     *
-     * @param node Knoten
-     * @param to   neuer Titel
-     * @since 1.0
-     */
-    private void changeNodeTitle(Node node, String to) {
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
             ((Element) node).setAttribute(ATTR_TITLE, to);
+
+        saveFile();
     }
 
     //TODO ALLE Inhalts-Operationen anpassen + implementieren

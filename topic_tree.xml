@@ -3,7 +3,6 @@
   ~ This product is licensed under the GNU General Public License v3.0.
   ~ See LICENSE file for further information.
   -->
-
 <topic_tree>
     <node title="Säfte">
         <node title="Bananensaft">
@@ -12,12 +11,12 @@
             <node title="(Schiefe Bananen)-Saft"/>
             <node title="(Gerade Bananen)-Saft"/>
         </node>
-        <node title="Kiwisaft">
+        <node title="Gedöns">
             <node title="Pissflitschensaft"/>
         </node>
         <node title="Nudelsaft"/>
     </node>
-    <node title="Schiefe Bananen"/>
+    <node title="Giebelgärtner"/>
     <node title="Salate">
         <node title="Gurkensalat">
             <node title="Satz von Kack"/>
