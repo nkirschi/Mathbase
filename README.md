@@ -6,4 +6,4 @@ Zielsetzung ist eine simple und präzise Verwaltung mannigfaltiger Themen aus de
 
 Eine Dokumentation des gesamten Projekts ist bei http://slaergh.github.io/Mathbase verfügbar.
 
-_Ingolstadt_, Mai 2017
+_Ingolstadt_, Januar 2018
