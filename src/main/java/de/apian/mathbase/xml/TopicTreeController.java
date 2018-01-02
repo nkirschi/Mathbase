@@ -8,7 +8,6 @@ package de.apian.mathbase.xml;
 
 import de.apian.mathbase.exc.NodeNotFoundException;
 import de.apian.mathbase.exc.TitleCollisionException;
-import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logger;
 import org.w3c.dom.Element;
@@ -16,14 +15,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.logging.Level;
 
 /**
@@ -78,35 +73,35 @@ public class TopicTreeController {
      *
      * @since 1.0
      */
-    private final String TAG_NODE = "node";
+    private static final String TAG_NODE = "node";
 
     /**
      * Bezeichner eines Inhalts in der XML-Datei
      *
      * @since 1.0
      */
-    private final String TAG_CONTENT = "content";
+    private static final String TAG_CONTENT = "content";
 
     /**
      * Bezeichner des Attributs {@code title} in der XML-Datei
      *
      * @since 1.0
      */
-    private final String ATTR_TITLE = "title";
+    private static final String ATTR_TITLE = "title";
 
     /**
      * Bezeichner des Attributs {@code type} (Typ der Inhalte) in der XML-Datei
      *
      * @since 1.0
      */
-    private final String ATTR_TYPE = "type";
+    private static final String ATTR_TYPE = "type";
 
     /**
      * Bezeichner des Attributs {@code path} (Dateipfad  relativ zum Ordner des Elternknoten) in der XML-Datei
      *
      * @since 1.0
      */
-    private final String ATTR_PATH = "path";
+    private static final String ATTR_PATH = "path";
 
     /**
      * Konstruktion des Kontrolleurs
@@ -131,6 +126,14 @@ public class TopicTreeController {
             Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
         } catch (IOException ex1) {
             Logger.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", ex1);
+            if (!Files.exists(Paths.get(ORIGINAL_PATH))) {
+                try {
+                    recreateFile();
+                    return;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             try { // Versuche im Fehlerfall die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
@@ -182,6 +185,7 @@ public class TopicTreeController {
             Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
     }
@@ -198,43 +202,38 @@ public class TopicTreeController {
      * @since 1.0
      */
     public static void recreateFile() throws IOException { // TODO Exceptions hübsch machen und try-with-resources benutzen!!
-        try {
-            //Erstellt XML-Datei
-            {
-                Path path = Paths.get(ORIGINAL_PATH);
-                if (Files.exists(path)) {
-                    FileUtils.move(path, Paths.get(ORIGINAL_PATH + ".old"));
-                    Logger.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden " +
-                            "und vor Neuerstellung umbenannt");
-                }
-                Files.createFile(path);
-                BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
-                writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
-                        "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
-                        "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
-                        "  ~ See LICENSE file for further information.\n  -->\n\n" +
-                        "<%s></%s>", TAG_ROOT, TAG_ROOT));
-                writer.close();
-                Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
-            }
 
-            //Erstellt Topics-Ordner
-            {
-                Path path = Paths.get(TOPICS_PATH);
-                if (Files.exists(path)) {
-                    FileUtils.move(path, Paths.get(TOPICS_PATH + ".old"));
-                    Logger.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden " +
-                            "und vor Neuerstellung umbenannt");
-                }
-                Files.createDirectory(path);
-            }
-
+        // Erstellen der XML-Datei
+        Path xmlPath = Paths.get(ORIGINAL_PATH);
+        if (Files.exists(xmlPath)) {
+            FileUtils.move(xmlPath, Paths.get(ORIGINAL_PATH + ".old"));
+            Logger.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden " +
+                    "und vor Neuerstellung umbenannt");
+        }
+        Files.createFile(xmlPath);
+        try (BufferedWriter writer = Files.newBufferedWriter(xmlPath, Charset.forName("UTF-8"))) {
+            writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
+                    "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
+                    "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
+                    "  ~ See LICENSE file for further information.\n  -->\n\n" +
+                    "<%s></%s>", TAG_ROOT, TAG_ROOT));
+            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
         } catch (IOException e) {
             Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
+            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
+
+        // Erstellen des Themenordners
+        Path topicsPath = Paths.get(TOPICS_PATH);
+        if (Files.exists(topicsPath)) {
+            FileUtils.move(topicsPath, Paths.get(TOPICS_PATH + ".old"));
+            Logger.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden " +
+                    "und vor Neuerstellung umbenannt");
+        }
+        Files.createDirectory(topicsPath);
     }
 
     /**
@@ -245,10 +244,10 @@ public class TopicTreeController {
      * @return ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public boolean doesExist(String title) { // TODO Macht Bene gleich schöner
+    public boolean doesExist(String title) { // TODO muss schöner gelöst werden...
         boolean exists = false;
 
-        NodeList nodeList = xmlHandler.getDoc().getElementsByTagName(TAG_NODE);
+        NodeList nodeList = xmlHandler.getDocument().getElementsByTagName(TAG_NODE);
         for (int i = 0; i < nodeList.getLength(); i++)
             if (FileUtils.normalize(nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getNodeValue())
                     .equals(FileUtils.normalize(title)))
@@ -266,26 +265,15 @@ public class TopicTreeController {
      * @since 1.0
      */
     public String localizeFolder(String title) throws NodeNotFoundException {
-        try {
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title +
-                    "']");
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        if (nodeList.getLength() == 0)
+            throw new NodeNotFoundException(String.format("Knoten \" + title + \" konnte nicht gefunden werden!"));
+        Node node = nodeList.item(0);
+        String path = localizeFolder(node) + "/";
 
-            if (nodeList.getLength() == 0) {
-                throw new NodeNotFoundException("Knoten \"" + title + "\" konnte nicht gefunden werden!");
-            }
-            Node node = nodeList.item(0);
-            String path = localizeFolder(node) + "/";
-            Logger.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
-            return path;
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
-        }
+        Logger.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
+        return path;
     }
 
     /**
@@ -295,28 +283,22 @@ public class TopicTreeController {
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
      */
     private String localizeFolder(Node node) {
-        //if (node == null)
-        //throw new IllegalArgumentException("Knoten ist null!");
-        // Wirft ja eh ne NullPointer ... Außerdem wird die Methode nur intern verwendet, also liegt der Fehler
-        // dann beim Verfasser ...
+        if (node == null)
+            return "";
 
         if (node.getNodeName().equals(TAG_ROOT))
             return TOPICS_PATH;
 
-        //Bringe Titel des Knoten in Erfahrung
-        String nodeTitle;
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
-        } else {
-            /*
-             * Das darf eigentlich nicht vorkommen, da ja alle Knoten von uns erzeugt wurden
-             * Sollte es doch, so ist irgendwie ein Knoten per Hand eingefügt worden und damit ist eine Bedingung
-             * der XML-Datei (Dass alle Knoten Titel-Attribute haben müssen nicht eingehalten
-             */
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
-        }
+        // Titel des Knotens
+        String title = "";
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+            title = ((Element) node).getAttribute(ATTR_TITLE);
 
-        String path = "/" + FileUtils.normalize(nodeTitle);
+        // Unmöglicher Fall
+        if (title.isEmpty())
+            return "";
+
+        String path = FileSystems.getDefault().getSeparator() + FileUtils.normalize(title);
         return localizeFolder(node.getParentNode()) + path;
     }
 
@@ -328,42 +310,30 @@ public class TopicTreeController {
      * @since 1.0
      */
     public String[] getChildren(String title) {
-        try {
-            String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE
-                    : "//" + TAG_ROOT + "/" + TAG_NODE;
-            NodeList nodeList = xmlHandler.getNodeListXPath(expr);
-            String[] result = new String[nodeList.getLength()];
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
 
-                //Bringe Titel des Knoten in Erfahrung
-                String nodeTitle;
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
-                } else {
-                    /*
-                     * Das darf eigentlich nicht vorkommen, da ja alle Knoten von uns erzeugt wurden
-                     * Sollte es doch, so ist irgendwie ein Knoten per Hand eingefügt worden und damit ist eine Bedingung
-                     * der XML-Datei (Dass alle Knoten Titel-Attribute haben müssen nicht eingehalten
-                     */
-                    throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
-                }
+        String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE
+                : "//" + TAG_ROOT + "/" + TAG_NODE;
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        String[] result = new String[nodeList.getLength()];
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
 
-                result[i] = nodeTitle;
-            }
-            return result;
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+            // Titel des Knotens
+            String nodeTitle = "";
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+                nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
+
+            // Leerer Titel (kann gar ned sein)
+            if (nodeTitle.isEmpty())
+                continue;
+
+            result[i] = nodeTitle;
         }
+        return result;
+
     }
 
-    //TODO ALLE Inhalts-Operationen anpassen + impelmentieren
+    //TODO ALLE Inhalts-Operationen anpassen + implementieren
 
     /**
      * Ermitteln aller Inhalte eines bestimmten Knotens
@@ -373,31 +343,23 @@ public class TopicTreeController {
      * @since 1.0
      */
     public Content[] getContents(String title) {
-        try {
-            String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
-            NodeList nodeList = xmlHandler.getNodeListXPath(expr);
 
-            Content[] contents = new Content[nodeList.getLength()];
-            for (int i = 0; i < contents.length; i++) {
-                NamedNodeMap attributes = nodeList.item(i).getAttributes();
-                contents[i] = new Content(
-                        Content.Type.forName(attributes.getNamedItem(ATTR_TYPE).getNodeValue()),
-                        attributes.getNamedItem(ATTR_PATH).getNodeValue(),
-                        attributes.getNamedItem(ATTR_PATH).getNodeValue()
-                );
-            }
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
 
-            Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
-            return contents;
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        Content[] contents = new Content[nodeList.getLength()];
+        for (int i = 0; i < contents.length; i++) {
+            NamedNodeMap attributes = nodeList.item(i).getAttributes();
+            contents[i] = new Content(
+                    Content.Type.forName(attributes.getNamedItem(ATTR_TYPE).getNodeValue()),
+                    attributes.getNamedItem(ATTR_PATH).getNodeValue(),
+                    attributes.getNamedItem(ATTR_PATH).getNodeValue()
+            );
         }
+
+        Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
+        return contents;
+
     }
 
     /**
@@ -411,32 +373,25 @@ public class TopicTreeController {
      * @since 1.0
      */
     public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException {
-        if (doesExist(title)) {
+
+        if (doesExist(title))
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
-        }
 
-        try {
-            //Eltern-Knoten wird herrausgesucht
-            String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
-            NodeList nodeList = xmlHandler.getNodeListXPath(expr);
-            if (nodeList.getLength() == 0) {
-                throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
-            }
-            Node parentNode = nodeList.item(0);
+        // Heraussuchen des Elternknotens
+        String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
 
-            //Knoten wird unter dem gefundenen Elternknoten erzeugt
-            addNode(title, parentNode);
-            Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
-                    parent == null ? "der Wurzel" : "\"" + parent + "\""));
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
-        }
+        // Unmöglicher Fall
+        if (nodeList.getLength() == 0)
+            throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
+
+        Node parentNode = nodeList.item(0);
+
+        //Knoten wird unter dem gefundenen Elternknoten erzeugt
+        addNode(title, parentNode);
+        Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
+                parent == null ? "der Wurzel" : "\"" + parent + "\""));
+
     }
 
     /**
@@ -450,7 +405,7 @@ public class TopicTreeController {
     private void addNode(String title, Node parent) throws IOException {
 
         // Erstellung des Knotens und Hinzufügen zum Elternknoten
-        Element element = xmlHandler.getDoc().createElement(TAG_NODE);
+        Element element = xmlHandler.getDocument().createElement(TAG_NODE);
         element.setAttribute(ATTR_TITLE, title);
         parent.appendChild(element);
         Logger.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
@@ -470,52 +425,44 @@ public class TopicTreeController {
      * @param from Titel des zu verschiebenden Knotens
      * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein). Wenn {@code NULL}, dann wird die Wurzel
      *             verwendet.
-     * @throws NodeNotFoundException    wenn einer der beiden Knoten nicht existiert
+     * @throws NodeNotFoundException   wenn einer der beiden Knoten nicht existiert
      * @throws TitleCollisionException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
-     *                                  oder {@code from} gleich {@code to} ist
-     * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
+     *                                 oder {@code from} gleich {@code to} ist
+     * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
     public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException {
         if (from.equals(to)) {
             throw new TitleCollisionException("from und to dürfen nicht gleich sein!");
         }
-        try {
-            // Ermitteln des Elternknotens
-            Node parentNode;
-            {
-                String expr = to != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + to + "']" : "//" + TAG_ROOT;
-                NodeList nodeList = xmlHandler.getNodeListXPath(expr);
-                if (nodeList.getLength() == 0) {
-                    throw new NodeNotFoundException("Knoten / Wurzel konnte nicht gefunden werden!");
-                }
-                parentNode = nodeList.item(0);
-            }
 
-            // Ermitteln des zu verschiebenden Knotens
-            Node node;
-            {
-                String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
-                NodeList nodeList = xmlHandler.getNodeListXPath(expr);
-                if (nodeList.getLength() == 0) {
-                    throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
-                }
-                node = nodeList.item(0);
+        // Ermitteln des Elternknotens
+        Node parentNode;
+        {
+            String expr = to != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + to + "']" : "//" + TAG_ROOT;
+            NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+            if (nodeList.getLength() == 0) {
+                throw new NodeNotFoundException("Knoten / Wurzel konnte nicht gefunden werden!");
             }
-
-            // Verschieben des Knotens unter den Elternknoten
-            moveNode(node, parentNode);
-            Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s verschoben", from,
-                    to == null ? "die Wurzel" : "\"" + to + "\""));
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+            parentNode = nodeList.item(0);
         }
+
+        // Ermitteln des zu verschiebenden Knotens
+        Node node;
+        {
+            String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
+            NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+            if (nodeList.getLength() == 0) {
+                throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
+            }
+            node = nodeList.item(0);
+        }
+
+        // Verschieben des Knotens unter den Elternknoten
+        moveNode(node, parentNode);
+        Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s verschoben", from,
+                to == null ? "die Wurzel" : "\"" + to + "\""));
+
     }
 
     /**
@@ -523,15 +470,14 @@ public class TopicTreeController {
      *
      * @param from Zu verschiebender Knoten (Darf nicht Wurzel sein)
      * @param to   Neuer Elternknoten (Darf nicht {@code node} sein)
-     * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
+     * @throws TitleCollisionException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
+     * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    private void moveNode(Node from, Node to) throws IOException {
-        // Überprüfung auf illegale Parameter
-        //if (from.getNodeName().equals(TAG_ROOT))
-        //   throw new IllegalArgumentException("Zu verschiebender Knoten darf nicht die Wurzel \"" + TAG_ROOT
-        //            + "\" sein!");
-        // Wird nur intern verwendet, da ist dann darauf zu achten, dass die Wurzel net verschoben wird ...
+    private void moveNode(Node from, Node to) throws TitleCollisionException, IOException {
+        // Überprüfung auf invalide Parameter
+        if (from.getNodeName().equals(TAG_ROOT))
+            throw new TitleCollisionException("Knoten darf nicht die Wurzel \"" + TAG_ROOT + "\" sein!");
 
         Path oldPath = Paths.get(localizeFolder(from));
 
@@ -547,6 +493,7 @@ public class TopicTreeController {
 
         // Speichern der XML-Datei
         saveFile();
+
     }
 
     /**
@@ -558,33 +505,25 @@ public class TopicTreeController {
      * @since 1.0
      */
     public void removeNode(String nodeTitle) throws NodeNotFoundException, IOException {
-        try {
-            // Ermitteln des Knotens
-            NodeList nodeList = xmlHandler.getNodeListXPath("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle
-                    + "']");
-            if (nodeList.getLength() == 0) {
-                throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
-            }
-            Node node = nodeList.item(0);
-            Path path = Paths.get(localizeFolder(node));
 
-            // Entfernen des Knotens
-            node.getParentNode().removeChild(node);
-
-            // Entfernen des Ordners
-            FileUtils.delete(path);
-
-            // Speichern der XML-Datei
-            saveFile();
-            Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
-        } catch (XPathExpressionException e) {
-            /*
-             * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
-             * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
-             * wäre das gesamte Programm sowieso erstmal unbrauchbar!
-             */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
+        // Ermitteln des Knotens
+        NodeList nodeList = xmlHandler.generateNodeListFrom("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle
+                + "']");
+        if (nodeList.getLength() == 0) {
+            throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
         }
+
+        Node node = nodeList.item(0);
+        Path path = Paths.get(localizeFolder(node));
+
+        // Entfernen des Knotens
+        node.getParentNode().removeChild(node);
+
+        // Entfernen des Ordners
+        FileUtils.delete(path);
+
+        // Speichern der XML-Datei
+        saveFile();
+        Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
     }
 }

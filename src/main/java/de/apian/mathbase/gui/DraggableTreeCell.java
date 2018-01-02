@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui;
 
 import de.apian.mathbase.exc.NodeNotFoundException;
+import de.apian.mathbase.exc.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -95,7 +96,7 @@ class DraggableTreeCell extends TreeCell<String> {
                     targetItem.getChildren().add(sourceItem);
                     targetItem.setExpanded(true);
                     targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                } catch (NodeNotFoundException | IOException e) {
+                } catch (NodeNotFoundException | IOException | TitleCollisionException e) {
                     e.printStackTrace();
                 }
             });

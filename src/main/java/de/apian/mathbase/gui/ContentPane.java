@@ -18,6 +18,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * Inhaltsanzeige eines gewählten Themas.
  *
@@ -56,8 +59,8 @@ public class ContentPane extends ScrollPane {
             outerBox.getChildren().add(vbox);
             outerBox.setAlignment(Pos.CENTER);
 
-            Label hint = new Label("Kein Thema ausgewählt. Wählen Sie ein Thema, indem Sie links auf den " +
-                    "entsprechenden Eintrag im Themenbaum klicken. Weitere Optionen sind im Kontextmenü des Baumes zu finden.");
+            ResourceBundle bundle = ResourceBundle.getBundle(Constants.RESOURCE_BUNDLE_PATH, Locale.GERMAN);
+            Label hint = new Label(bundle.getString("hint"));
             hint.setWrapText(true);
             hint.setMaxWidth(400);
 

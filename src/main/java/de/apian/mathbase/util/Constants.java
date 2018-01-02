@@ -37,7 +37,12 @@ public class Constants {
      * @since 1.0
      */
     public static final Font TITLE_FONT = Font.loadFont(
-            Constants.class.getResourceAsStream("/de/apian/mathbase/ADAM.CG_PRO.otf"), 11.0);
+            Constants.class.getResourceAsStream("/fonts/adam.cg_pro.otf"), 11.0);
+
+    /**
+     * Pfad zum Resource-Bundle für die GUI-Texte relativ zum Ressourcenpfad
+     */
+    public static final String RESOURCE_BUNDLE_PATH = "Mathbase";
 
     /**
      * Gehashtes Admin-Passwort
