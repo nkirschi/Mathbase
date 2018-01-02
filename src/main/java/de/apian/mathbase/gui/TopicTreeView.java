@@ -123,7 +123,7 @@ public class TopicTreeView extends TreeView<String> {
      *
      * @param parent Elternknoten
      * @param key    Suchbegriff
-     * @return Boolesche Aussage, ob {@param key} im Teilbaum ab {@param parent} enthalten ist
+     * @return Boolesche Aussage, ob der Suchbegriff enthalten ist
      * @since 1.0
      */
     private boolean subtreeContainsIgnoreCase(TreeItem<String> parent, String key) {
@@ -158,9 +158,8 @@ public class TopicTreeView extends TreeView<String> {
     }
 
     /**
-     * Kreation des Kontextmenüs im Baum
+     * Initiierung eines nigelnagelschnieken Kontextmenüs (mit Senf)
      *
-     * @return Nigelnagelschniekes Kontextmenü (mit Senf)
      * @since 1.0
      */
     private void initContextMenu() {
