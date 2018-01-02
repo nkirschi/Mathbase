@@ -18,6 +18,9 @@
         <node title="Nudelsaft"/>
     </node>
     <node title="Schiefe Bananen"/>
-
-    <node title="123"/>
+    <node title="Salate">
+        <node title="Gurkensalat">
+            <node title="Satz von Kack"/>
+        </node>
+    </node>
 </topic_tree>
