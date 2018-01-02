@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.gui.topictree.TopicTreeView;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -40,7 +41,7 @@ public class SidebarPane extends BorderPane {
      *
      * @since 1.0
      */
-    private TopicTreeView treeView;
+    private de.apian.mathbase.gui.topictree.TopicTreeView treeView;
 
     /**
      * Konstruktion der Sidebar

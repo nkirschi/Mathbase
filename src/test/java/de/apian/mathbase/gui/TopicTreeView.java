@@ -6,8 +6,10 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.exc.NodeNotFoundException;
-import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.exceptions.NodeNotFoundException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.gui.dialog.AddTopicDialog;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;
@@ -94,7 +96,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     public TreeView<String> filter(String key) {
-        TopicTreeView treeView = new TopicTreeView(mainPane, topicTreeController);
+        de.apian.mathbase.gui.topictree.TopicTreeView treeView = new de.apian.mathbase.gui.topictree.TopicTreeView(mainPane, topicTreeController);
         filter(getRoot(), treeView.getRoot(), key);
         return treeView;
     }
@@ -198,7 +200,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void addUnderSelected() {
-        AddTopicDialog dialog = new AddTopicDialog(mainPane, topicTreeController);
+        de.apian.mathbase.gui.dialog.AddTopicDialog dialog = new AddTopicDialog(mainPane, topicTreeController);
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(value -> {
             String title = value.substring(0, value.indexOf(';'));
@@ -238,7 +240,7 @@ public class TopicTreeView extends TreeView<String> {
     private void removeSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            PasswordDialog dialog = new PasswordDialog(mainPane);
+            de.apian.mathbase.gui.dialog.PasswordDialog dialog = new PasswordDialog(mainPane);
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(pw -> {
                 try {

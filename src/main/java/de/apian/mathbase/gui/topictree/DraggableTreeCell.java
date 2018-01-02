@@ -4,10 +4,12 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.gui;
+package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.exc.NodeNotFoundException;
-import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.exceptions.NodeNotFoundException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -30,7 +32,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 1.0
  */
-class DraggableTreeCell extends TreeCell<String> {
+public class DraggableTreeCell extends TreeCell<String> {
 
     /**
      * Aktuell gewählte Quell- und Zielknoten

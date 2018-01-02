@@ -6,8 +6,8 @@
 
 package de.apian.mathbase.xml;
 
-import de.apian.mathbase.exc.NodeNotFoundException;
-import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.exceptions.NodeNotFoundException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logger;
 import org.w3c.dom.Element;

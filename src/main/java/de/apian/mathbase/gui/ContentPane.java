@@ -42,7 +42,7 @@ public class ContentPane extends ScrollPane {
      * @param title               Titel des zugehörigen Themas
      * @param topicTreeController Themenbaumkontrolleur
      */
-    ContentPane(String title, MainPane mainPane, TopicTreeController topicTreeController) {
+    public ContentPane(String title, MainPane mainPane, TopicTreeController topicTreeController) {
         this.topicTreeController = topicTreeController;
 
         setPadding(new Insets(10, 10, 10, 10));

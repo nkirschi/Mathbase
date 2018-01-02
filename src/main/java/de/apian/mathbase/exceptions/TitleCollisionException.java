@@ -4,7 +4,7 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.exc;
+package de.apian.mathbase.exceptions;
 
 /**
  * Kollision der Titel zweier Knoten.

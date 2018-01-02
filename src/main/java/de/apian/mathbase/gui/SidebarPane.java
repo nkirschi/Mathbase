@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.gui.topictree.TopicTreeView;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;

@@ -4,10 +4,14 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.gui;
+package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.exc.NodeNotFoundException;
-import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.exceptions.NodeNotFoundException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.gui.ContentPane;
+import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.AddTopicDialog;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;

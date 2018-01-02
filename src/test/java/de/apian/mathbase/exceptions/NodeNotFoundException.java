@@ -4,7 +4,7 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.exc;
+package de.apian.mathbase.exceptions;
 
 /**
  * Nichtvorhandensein eines bestimmten Knotens.
@@ -29,7 +29,7 @@ public class NodeNotFoundException extends Exception {
      * Standard-Konstruktor mit Nachricht und Grund für diese Ausnahme
      *
      * @param title Titel des Knotens
-     * @param cause   Grund für Ausnahme
+     * @param cause Grund für Ausnahme
      * @since 1.0
      */
     public NodeNotFoundException(String title, Throwable cause) {

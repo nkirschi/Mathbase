@@ -6,8 +6,9 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.exc.NodeNotFoundException;
-import de.apian.mathbase.exc.TitleCollisionException;
+import de.apian.mathbase.exceptions.NodeNotFoundException;
+import de.apian.mathbase.exceptions.TitleCollisionException;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -87,7 +88,7 @@ class DraggableTreeCell extends TreeCell<String> {
             if (targetItem == null)
                 targetItem = getTreeView().getRoot();
 
-            PasswordDialog dialog = new PasswordDialog(mainPane);
+            de.apian.mathbase.gui.dialog.PasswordDialog dialog = new PasswordDialog(mainPane);
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(pw -> {
                 try {
