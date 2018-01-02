@@ -182,7 +182,6 @@ public class TopicTreeController {
             Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
     }
@@ -234,7 +233,6 @@ public class TopicTreeController {
             Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
             // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
     }
@@ -247,7 +245,7 @@ public class TopicTreeController {
      * @return ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public boolean doesExist(String title) { // TODO muss schöner gelöst werden...
+    public boolean doesExist(String title) { // TODO Macht Bene gleich schöner
         boolean exists = false;
 
         NodeList nodeList = xmlHandler.getDoc().getElementsByTagName(TAG_NODE);
@@ -295,25 +293,27 @@ public class TopicTreeController {
      *
      * @param node Der Ausgangsknoten
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
-     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. kein Titel-Attribut besitzt und damit
-     *                                  eigentlich auch keiner "unserer" Knoten sein kann. Dazu muss schon einiges
-     *                                  schieflaufen ...
      */
-    private String localizeFolder(Node node) throws IllegalArgumentException {
-        if (node == null)
-            throw new IllegalArgumentException("Knoten ist null!");
+    private String localizeFolder(Node node) {
+        //if (node == null)
+        //throw new IllegalArgumentException("Knoten ist null!");
+        // Wirft ja eh ne NullPointer ... Außerdem wird die Methode nur intern verwendet, also liegt der Fehler
+        // dann beim Verfasser ...
 
         if (node.getNodeName().equals(TAG_ROOT))
             return TOPICS_PATH;
 
         //Bringe Titel des Knoten in Erfahrung
-        String nodeTitle = "";
+        String nodeTitle;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
-        }
-        if (nodeTitle.equals("")) {
-            throw new IllegalArgumentException("Knoten, welcher kein Element ist bzw keinen Titel hat, gefunden! " +
-                    "*PANIK*");
+        } else {
+            /*
+             * Das darf eigentlich nicht vorkommen, da ja alle Knoten von uns erzeugt wurden
+             * Sollte es doch, so ist irgendwie ein Knoten per Hand eingefügt worden und damit ist eine Bedingung
+             * der XML-Datei (Dass alle Knoten Titel-Attribute haben müssen nicht eingehalten
+             */
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
 
         String path = "/" + FileUtils.normalize(nodeTitle);
@@ -325,12 +325,9 @@ public class TopicTreeController {
      *
      * @param title Titel des Knotens
      * @return {@code String}-Array der Titel aller Kinder
-     * @throws IllegalArgumentException wenn ein Knoten kein Element ist bzw. kein Titel-Attribut besitzt und damit
-     *                                  eigentlich auch keiner "unserer" Knoten sein kann. Dazu muss schon einiges
-     *                                  schieflaufen ...
      * @since 1.0
      */
-    public String[] getChildren(String title) throws IllegalArgumentException {
+    public String[] getChildren(String title) {
         try {
             String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE
                     : "//" + TAG_ROOT + "/" + TAG_NODE;
@@ -340,13 +337,16 @@ public class TopicTreeController {
                 Node node = nodeList.item(i);
 
                 //Bringe Titel des Knoten in Erfahrung
-                String nodeTitle = "";
+                String nodeTitle;
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
-                }
-                if (nodeTitle.equals("")) {
-                    throw new IllegalArgumentException("Knoten, welcher kein Element ist bzw keinen Titel hat, " +
-                            "gefunden! *PANIK*");
+                } else {
+                    /*
+                     * Das darf eigentlich nicht vorkommen, da ja alle Knoten von uns erzeugt wurden
+                     * Sollte es doch, so ist irgendwie ein Knoten per Hand eingefügt worden und damit ist eine Bedingung
+                     * der XML-Datei (Dass alle Knoten Titel-Attribute haben müssen nicht eingehalten
+                     */
+                    throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
                 }
 
                 result[i] = nodeTitle;
@@ -471,14 +471,14 @@ public class TopicTreeController {
      * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein). Wenn {@code NULL}, dann wird die Wurzel
      *             verwendet.
      * @throws NodeNotFoundException    wenn einer der beiden Knoten nicht existiert
-     * @throws IllegalArgumentException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
+     * @throws TitleCollisionException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
      *                                  oder {@code from} gleich {@code to} ist
      * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    public void moveNode(String from, String to) throws NodeNotFoundException, IllegalArgumentException, IOException {
+    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException {
         if (from.equals(to)) {
-            throw new IllegalArgumentException("from und to dürfen nicht gleich sein!");
+            throw new TitleCollisionException("from und to dürfen nicht gleich sein!");
         }
         try {
             // Ermitteln des Elternknotens
@@ -523,16 +523,16 @@ public class TopicTreeController {
      *
      * @param from Zu verschiebender Knoten (Darf nicht Wurzel sein)
      * @param to   Neuer Elternknoten (Darf nicht {@code node} sein)
-     * @throws IllegalArgumentException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
      * @throws IOException              wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    private void moveNode(Node from, Node to) throws IllegalArgumentException, IOException {
+    private void moveNode(Node from, Node to) throws IOException {
         // Überprüfung auf illegale Parameter
-        if (from.getNodeName().equals(TAG_ROOT)) {
-            throw new IllegalArgumentException("Zu verschiebender Knoten darf nicht die Wurzel \"" + TAG_ROOT
-                    + "\" sein!");
-        }
+        //if (from.getNodeName().equals(TAG_ROOT))
+        //   throw new IllegalArgumentException("Zu verschiebender Knoten darf nicht die Wurzel \"" + TAG_ROOT
+        //            + "\" sein!");
+        // Wird nur intern verwendet, da ist dann darauf zu achten, dass die Wurzel net verschoben wird ...
+
         Path oldPath = Paths.get(localizeFolder(from));
 
         // Verschieben des Knotens
