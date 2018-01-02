@@ -144,7 +144,7 @@ public class TopicTreeController {
                 Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
                         + BACKUP_PATH + "\" wiederhergestellt werden", ex2);
 
-                // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+                // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
                 // dass die Datei nicht geladen werden konnte
                 throw new IOException("Keine Datei konnte geladen werden! Kontaktieren Sie Ihren Systemadministrator!");
             }
@@ -164,7 +164,7 @@ public class TopicTreeController {
             Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
             Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", e);
-            // Schmeiß eine IOException, um den aufrufenden Methoden mitzuteilen,
+            // Schmeißt eine IOException, um den aufrufenden Methoden mitzuteilen,
             // dass die Datei nicht gespeichert werden konnte
             throw e;
         }
@@ -183,9 +183,8 @@ public class TopicTreeController {
                     + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
             Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
-            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
     }
@@ -220,9 +219,8 @@ public class TopicTreeController {
             Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
         } catch (IOException e) {
             Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
-            // Schmeiß eine IOException, um den aufrufenden Klassen mitzuteilen,
+            // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
-            // TODO Errorhandling in den anderen Klassen implementieren
             throw e;
         }
 
@@ -244,14 +242,25 @@ public class TopicTreeController {
      * @return ob ein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public boolean doesExist(String title) { // TODO muss schöner gelöst werden...
+    public boolean doesExist(String title) {
         boolean exists = false;
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
 
-        NodeList nodeList = xmlHandler.getDocument().getElementsByTagName(TAG_NODE);
-        for (int i = 0; i < nodeList.getLength(); i++)
-            if (FileUtils.normalize(nodeList.item(i).getAttributes().getNamedItem(ATTR_TITLE).getNodeValue())
-                    .equals(FileUtils.normalize(title)))
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            //Eigentlich sollte ja nur ein Knoten mit dem Titel da sein, aber Meckern ist nicht Sinn der Methode
+
+            // Titel des Knotens
+            String anotherTitle = "";
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+                anotherTitle = ((Element) node).getAttribute(ATTR_TITLE);
+            // Leerer Titel (kann gar nicht sein, da wir davon ausgehen, dass alle Knoten durch addNode erzeugt wurden)
+            if (title.isEmpty())
+                continue;
+            if (anotherTitle.equals(title))
                 exists = true;
+        }
         Logger.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
         return exists;
     }
@@ -268,7 +277,7 @@ public class TopicTreeController {
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
         NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
         if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException(String.format("Knoten \" + title + \" konnte nicht gefunden werden!"));
+            throw new NodeNotFoundException(String.format("Knoten \"%s\" konnte nicht gefunden werden!", title));
         Node node = nodeList.item(0);
         String path = localizeFolder(node) + "/";
 
@@ -294,7 +303,7 @@ public class TopicTreeController {
         if (node.getNodeType() == Node.ELEMENT_NODE)
             title = ((Element) node).getAttribute(ATTR_TITLE);
 
-        // Unmöglicher Fall
+        // Leerer Titel (kann gar nicht sein, da wir davon ausgehen, dass alle Knoten durch addNode erzeugt wurden)
         if (title.isEmpty())
             return "";
 
@@ -323,42 +332,14 @@ public class TopicTreeController {
             if (node.getNodeType() == Node.ELEMENT_NODE)
                 nodeTitle = ((Element) node).getAttribute(ATTR_TITLE);
 
-            // Leerer Titel (kann gar ned sein)
+
+            // Leerer Titel (kann gar nicht sein, da wir davon ausgehen, dass alle Knoten durch addNode erzeugt wurden)
             if (nodeTitle.isEmpty())
                 continue;
 
             result[i] = nodeTitle;
         }
         return result;
-
-    }
-
-    //TODO ALLE Inhalts-Operationen anpassen + implementieren
-
-    /**
-     * Ermitteln aller Inhalte eines bestimmten Knotens
-     *
-     * @param title Titel des betreffenden Knotens
-     * @return {@code Content}-Array aller Inhalte des Knotens
-     * @since 1.0
-     */
-    public Content[] getContents(String title) {
-
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
-
-        Content[] contents = new Content[nodeList.getLength()];
-        for (int i = 0; i < contents.length; i++) {
-            NamedNodeMap attributes = nodeList.item(i).getAttributes();
-            contents[i] = new Content(
-                    Content.Type.forName(attributes.getNamedItem(ATTR_TYPE).getNodeValue()),
-                    attributes.getNamedItem(ATTR_PATH).getNodeValue(),
-                    attributes.getNamedItem(ATTR_PATH).getNodeValue()
-            );
-        }
-
-        Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
-        return contents;
 
     }
 
@@ -373,7 +354,6 @@ public class TopicTreeController {
      * @since 1.0
      */
     public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException {
-
         if (doesExist(title))
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
 
@@ -403,7 +383,6 @@ public class TopicTreeController {
      * @since 1.0
      */
     private void addNode(String title, Node parent) throws IOException {
-
         // Erstellung des Knotens und Hinzufügen zum Elternknoten
         Element element = xmlHandler.getDocument().createElement(TAG_NODE);
         element.setAttribute(ATTR_TITLE, title);
@@ -525,5 +504,66 @@ public class TopicTreeController {
         // Speichern der XML-Datei
         saveFile();
         Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
+    }
+
+    /**
+     * Ändern des Titels eines Knotens
+     *
+     * @param from Ursprünglicher Titel
+     * @param to   neuer Titel
+     * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
+     * @since 1.0
+     */
+    public void changeNodeTitle(String from, String to) throws NodeNotFoundException {
+        // Ermitteln des Knotens
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        if (nodeList.getLength() == 0) {
+            throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
+        }
+        Node node = nodeList.item(0);
+        //Ändern des Titels
+        changeNodeTitle(node, to);
+    }
+
+    /**
+     * Ändern des Titels eines Knotens, welcher als Objekt gegeben ist
+     *
+     * @param node Knoten
+     * @param to   neuer Titel
+     * @since 1.0
+     */
+    private void changeNodeTitle(Node node, String to) {
+        if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
+            ((Element) node).setAttribute(ATTR_TITLE, to);
+    }
+
+    //TODO ALLE Inhalts-Operationen anpassen + implementieren
+
+    /**
+     * Ermitteln aller Inhalte eines bestimmten Knotens
+     *
+     * @param title Titel des betreffenden Knotens
+     * @return {@code Content}-Array aller Inhalte des Knotens
+     * @since 1.0
+     */
+    public Content[] getContents(String title) {
+
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+
+        Content[] contents = new Content[nodeList.getLength()];
+        for (int i = 0; i < contents.length; i++) {
+            NamedNodeMap attributes = nodeList.item(i).getAttributes();
+            contents[i] = new Content(
+                    Content.Type.forName(attributes.getNamedItem(ATTR_TYPE).getNodeValue()),
+                    attributes.getNamedItem(ATTR_PATH).getNodeValue(),
+                    attributes.getNamedItem(ATTR_PATH).getNodeValue()
+            );
+        }
+
+        Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
+        return contents;
+
     }
 }
