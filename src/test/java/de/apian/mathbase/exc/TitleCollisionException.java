@@ -1,20 +1,26 @@
+/*
+ * Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
+ * This product is licensed under the GNU General Public License v3.0.
+ * See LICENSE file for further information.
+ */
+
 package de.apian.mathbase.exc;
 
 /**
- * Titel eines bestimmten Knotens ist leer (Nicht {@code NULL}!)
+ * Kollision der Titel zweier Knoten.
  *
  * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
-public class EmptyTitleException extends Exception {
+public class TitleCollisionException extends Exception {
 
     /**
      * Standard-Konstruktor
      *
      * @since 1.0
      */
-    public EmptyTitleException() {
+    public TitleCollisionException() {
         super();
     }
 
@@ -24,7 +30,7 @@ public class EmptyTitleException extends Exception {
      * @param message Nachricht
      * @since 1.0
      */
-    public EmptyTitleException(String message) {
+    public TitleCollisionException(String message) {
         super(message);
     }
 
@@ -35,7 +41,7 @@ public class EmptyTitleException extends Exception {
      * @param cause   Grund für Ausnahme
      * @since 1.0
      */
-    public EmptyTitleException(String message, Throwable cause) {
+    public TitleCollisionException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -45,7 +51,7 @@ public class EmptyTitleException extends Exception {
      * @param cause Grund für Ausnahme
      * @since 1.0
      */
-    public EmptyTitleException(Throwable cause) {
+    public TitleCollisionException(Throwable cause) {
         super(cause);
     }
 }
