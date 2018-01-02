@@ -505,7 +505,7 @@ public class TopicTreeController {
     }
 
     /**
-     * Umbenennen eines Knotens
+     * Umbenennen eines Knotens.
      *
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
@@ -527,6 +527,7 @@ public class TopicTreeController {
             ((Element) node).setAttribute(ATTR_TITLE, to);
 
         saveFile();
+        Logger.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
     }
 
     //TODO ALLE Inhalts-Operationen anpassen + implementieren
