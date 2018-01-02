@@ -524,6 +524,7 @@ public class TopicTreeController {
         Node node = nodeList.item(0);
         //Ändern des Titels
         changeNodeTitle(node, to);
+        Logger.log(Level.INFO, "Titel des Knotens \"" + from + "\" wurde zu \"" + to + "\" geändert");
     }
 
     /**
