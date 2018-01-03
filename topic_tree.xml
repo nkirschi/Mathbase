@@ -1,10 +1,28 @@
-content
-        dialog
-        topictree
-        pane
-        util<!--
+<!--
   ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
   ~ This product is licensed under the GNU General Public License v3.0.
   ~ See LICENSE file for further information.
   -->
-
+<topic_tree>
+    <node title="Säfte">
+        <node title="Bananensaft">
+            <content path="kacki.pdf" title="Kakki" type="worksheet"/>
+            <content path="vid.mp4" type="video"/>
+            <node title="(Schiefe Bananen)-Saft"/>
+            <node title="(Gerade Bananen)-Saft"/>
+        </node>
+        <node title="Kiwisaft">
+            <node title="Gedöns">
+                <node title="Pissflitschensaft"/>
+            </node>
+            <node title="Nudelsaft"/>
+        </node>
+    </node>
+    <node title="Schiefe Bananen"/>
+    <node title="Giebelgärtner"/>
+    <node title="Salate">
+        <node title="Gurkensalat">
+            <node title="Satz von Kack"/>
+        </node>
+    </node>
+</topic_tree>
