@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 /**
  * Nützlichkeiten für Dateioperationen
  *
- * @author Nikolas Kirschstein.
+ * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */

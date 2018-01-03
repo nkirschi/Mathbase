@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -87,7 +88,7 @@ public class XmlFileHandler {
 
         // Entfernen von Whitespace
         document.normalize();
-        NodeList nodeList = generateNodeListFrom("//text()[normalize-space()='']");
+        NodeList nodeList = getNodeList("//text()[normalize-space()='']");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             node.getParentNode().removeChild(node);
@@ -124,10 +125,18 @@ public class XmlFileHandler {
      * @see <a href="https://www.tutorialspoint.com/java_xml/java_xpath_parser.htm">Java XPath Parser</a>
      * @since 1.0
      */
-    public NodeList generateNodeListFrom(String expr) {
+    public NodeList getNodeList(String expr) {
+        return (NodeList) compileAndEvaluate(expr, XPathConstants.NODESET);
+    }
+
+    public Node getNode(String expr) {
+        return (Node) compileAndEvaluate(expr, XPathConstants.NODE);
+    }
+
+    private Object compileAndEvaluate(String expr, QName type) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
-            return (NodeList) xPath.compile(expr).evaluate(document, XPathConstants.NODESET);
+            return xPath.compile(expr).evaluate(document, type);
         } catch (XPathException e) {
             /*
              * Dieser Fall kann eigentlich niemals eintreten, da die XPathExpression hardgecoded ist.
