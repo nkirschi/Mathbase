@@ -408,7 +408,8 @@ public class TopicTreeController {
             try {
                 FileUtils.delete(path);
             } catch (IOException e1) {
-                //Fehlgeschlagen, lass Ordner in Ruhe und informiere aufrufende Klasse, dann brich ab
+                //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und informiere aufrufende Klasse,
+                // dann brich ab
                 e1.addSuppressed(e);
                 throw e1;
             }
@@ -466,30 +467,69 @@ public class TopicTreeController {
     /**
      * Verschieben einen als Objekt gegebenen Knoten unter einen anderen als Objekt gegebenen Knoten
      *
-     * @param from Zu verschiebender Knoten (Darf nicht Wurzel sein)
+     * @param node Zu verschiebender Knoten (Darf nicht Wurzel sein)
      * @param to   Neuer Elternknoten (Darf nicht {@code node} sein)
      * @throws TitleCollisionException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
      * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    private void moveNode(Node from, Node to) throws TitleCollisionException, IOException, TransformerException {
+    private void moveNode(Node node, Node to) throws TitleCollisionException, IOException, TransformerException {
         // Überprüfung auf invalide Parameter
-        if (from.getNodeName().equals(TAG_ROOT))
+        if (node.getNodeName().equals(TAG_ROOT))
             throw new TitleCollisionException("Knoten darf nicht die Wurzel \"" + TAG_ROOT + "\" sein!");
 
-        Path oldPath = Paths.get(localizeFolder(from));
-
+        Path oldPath = Paths.get(localizeFolder(node));
         // Verschieben des Knotens
-        from.getParentNode().removeChild(from);
-        to.appendChild(from);
+        Node from = node.getParentNode();
+        from.removeChild(node);
+        to.appendChild(node);
 
-        // Verschieben des Ordners
-        Path newPath = Paths.get(localizeFolder(from));
-        FileUtils.move(oldPath, newPath);
+        // Kopieren des Ordners
+        Path newPath = Paths.get(localizeFolder(node));
+        try {
+            FileUtils.copy(oldPath, newPath);
+        } catch (IOException e) {
+            //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
+            to.removeChild(node);
+            from.appendChild(node);
+            throw e;
+        }
 
         // Speichern der XML-Datei
-        saveFile();
+        try {
+            saveFile();
+        } catch (TransformerException e) {
+            //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
+            to.removeChild(node);
+            from.appendChild(node);
+            try {
+                FileUtils.delete(newPath);
+            } catch (IOException e1) {
+                //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und informiere aufrufende Klasse,
+                // dann brich ab
+                e1.addSuppressed(e);
+                throw e1;
+            }
+            throw e;
+        }
 
+        // Lösche Originalen Ordner
+        try {
+            FileUtils.delete(oldPath);
+        } catch (IOException e) {
+            //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
+            to.removeChild(node);
+            from.appendChild(node);
+            try {
+                FileUtils.delete(newPath);
+            } catch (IOException e1) {
+                //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und informiere aufrufende Klasse,
+                // dann brich ab
+                e1.addSuppressed(e);
+                throw e1;
+            }
+            throw e;
+        }
     }
 
     /**
