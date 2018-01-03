@@ -126,15 +126,6 @@ public class TopicTreeController {
             Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
         } catch (IOException ex1) {
             Logging.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", ex1);
-            if (!Files.exists(Paths.get(ORIGINAL_PATH))) {
-                try {
-                    recreateFile();
-                    return;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
             try { // Versuche im Fehlerfall die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
@@ -155,7 +146,7 @@ public class TopicTreeController {
      * Speichern der Daten als XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
      * Wird von den die XML-Datei bearbeitenden Methoden selbst aufgerufen.
      *
-     * @throws IOException wenn das Speichern nicht erfolgreich war
+     * @throws TransformerException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
     private void saveFile() throws TransformerException {
@@ -200,11 +191,11 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public static void recreateFile() throws IOException { // TODO Exceptions hübsch machen und try-with-resources benutzen!!
+    public static void recreateFile() throws IOException {
 
         // Erstellen der XML-Datei
         Path xmlPath = Paths.get(ORIGINAL_PATH);
-        if (Files.exists(xmlPath)) {
+        if (xmlPath.toFile().exists()) {
             FileUtils.move(xmlPath, Paths.get(ORIGINAL_PATH + ".old"));
             Logging.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden " +
                     "und vor Neuerstellung umbenannt");
@@ -226,7 +217,7 @@ public class TopicTreeController {
 
         // Erstellen des Themenordners
         Path topicsPath = Paths.get(TOPICS_PATH);
-        if (Files.exists(topicsPath)) {
+        if (topicsPath.toFile().exists()) {
             FileUtils.move(topicsPath, Paths.get(TOPICS_PATH + ".old"));
             Logging.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden " +
                     "und vor Neuerstellung umbenannt");
@@ -375,12 +366,20 @@ public class TopicTreeController {
 
     }
 
-    private Node getNode(String parent) throws NodeNotFoundException {
-        String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
+    /**
+     * Suchen eines Knoten anhand seines Titels. Ist der Titel {@code NULL}, dann wird die Wurzel zurückgegeben.
+     *
+     * @param title Titel des Knoten
+     * @return Der Knoten
+     * @throws NodeNotFoundException wenn der Knoten nicht existiert
+     */
+    private Node getNode(String title) throws NodeNotFoundException { //TODO überall verwenden. Soll die Exception
+        //TODO überhaupt geworfen werden, wir gehen ja davon aus dass nicht nach ungültigen Titeln gesucht wird ..
+        String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']" : "//" + TAG_ROOT;
         NodeList nodeList = xmlHandler.getNodeList(expr);
 
         if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
+            throw new NodeNotFoundException("Knoten \"" + title + "\" konnte nicht gefunden werden");
 
         return nodeList.item(0);
     }
@@ -595,11 +594,10 @@ public class TopicTreeController {
         // Ermitteln des Knotens
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
         NodeList nodeList = xmlHandler.getNodeList(expr);
-
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
-
         Node node = nodeList.item(0);
+
         Path oldPath = Paths.get(localizeFolder(node));
 
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
