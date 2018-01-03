@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
 import java.util.Comparator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -59,6 +58,20 @@ public class FileUtils {
         if (Files.exists(to, LinkOption.NOFOLLOW_LINKS))
             delete(to);
         Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    /**
+     * Kopieren eines kompletten Verzeichnisses
+     *
+     * @param from Urpfad
+     * @param to   Zielpfad
+     * @throws IOException wenn das Kopieren fehlschlägt
+     * @since 1.0
+     */
+    public static void copy(Path from, Path to) throws IOException {
+        if (Files.exists(to, LinkOption.NOFOLLOW_LINKS))
+            delete(to);
+        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**

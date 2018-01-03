@@ -361,7 +361,6 @@ public class TopicTreeController {
         String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
         NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
 
-        // Unmöglicher Fall
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
 
@@ -391,11 +390,30 @@ public class TopicTreeController {
 
         // Erstellung des Ordners
         Path path = Paths.get(localizeFolder(element));
-        Files.createDirectory(path);
-        Logging.log(Level.INFO, "Ordner des Knotens \"" + title + "\" erfolgreich erstellt");
+        try {
+            Files.createDirectory(path);
+            Logging.log(Level.INFO, "Ordner des Knotens \"" + title + "\" erfolgreich erstellt");
+        } catch (IOException e) {
+            // Fehlgeschlagen, ändere XML im Speicher zurück, dann brich ab
+            parent.removeChild(element);
+            throw e;
+        }
 
         // Speichern der XML-Datei
-        saveFile();
+        try {
+            saveFile();
+        } catch (TransformerException e) {
+            // Fehlgeschlagen, ändere XML im Speicher zurück, lösche Ordner, dann brich ab
+            parent.removeChild(element);
+            try {
+                FileUtils.delete(path);
+            } catch (IOException e1) {
+                //Fehlgeschlagen, lass Ordner in Ruhe und informiere aufrufende Klasse, dann brich ab
+                e1.addSuppressed(e);
+                throw e1;
+            }
+            throw e;
+        }
     }
 
     /**
@@ -410,7 +428,8 @@ public class TopicTreeController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException, TransformerException {
+    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException,
+            TransformerException {
         if (from.equals(to)) {
             throw new TitleCollisionException("from und to dürfen nicht gleich sein!");
         }
@@ -463,12 +482,10 @@ public class TopicTreeController {
         // Verschieben des Knotens
         from.getParentNode().removeChild(from);
         to.appendChild(from);
-        //Logging.log(Level.INFO, "Knoten verschoben");
 
         // Verschieben des Ordners
         Path newPath = Paths.get(localizeFolder(from));
         FileUtils.move(oldPath, newPath);
-        //Logging.log(Level.INFO, "Ordner verschoben");
 
         // Speichern der XML-Datei
         saveFile();
