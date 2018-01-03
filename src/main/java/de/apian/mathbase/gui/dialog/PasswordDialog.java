@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.PasswordField;
 import javafx.scene.image.ImageView;
 
 import java.nio.charset.StandardCharsets;
@@ -39,7 +40,7 @@ public class PasswordDialog extends AbstractTextDialog {
      * @since 1.0
      */
     public PasswordDialog(MainPane mainPane) {
-        super(mainPane);
+        super(mainPane, new PasswordField());
         setTitle("Authentifikation");
         setGraphic(new ImageView(Images.getInternal("password.png")));
         setInputDescription("Passwort");

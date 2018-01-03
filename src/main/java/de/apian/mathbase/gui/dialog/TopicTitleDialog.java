@@ -12,6 +12,7 @@ import de.apian.mathbase.xml.TopicTreeController;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 
 /**
  * Titeleingabedialog für ein Thema, z.B. beim Erstellen oder Umbenennen.
@@ -37,7 +38,7 @@ public class TopicTitleDialog extends AbstractTextDialog {
      * @since 1.0
      */
     public TopicTitleDialog(MainPane mainPane, TopicTreeController topicTreeController) {
-        super(mainPane);
+        super(mainPane, new TextField());
         this.topicTreeController = topicTreeController;
         setTitle("Themenverwaltung");
         setInputDescription("Titel");

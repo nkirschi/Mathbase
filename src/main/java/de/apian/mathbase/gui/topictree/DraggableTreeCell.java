@@ -14,9 +14,7 @@ import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 
 import javax.xml.transform.TransformerException;
@@ -43,68 +41,32 @@ public class DraggableTreeCell extends TreeCell<String> {
     private static TreeItem<String> sourceItem, targetItem;
 
     /**
+     * Basisanzeigefläche
+     *
+     * @since 1.0
+     */
+    private MainPane mainPane;
+
+    /**
+     * Themenbaumkontrolleur
+     *
+     * @since 1.0
+     */
+    private TopicTreeController topicTreeController;
+
+    /**
      * Konstruktion des Themenbaumeintrages
      *
      * @since 1.0
      */
     DraggableTreeCell(MainPane mainPane, TopicTreeController topicTreeController) {
+        this.mainPane = mainPane;
+        this.topicTreeController = topicTreeController;
 
-        // Drücken der linken Maustaste und Bewegung des Mauszeigers
-        setOnDragDetected(a -> {
-            sourceItem = getTreeItem();
-
-            if (sourceItem != null) {
-                Dragboard db = startDragAndDrop(TransferMode.MOVE);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(sourceItem.getValue());
-                db.setContent(content);
-                System.out.println(sourceItem.getValue());
-            }
-            a.consume();
-        });
-
-        // Gedrückthalten der linken Maustaste
-        setOnDragOver(a -> {
-            targetItem = getTreeItem();
-            if (targetItem == null)
-                targetItem = getTreeView().getRoot();
-
-            if (sourceItem.getParent() != targetItem && sourceItem != targetItem && !isChild(targetItem, sourceItem)) {
-                if (targetItem.getValue() != null) {
-                    InnerShadow shadow = new InnerShadow();
-                    shadow.setOffsetX(1.0);
-                    shadow.setColor(Color.web("#666666"));
-                    shadow.setOffsetY(1.0);
-                    setEffect(shadow);
-                }
-                a.acceptTransferModes(TransferMode.MOVE);
-            }
-            a.consume();
-        });
-
-        // Ende der Bewegung des Mauszeigers
+        setOnDragDetected(this::dragDetected);
+        setOnDragOver(this::dragOver);
         setOnDragExited(a -> setEffect(null));
-
-        // Loslassen der linken Maustaste
-        setOnDragDropped(a -> {
-            if (targetItem == null)
-                targetItem = getTreeView().getRoot();
-
-            PasswordDialog dialog = new PasswordDialog(mainPane);
-            dialog.setHeaderText("Thema verschieben");
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(pw -> {
-                try {
-                    topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
-                    sourceItem.getParent().getChildren().remove(sourceItem);
-                    targetItem.getChildren().add(sourceItem);
-                    targetItem.setExpanded(true);
-                    targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
+        setOnDragDropped(this::dragDropped);
     }
 
     /**
@@ -124,6 +86,72 @@ public class DraggableTreeCell extends TreeCell<String> {
             setText(null);
             setGraphic(null);
         }
+    }
+
+    /**
+     * Aktionen beim Drücken der linken Maustaste und gleichzeitigem Bewegen des Mauszeigers
+     *
+     * @param event Ziehereignis
+     * @since 1.0
+     */
+    private void dragDetected(MouseEvent event) {
+        sourceItem = getTreeItem();
+
+        if (sourceItem != null) {
+            Dragboard db = startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(sourceItem.getValue());
+            db.setContent(content);
+        }
+        event.consume();
+    }
+
+    /**
+     * Aktionen beim Gedrückthalten der linken Maustaste und Ziehen über andere Elemente
+     * @param event Ziehereignis
+     * @since 1.0
+     */
+    private void dragOver(DragEvent event) {
+        targetItem = getTreeItem();
+        if (targetItem == null)
+            targetItem = getTreeView().getRoot();
+
+        if (sourceItem.getParent() != targetItem && sourceItem != targetItem && !isChild(targetItem, sourceItem)) {
+            if (targetItem.getValue() != null) {
+                InnerShadow shadow = new InnerShadow();
+                shadow.setOffsetX(1.0);
+                shadow.setColor(Color.web("#666666"));
+                shadow.setOffsetY(1.0);
+                setEffect(shadow);
+            }
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
+    }
+
+    /**
+     * Aktionen beim Loslassen der linken Maustaste über einem Knoten
+     * @param event Ziehereignis
+     * @since 1.0
+     */
+    private void dragDropped(DragEvent event) {
+        if (targetItem == null)
+            targetItem = getTreeView().getRoot();
+
+        PasswordDialog dialog = new PasswordDialog(mainPane);
+        dialog.setHeaderText("Thema verschieben");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(pw -> {
+            try {
+                topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
+                sourceItem.getParent().getChildren().remove(sourceItem);
+                targetItem.getChildren().add(sourceItem);
+                targetItem.setExpanded(true);
+                targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+            } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**

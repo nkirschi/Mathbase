@@ -52,7 +52,8 @@ public abstract class AbstractTextDialog extends TextInputDialog {
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    protected AbstractTextDialog(MainPane mainPane) {
+    protected AbstractTextDialog(MainPane mainPane, TextField textField) {
+        this.textField = textField;
         initOwner(mainPane.getScene().getWindow());
         setResizable(false);
         getDialogPane().setContent(createDialogContent());
@@ -77,7 +78,6 @@ public abstract class AbstractTextDialog extends TextInputDialog {
         descriptionLabel = new Label();
         gridPane.add(descriptionLabel, 0, 0);
 
-        textField = new TextField();
         textField.setPrefColumnCount(20);
         textField.textProperty().addListener((observable, oldValue, newValue) -> infoLabel.setVisible(false));
         GridPane.setHgrow(textField, Priority.ALWAYS);
