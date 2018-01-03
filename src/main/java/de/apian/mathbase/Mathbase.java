@@ -11,7 +11,6 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -31,28 +30,12 @@ import java.util.logging.Level;
 public class Mathbase extends Application {
 
     /**
-     * Statische Instanzreferenz auf das Singleton {@code Mathbase}
-     *
-     * @since 1.0
-     */
-    private static Mathbase instance;
-
-    /**
      * Referenz auf das Hauptfenster {@code stage}
      *
      * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
      * @since 1.0
      */
     private Stage stage;
-
-    /**
-     * Ghost-Konstruktor, der wegen JavaFX {@code public}-Sichtbarkeit benötigt
-     *
-     * @since 1.0
-     */
-    public Mathbase() {
-        instance = this;
-    }
 
     /**
      * Einstiegspunkt der Applikation
@@ -63,16 +46,6 @@ public class Mathbase extends Application {
     public static void main(String[] args) {
         Logging.log(Level.INFO, "Programm gestartet");
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
-    }
-
-    /**
-     * Singleton-Instanzoperation
-     *
-     * @return Einzige Instanz von {@code Mathbase}
-     * @since 1.0
-     */
-    static Mathbase getInstance() {
-        return instance;
     }
 
     /**
@@ -99,17 +72,7 @@ public class Mathbase extends Application {
         stage.setHeight(600);
         stage.getIcons().add(Images.getInternal("icon.png"));
         stage.setOnCloseRequest(a -> cleanUp());
-        changeTo(new MainPane());
-    }
-
-    /**
-     * Wechseln der aktuellen Szene
-     *
-     * @param parent Anzuzeigende {@code Komponente}
-     * @since 1.0
-     */
-    private void changeTo(Parent parent) {
-        stage.setScene(new Scene(parent));
+        stage.setScene(new Scene(new MainPane()));
     }
 
     /**
@@ -119,6 +82,7 @@ public class Mathbase extends Application {
      */
     private void cleanUp() {
         stage.hide();
+        Logging.log(Level.INFO, "Programm korrekt beendet");
         System.exit(0);
     }
 }

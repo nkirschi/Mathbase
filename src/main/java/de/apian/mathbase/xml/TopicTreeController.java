@@ -558,7 +558,6 @@ public class TopicTreeController {
             );
         }
 
-        Logging.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
         return contents;
 
     }
