@@ -521,14 +521,14 @@ public class TopicTreeController {
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
 
-        Path fromPath = Paths.get(localizeFolder(from));
-
         Node node = nodeList.item(0);
+        Path fromPath = Paths.get(localizeFolder(node));
+
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
             ((Element) node).setAttribute(ATTR_TITLE, to);
         saveFile();
 
-        Path toPath = Paths.get(localizeFolder(to));
+        Path toPath = Paths.get(localizeFolder(node));
         FileUtils.move(fromPath, toPath);
 
         Logging.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
