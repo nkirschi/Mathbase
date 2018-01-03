@@ -7,13 +7,15 @@
 package de.apian.mathbase.xml;
 
 import de.apian.mathbase.util.FileUtils;
-import de.apian.mathbase.util.Logger;
+import de.apian.mathbase.util.Logging;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.transform.TransformerException;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -121,9 +123,9 @@ public class TopicTreeController {
     private void loadFile() throws IOException {
         try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
-            Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
+            Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
         } catch (IOException ex1) {
-            Logger.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", ex1);
+            Logging.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", ex1);
             if (!Files.exists(Paths.get(ORIGINAL_PATH))) {
                 try {
                     recreateFile();
@@ -136,10 +138,10 @@ public class TopicTreeController {
             try { // Versuche im Fehlerfall die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
-                Logger.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
+                Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
                         + BACKUP_PATH + "\" wiederhergestellt und geladen");
             } catch (IOException ex2) {
-                Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
+                Logging.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
                         + BACKUP_PATH + "\" wiederhergestellt werden", ex2);
 
                 // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
@@ -156,12 +158,12 @@ public class TopicTreeController {
      * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
-    private void saveFile() throws IOException {
+    private void saveFile() throws TransformerException {
         try {
             xmlHandler.saveDocToXml(ORIGINAL_PATH);
-            Logger.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
-        } catch (IOException e) {
-            Logger.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", e);
+            Logging.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
+        } catch (TransformerException e) {
+            Logging.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", e);
             // Schmeißt eine IOException, um den aufrufenden Methoden mitzuteilen,
             // dass die Datei nicht gespeichert werden konnte
             throw e;
@@ -177,10 +179,10 @@ public class TopicTreeController {
     public void backupFile() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
-            Logger.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
+            Logging.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
                     + "\" erfolgreich abgeschlossen");
         } catch (IOException e) {
-            Logger.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
+            Logging.log(Level.WARNING, "Fehler beim Erstellen der Backupdatei \"" + BACKUP_PATH + "\"", e);
             // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht gesichert werden konnte; diese sollen dann weiter verfahren!
             throw e;
@@ -204,7 +206,7 @@ public class TopicTreeController {
         Path xmlPath = Paths.get(ORIGINAL_PATH);
         if (Files.exists(xmlPath)) {
             FileUtils.move(xmlPath, Paths.get(ORIGINAL_PATH + ".old"));
-            Logger.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden " +
+            Logging.log(Level.WARNING, "Existierende " + ORIGINAL_PATH + "-Datei gefunden " +
                     "und vor Neuerstellung umbenannt");
         }
         Files.createFile(xmlPath);
@@ -214,9 +216,9 @@ public class TopicTreeController {
                     "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
                     "  ~ See LICENSE file for further information.\n  -->\n\n" +
                     "<%s></%s>", TAG_ROOT, TAG_ROOT));
-            Logger.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
+            Logging.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
         } catch (IOException e) {
-            Logger.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
+            Logging.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht neu erstellt werden");
             // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
             // dass die Datei nicht erstellt werden konnte; diese sollen dann weiter verfahren!
             throw e;
@@ -226,7 +228,7 @@ public class TopicTreeController {
         Path topicsPath = Paths.get(TOPICS_PATH);
         if (Files.exists(topicsPath)) {
             FileUtils.move(topicsPath, Paths.get(TOPICS_PATH + ".old"));
-            Logger.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden " +
+            Logging.log(Level.WARNING, "Existierende " + TOPICS_PATH + "-Ordner gefunden " +
                     "und vor Neuerstellung umbenannt");
         }
         Files.createDirectory(topicsPath);
@@ -259,7 +261,7 @@ public class TopicTreeController {
             if (anotherTitle.equals(title))
                 exists = true;
         }
-        Logger.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
+        Logging.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
         return exists;
     }
 
@@ -277,9 +279,9 @@ public class TopicTreeController {
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException(String.format("Knoten \"%s\" konnte nicht gefunden werden!", title));
         Node node = nodeList.item(0);
-        String path = localizeFolder(node) + "/";
+        String path = localizeFolder(node) + File.pathSeparator;
 
-        Logger.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
+        Logging.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
         return path;
     }
 
@@ -351,7 +353,7 @@ public class TopicTreeController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException {
+    public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException, TransformerException {
         if (doesExist(title))
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
 
@@ -367,7 +369,7 @@ public class TopicTreeController {
 
         //Knoten wird unter dem gefundenen Elternknoten erzeugt
         addNode(title, parentNode);
-        Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
+        Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
                 parent == null ? "der Wurzel" : "\"" + parent + "\""));
 
     }
@@ -380,17 +382,17 @@ public class TopicTreeController {
      * @throws IOException wenn Speichern der XML-Datei bzw Erstellen des Ordners fehlschlägt
      * @since 1.0
      */
-    private void addNode(String title, Node parent) throws IOException {
+    private void addNode(String title, Node parent) throws IOException, TransformerException {
         // Erstellung des Knotens und Hinzufügen zum Elternknoten
         Element element = xmlHandler.getDocument().createElement(TAG_NODE);
         element.setAttribute(ATTR_TITLE, title);
         parent.appendChild(element);
-        Logger.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
+        Logging.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
 
         // Erstellung des Ordners
         Path path = Paths.get(localizeFolder(element));
         Files.createDirectory(path);
-        Logger.log(Level.INFO, "Ordner des Knotens \"" + title + "\" erfolgreich erstellt");
+        Logging.log(Level.INFO, "Ordner des Knotens \"" + title + "\" erfolgreich erstellt");
 
         // Speichern der XML-Datei
         saveFile();
@@ -408,7 +410,7 @@ public class TopicTreeController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException {
+    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException, TransformerException {
         if (from.equals(to)) {
             throw new TitleCollisionException("from und to dürfen nicht gleich sein!");
         }
@@ -437,7 +439,7 @@ public class TopicTreeController {
 
         // Verschieben des Knotens unter den Elternknoten
         moveNode(node, parentNode);
-        Logger.log(Level.INFO, String.format("Knoten \"%s\" unter %s verschoben", from,
+        Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s verschoben", from,
                 to == null ? "die Wurzel" : "\"" + to + "\""));
 
     }
@@ -451,7 +453,7 @@ public class TopicTreeController {
      * @throws IOException             wenn Speichern der XML-Datei bzw Verschieben des Ordners fehlschlägt
      * @since 1.0
      */
-    private void moveNode(Node from, Node to) throws TitleCollisionException, IOException {
+    private void moveNode(Node from, Node to) throws TitleCollisionException, IOException, TransformerException {
         // Überprüfung auf invalide Parameter
         if (from.getNodeName().equals(TAG_ROOT))
             throw new TitleCollisionException("Knoten darf nicht die Wurzel \"" + TAG_ROOT + "\" sein!");
@@ -461,12 +463,12 @@ public class TopicTreeController {
         // Verschieben des Knotens
         from.getParentNode().removeChild(from);
         to.appendChild(from);
-        //Logger.log(Level.INFO, "Knoten verschoben");
+        //Logging.log(Level.INFO, "Knoten verschoben");
 
         // Verschieben des Ordners
         Path newPath = Paths.get(localizeFolder(from));
         FileUtils.move(oldPath, newPath);
-        //Logger.log(Level.INFO, "Ordner verschoben");
+        //Logging.log(Level.INFO, "Ordner verschoben");
 
         // Speichern der XML-Datei
         saveFile();
@@ -481,27 +483,26 @@ public class TopicTreeController {
      * @throws IOException           wenn es einen Fehler beim Entfernen gab
      * @since 1.0
      */
-    public void removeNode(String nodeTitle) throws NodeNotFoundException, IOException {
+    public void removeNode(String nodeTitle) throws NodeNotFoundException, IOException, TransformerException {
 
         // Ermitteln des Knotens
-        NodeList nodeList = xmlHandler.generateNodeListFrom("//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle
-                + "']");
-        if (nodeList.getLength() == 0) {
-            throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" konnte nicht gefunden werden!");
-        }
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle + "']";
+
+        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        if (nodeList.getLength() == 0)
+            throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" nicht gefunden!");
 
         Node node = nodeList.item(0);
+
         Path path = Paths.get(localizeFolder(node));
 
-        // Entfernen des Knotens
-        node.getParentNode().removeChild(node);
+        node.getParentNode().removeChild(node); // Entfernen des Knotens
+        saveFile(); // Speichern der XML-Datei
 
         // Entfernen des Ordners
         FileUtils.delete(path);
 
-        // Speichern der XML-Datei
-        saveFile();
-        Logger.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
+        Logging.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
     }
 
     /**
@@ -512,22 +513,25 @@ public class TopicTreeController {
      * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
      * @since 1.0
      */
-    public void renameNode(String from, String to) throws NodeNotFoundException, IOException {
+    public void renameNode(String from, String to) throws NodeNotFoundException, IOException, TransformerException {
         // Ermitteln des Knotens
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
         NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
 
-        if (nodeList.getLength() == 0) {
-            throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
-        }
+        if (nodeList.getLength() == 0)
+            throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
+
+        Path fromPath = Paths.get(localizeFolder(from));
 
         Node node = nodeList.item(0);
-        //Ändern des Titels
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
             ((Element) node).setAttribute(ATTR_TITLE, to);
-
         saveFile();
-        Logger.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
+
+        Path toPath = Paths.get(localizeFolder(to));
+        FileUtils.move(fromPath, toPath);
+
+        Logging.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
     }
 
     //TODO ALLE Inhalts-Operationen anpassen + implementieren
@@ -554,7 +558,7 @@ public class TopicTreeController {
             );
         }
 
-        Logger.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
+        Logging.log(Level.INFO, "Inhalte des Knotens mit dem Titel \"" + title + "\" ermittelt");
         return contents;
 
     }

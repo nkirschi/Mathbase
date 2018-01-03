@@ -19,6 +19,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Optional;
@@ -98,7 +99,7 @@ public class DraggableTreeCell extends TreeCell<String> {
                     targetItem.getChildren().add(sourceItem);
                     targetItem.setExpanded(true);
                     targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                } catch (NodeNotFoundException | IOException | TitleCollisionException e) {
+                } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
                     e.printStackTrace();
                 }
             });

@@ -78,7 +78,7 @@ public class Images {
         if (!internalCache.containsKey(path)) {
             InputStream in = Images.class.getResourceAsStream(path);
             if (in == null) {
-                Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE);
+                Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE);
                 throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
             }
             internalCache.put(path, new Image(in));

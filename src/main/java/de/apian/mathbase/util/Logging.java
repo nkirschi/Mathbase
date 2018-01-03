@@ -6,7 +6,11 @@
 
 package de.apian.mathbase.util;
 
+import de.apian.mathbase.gui.dialog.ErrorAlert;
+
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;
@@ -18,22 +22,22 @@ import java.util.logging.*;
  * @version 1.0
  * @since 1.0
  */
-public class Logger {
+public class Logging {
 
-    private Logger() {
+    private Logging() {
     }
 
     /**
-     * Referenz auf den globalen Logging für die Applikation
+     * Referenz auf den globalen Logger für die Applikation.
      * <p>
      * Die API sieht eigentlich vor, in jeder Klasse, die etwas loggen können soll,
      * ein eigenes {@code Logging} -Objekt zu erstellen, aber für Mathbase reicht uns der hier...
      *
      * @since 1.0
      */
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
+    private static final Logger logger = Logger.getGlobal();
 
-    // Statischer Initialiserungsblock für den Logging
+    // Statischer Initialiserungsblock fürs Logging
     static {
         logger.setUseParentHandlers(false); // Deaktivierung des Standard-Konsolenoutputs
         Formatter formatter = new LogFormatter();
@@ -45,18 +49,19 @@ public class Logger {
             fileHandler.setLevel(Level.ALL);
             logger.addHandler(fileHandler);
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorAlert alert = new ErrorAlert(e);
+            alert.showAndWait();
         }
 
-        // Konsolenoutput (falls zu nervig, einfach das Level ändern)
+        // Konsolenoutput (falls zu nervig, einfach das Mindestlevel ändern)
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(formatter);
-        consoleHandler.setLevel(Level.WARNING);
+        consoleHandler.setLevel(Level.WARNING); // Level, ab dem geloggt wird
         logger.addHandler(consoleHandler);
     }
 
     /**
-     * Durchschiebemethode zum Loggen
+     * Durchschiebemethode zum Loggen.
      *
      * @param lvl Schwere des Ereignisses, z.B. {@code Logging.INFO}
      * @param msg Zu loggende Nachricht
@@ -68,7 +73,7 @@ public class Logger {
     }
 
     /**
-     * Durchschiebemethode zum Loggen plus ein Werfbares
+     * Durchschiebemethode zum Loggen plus ein Werfbares.
      *
      * @param lvl Schwere des Ereignisses, z.B. {@code Logging.INFO}
      * @param msg Zu loggende Nachricht
@@ -84,17 +89,29 @@ public class Logger {
      * Eigener Formatierer fürs Logging.
      */
     private static class LogFormatter extends Formatter {
-        private SimpleDateFormat dateFormat; // Exemplar der Datumsformatierung
 
         /**
-         * Default-Konstruktor, der das {@code DateFormat}  initialisiert
+         * Exemplar der Datumsformatierung.
+         * <p>
+         * Wird benötigt, um das Datum eines Erignisses in lesbarer Form zu loggen,
+         * da die API nur die seit 1970 vergangenen Millisekunden anbietet.
+         *
+         * @see SimpleDateFormat
+         * @since 1.0
+         */
+        private SimpleDateFormat dateFormat;
+
+        /**
+         * Default-Konstruktor, der das {@code DateFormat} und die Indentation initialisiert.
+         *
+         * @since 1.0
          */
         LogFormatter() {
             dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
         }
 
         /**
-         * Einzige Aufgabe des Formatierers... Formatieren!
+         * Unerwartete Aufgabe des Formatierers... Formatieren!
          *
          * @param record Von der Logging-API übergebener {@code LogRecord}
          * @return Formatierter String
@@ -102,34 +119,17 @@ public class Logger {
          */
         @Override
         public String format(LogRecord record) {
-            // Datum in lesbarer Form, da die API nur die seit 1970 vergangenen Millisekunden anbietet
             String date = dateFormat.format(new Date(record.getMillis()));
+            String level = record.getLevel().toString();
+            String message = formatMessage(record);
 
-            // Ermitteln des den LogRecord verursachenden Threads
-            String thread = "";
-            for (Thread t : Thread.getAllStackTraces().keySet())
-                if (t != null && t.getId() == record.getThreadID())
-                    thread = t.getName();
+            String log = String.format("[%s] %s: %s%n", date, level, message);
 
-            String level = "";
-            if (record.getLevel() != null)
-                level = record.getLevel().toString();
-
-            String message = "";
-            if (record.getMessage() != null)
-                message = formatMessage(record);
-
-            String format = "%s [%s] %s> %s%n";
-            String log = String.format(format, date, thread, level, message);
-
+            // Anfügen eventueller Ausnahmen
             if (record.getThrown() != null) {
-                StringBuilder thrown = new StringBuilder(String.format("%c%c%s%n", ' ', ' ', record.getThrown()));
-                for (StackTraceElement s : record.getThrown().getStackTrace()) {
-                    thrown.append(String.format("%c%c%c%c%s%n", ' ', ' ', ' ', ' ',
-                            "at " + s.getClassName() + "." + s.getMethodName() +
-                                    "(" + s.getFileName() + ":" + s.getLineNumber() + ")"));
-                }
-                log += thrown;
+                StringWriter writer = new StringWriter();
+                record.getThrown().printStackTrace(new PrintWriter(writer));
+                log += writer.toString();
             }
 
             return log;

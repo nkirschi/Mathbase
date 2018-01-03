@@ -6,14 +6,9 @@
 
 package de.apian.mathbase.xml;
 
-import com.sun.javafx.stage.StageHelper;
+import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.util.Logger;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import de.apian.mathbase.util.Logging;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,6 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -33,8 +29,6 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -86,10 +80,10 @@ public class XmlFileHandler {
      * Speichern des {@code document}-Objekts als XML-Datei
      *
      * @param targetPath Pfad der Zieldatei relativ zum Arbeitsverzeichnis
-     * @throws IOException wenn das Speichern fehlgeschlagen ist
+     * @throws TransformerException wenn das Transformieren fehlgeschlagen ist
      * @since 1.0
      */
-    public void saveDocToXml(String targetPath) throws IOException {
+    public void saveDocToXml(String targetPath) throws TransformerException {
 
         // Entfernen von Whitespace
         document.normalize();
@@ -108,21 +102,16 @@ public class XmlFileHandler {
         TransformerFactory factory = TransformerFactory.newInstance();
         factory.setAttribute("indent-number", "4");
 
-        try {
-            Transformer transformer = factory.newTransformer();
 
-            // Setzen der Parameter, sodass die XML-Datei später auch lesbar ist
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        Transformer transformer = factory.newTransformer();
 
-            transformer.transform(source, result); // Erzeugung der finalen XML-Datei
-        } catch (Exception e) {
-            throw new IOException(String.format("Fehler beim Speichern der Datei \"%s\"",
-                    Paths.get(targetPath).toAbsolutePath().toString()), e);
-        }
+        // Setzen der Parameter, sodass die XML-Datei später auch lesbar ist
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+        transformer.transform(source, result); // Erzeugung der finalen XML-Datei
     }
 
     /**
@@ -145,28 +134,8 @@ public class XmlFileHandler {
              * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
              * wäre das gesamte Programm sowieso erstmal unbrauchbar!
              */
-            for (Stage stage : StageHelper.getStages()) {
-                stage.hide();
-                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.FINISH);
-                alert.initOwner(stage);
-                alert.setHeaderText("Fatal Error");
-
-                ScrollPane scrollPane = new ScrollPane();
-                scrollPane.setFitToWidth(true);
-                scrollPane.setFitToHeight(true);
-                scrollPane.setPrefHeight(600);
-
-                Text text = new Text(e.getMessage() + "\n");
-                for (StackTraceElement element : e.getStackTrace())
-                    text.setText(text.getText() + "\n" + element);
-
-                scrollPane.setContent(text);
-                alert.getDialogPane().setContent(scrollPane);
-
-                Optional<ButtonType> opt = alert.showAndWait();
-                opt.ifPresent(buttonType -> System.exit(1));
-            }
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            new ErrorAlert(e).showAndWait();
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
     }

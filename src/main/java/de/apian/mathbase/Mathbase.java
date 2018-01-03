@@ -9,7 +9,7 @@ package de.apian.mathbase;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
-import de.apian.mathbase.util.Logger;
+import de.apian.mathbase.util.Logging;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -61,7 +61,7 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     public static void main(String[] args) {
-        Logger.log(Level.INFO, "Programm gestartet");
+        Logging.log(Level.INFO, "Programm gestartet");
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
     }
 

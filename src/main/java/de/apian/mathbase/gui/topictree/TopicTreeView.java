@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -214,7 +215,7 @@ public class TopicTreeView extends TreeView<String> {
                 TreeItem<String> newItem = new TreeItem<>(title);
                 selectedItem.getChildren().add(newItem);
                 selectedItem.setExpanded(true);
-            } catch (NodeNotFoundException | IOException | TitleCollisionException e) {
+            } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
                 e.printStackTrace();
             }
         });
@@ -231,7 +232,7 @@ public class TopicTreeView extends TreeView<String> {
             try {
                 topicTreeController.renameNode(selectedItem.getValue(), title);
                 selectedItem.setValue(title);
-            } catch (NodeNotFoundException | IOException e) {
+            } catch (NodeNotFoundException | IOException | TransformerException e) {
                 e.printStackTrace();
             }
         });
@@ -256,7 +257,7 @@ public class TopicTreeView extends TreeView<String> {
                 selectedItem.getParent().getChildren().remove(selectedItem);
                 topicTreeController.removeNode(selectedItem.getValue());
                 getSelectionModel().select(null);
-            } catch (NodeNotFoundException | IOException e) {
+            } catch (NodeNotFoundException | IOException | TransformerException e) {
                 e.printStackTrace();
             }
         });

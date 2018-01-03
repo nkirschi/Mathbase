@@ -7,7 +7,7 @@
 package de.apian.mathbase.xml;
 
 import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.util.Logger;
+import de.apian.mathbase.util.Logging;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -139,7 +139,7 @@ public class XmlFileHandler {
              * Sollte unwahrscheinlicherweise doch einmal etwas an der XPath-API geändert werden,
              * wäre das gesamte Programm sowieso erstmal unbrauchbar!
              */
-            Logger.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE);
         }
     }

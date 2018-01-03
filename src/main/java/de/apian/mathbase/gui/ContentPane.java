@@ -15,7 +15,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 import java.util.Locale;
@@ -46,37 +49,42 @@ public class ContentPane extends ScrollPane {
         this.topicTreeController = topicTreeController;
 
         setPadding(new Insets(10, 10, 10, 10));
-
-        // TODO weitermachen
+        // Kein Thema ausgewählt
         if (title == null) {
-            VBox outerBox = new VBox(40);
-            VBox vbox = new VBox(0);
-            vbox.getChildren().add(new ImageView(Images.getInternal("icon2.png")));
-            vbox.setAlignment(Pos.CENTER);
-            Label label = new Label("Mathbase " + Constants.APP_VERSION);
-            label.setFont(Constants.TITLE_FONT);
-            vbox.getChildren().add(label);
-            outerBox.getChildren().add(vbox);
-            outerBox.setAlignment(Pos.CENTER);
-
-            ResourceBundle bundle = ResourceBundle.getBundle(Constants.RESOURCE_BUNDLE_PATH, Locale.GERMAN);
-            Label hint = new Label(bundle.getString("hint"));
-            hint.setWrapText(true);
-            hint.setMaxWidth(400);
-
-            hint.setTextAlignment(TextAlignment.CENTER);
-            outerBox.getChildren().add(hint);
-
-            setFitToWidth(true);
-            setFitToHeight(true);
-            setContent(outerBox);
-        } else {
-            VBox vBox = new VBox(10);
-            vBox.getChildren().add(new Label(title));
-
-            for (Content content : topicTreeController.getContents(title))
-                vBox.getChildren().add(new Label(content.getPath()));
-            setContent(vBox);
+            setContent(createSpaceFiller());
+            return;
         }
+
+        BorderPane borderPane = new BorderPane();
+        Label titleLabel = new Label(title);
+        titleLabel.setFont(Font.font(Constants.TITLE_FONT.getFamily(), FontWeight.BOLD, 24));
+        titleLabel.setTextFill(Constants.ACCENT_COLOR);
+
+        borderPane.setTop(titleLabel);
+
+        VBox vBox = new VBox(10);
+        for (Content content : topicTreeController.getContents(title))
+            vBox.getChildren().add(new Label(content.getPath()));
+        borderPane.setCenter(vBox);
+
+        setContent(borderPane);
+    }
+
+    private VBox createSpaceFiller() {
+        VBox vBox = new VBox(10);
+        vBox.getChildren().add(new ImageView(Images.getInternal("icon2.png")));
+        vBox.setAlignment(Pos.CENTER);
+
+        ResourceBundle bundle = ResourceBundle.getBundle(Constants.RESOURCE_BUNDLE_PATH, Locale.GERMAN);
+        Label hint = new Label(bundle.getString("hint"));
+        hint.setWrapText(true);
+        hint.setMaxWidth(400);
+
+        hint.setTextAlignment(TextAlignment.CENTER);
+        vBox.getChildren().add(hint);
+
+        setFitToWidth(true);
+        setFitToHeight(true);
+        return vBox;
     }
 }

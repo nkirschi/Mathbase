@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
   ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
   ~ This product is licensed under the GNU General Public License v3.0.
   ~ See LICENSE file for further information.
-  -->
-<topic_tree>
+  --><topic_tree>
+    <node title="Gartenlaube"/>
     <node title="Säfte">
         <node title="Bananensaft">
             <content path="kacki.pdf" title="Kakki" type="worksheet"/>
@@ -16,10 +17,11 @@
         </node>
         <node title="Nudelsaft"/>
     </node>
-    <node title="Giebelgärtner"/>
     <node title="Salate">
         <node title="Gurkensalat">
             <node title="Satz von Kack"/>
         </node>
     </node>
+    <node title="Toast"/>
+    <node title="Würfler"/>
 </topic_tree>
