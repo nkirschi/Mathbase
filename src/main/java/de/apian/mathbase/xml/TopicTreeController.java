@@ -258,7 +258,7 @@ public class TopicTreeController {
             // Leerer Titel (kann gar nicht sein, da wir davon ausgehen, dass alle Knoten durch addNode erzeugt wurden)
             if (title.isEmpty())
                 continue;
-            if (anotherTitle.equals(title))
+            if (FileUtils.normalize(anotherTitle).equals(FileUtils.normalize(title)))
                 exists = true;
         }
         Logging.log(Level.INFO, "Existenz von Knoten mit Titel \"" + title + "\" überprüft: " + exists);
