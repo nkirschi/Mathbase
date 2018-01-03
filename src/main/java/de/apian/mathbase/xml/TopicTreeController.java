@@ -245,7 +245,7 @@ public class TopicTreeController {
     public boolean doesExist(String title) {
         boolean exists = false;
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             //Eigentlich sollte ja nur ein Knoten mit dem Titel da sein, aber Meckern ist nicht Sinn der Methode
@@ -275,7 +275,7 @@ public class TopicTreeController {
      */
     public String localizeFolder(String title) throws NodeNotFoundException {
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException(String.format("Knoten \"%s\" konnte nicht gefunden werden!", title));
         Node node = nodeList.item(0);
@@ -322,7 +322,7 @@ public class TopicTreeController {
 
         String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_NODE
                 : "//" + TAG_ROOT + "/" + TAG_NODE;
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
         String[] result = new String[nodeList.getLength()];
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -359,7 +359,7 @@ public class TopicTreeController {
 
         // Heraussuchen des Elternknotens
         String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
 
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
@@ -371,6 +371,16 @@ public class TopicTreeController {
         Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
                 parent == null ? "der Wurzel" : "\"" + parent + "\""));
 
+    }
+
+    private Node getNode(String parent) throws NodeNotFoundException {
+        String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
+        NodeList nodeList = xmlHandler.getNodeList(expr);
+
+        if (nodeList.getLength() == 0)
+            throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
+
+        return nodeList.item(0);
     }
 
     /**
@@ -439,7 +449,7 @@ public class TopicTreeController {
         Node parentNode;
         {
             String expr = to != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + to + "']" : "//" + TAG_ROOT;
-            NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+            NodeList nodeList = xmlHandler.getNodeList(expr);
             if (nodeList.getLength() == 0) {
                 throw new NodeNotFoundException("Knoten / Wurzel konnte nicht gefunden werden!");
             }
@@ -450,7 +460,7 @@ public class TopicTreeController {
         Node node;
         {
             String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
-            NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+            NodeList nodeList = xmlHandler.getNodeList(expr);
             if (nodeList.getLength() == 0) {
                 throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
             }
@@ -545,7 +555,7 @@ public class TopicTreeController {
         // Ermitteln des Knotens
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle + "']";
 
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" nicht gefunden!");
 
@@ -573,7 +583,7 @@ public class TopicTreeController {
     public void renameNode(String from, String to) throws NodeNotFoundException, IOException, TransformerException {
         // Ermitteln des Knotens
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
 
         if (nodeList.getLength() == 0)
             throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
@@ -603,7 +613,7 @@ public class TopicTreeController {
     public Content[] getContents(String title) {
 
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
-        NodeList nodeList = xmlHandler.generateNodeListFrom(expr);
+        NodeList nodeList = xmlHandler.getNodeList(expr);
 
         Content[] contents = new Content[nodeList.getLength()];
         for (int i = 0; i < contents.length; i++) {
