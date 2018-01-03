@@ -494,7 +494,6 @@ public class TopicTreeController {
             throw new TitleCollisionException("Knoten darf nicht die Wurzel \"" + TAG_ROOT + "\" sein!");
 
         Path oldPath = Paths.get(localizeFolder(node));
-        // Verschieben des Knotens
         Node from = node.getParentNode();
         from.removeChild(node);
         to.appendChild(node);
@@ -588,6 +587,8 @@ public class TopicTreeController {
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
      * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
+     * @throws IOException             wenn Umbennenen des Ordners fehlschlägt
+     * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     public void renameNode(String from, String to) throws NodeNotFoundException, IOException, TransformerException {
@@ -599,14 +600,48 @@ public class TopicTreeController {
             throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
 
         Node node = nodeList.item(0);
-        Path fromPath = Paths.get(localizeFolder(node));
+        Path oldPath = Paths.get(localizeFolder(node));
 
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
             ((Element) node).setAttribute(ATTR_TITLE, to);
-        saveFile();
 
-        Path toPath = Paths.get(localizeFolder(node));
-        FileUtils.move(fromPath, toPath);
+        Path newPath = Paths.get(localizeFolder(node));
+        // Kopieren des Ordners
+        try {
+            FileUtils.copy(oldPath, newPath);
+        } catch (IOException e) {
+            //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
+            if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
+                ((Element) node).setAttribute(ATTR_TITLE, to);
+            throw e;
+        }
+
+        // Speichern der XML-Datei
+        try {
+            saveFile();
+        } catch (TransformerException e) {
+            //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
+            if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
+                ((Element) node).setAttribute(ATTR_TITLE, to);
+            try {
+                FileUtils.delete(newPath);
+            } catch (IOException e1) {
+                //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und logge das Ganze
+                e1.addSuppressed(e);
+                Logging.log(Level.WARNING, "Ordner \"" + newPath.toString() + "\" ist nun unnötig, Löschen schlug "
+                        + "allerdings fehl!", e1);
+            }
+            throw e;
+        }
+
+        // Lösche Originalen Ordner
+        try {
+            FileUtils.delete(oldPath);
+        } catch (IOException e) {
+            //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und logge das Ganze
+            Logging.log(Level.WARNING, "Ordner \"" + newPath.toString() + "\" ist nun unnötig, Löschen schlug " +
+                    "allerdings fehl!", e);
+        }
 
         Logging.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
     }
