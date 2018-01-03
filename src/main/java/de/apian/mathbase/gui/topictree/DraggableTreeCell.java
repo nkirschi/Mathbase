@@ -91,6 +91,7 @@ public class DraggableTreeCell extends TreeCell<String> {
                 targetItem = getTreeView().getRoot();
 
             PasswordDialog dialog = new PasswordDialog(mainPane);
+            dialog.setHeaderText("Thema verschieben");
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(pw -> {
                 try {

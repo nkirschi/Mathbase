@@ -10,12 +10,9 @@ import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Images;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -27,83 +24,29 @@ import static de.apian.mathbase.util.Constants.FATAL_ERROR_MESSAGE;
 import static de.apian.mathbase.util.Constants.HASHED_PASSWORD;
 
 /**
- * Passworteingabedialog für administrative Operationen
+ * Passworteingabedialog für administrative Operationen, z.B. Löschen von Themen.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */
-public class PasswordDialog extends TextInputDialog {
-    /**
-     * Passworteingabefeld
-     *
-     * @since 1.0
-     */
-    private TextField passwordField;
+public class PasswordDialog extends AbstractTextDialog {
 
     /**
-     * Hinweis auf falsches Passwort
-     *
-     * @since 1.0
-     */
-    private Label incorrectLabel;
-
-    /**
-     * Konstruktion des Passworteingabedialogs
+     * Konstruktion des Passworteingabedialogs.
      *
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
     public PasswordDialog(MainPane mainPane) {
-        initOwner(mainPane.getScene().getWindow());
-        setTitle("Administrator");
-        setHeaderText("Authentifikation erforderlich!");
-        setResizable(false);
+        super(mainPane);
+        setTitle("Authentifikation");
         setGraphic(new ImageView(Images.getInternal("password.png")));
-
-        getDialogPane().setContent(createGrid());
-        initOkButton();
-        setResultConverter(buttonType -> (buttonType == null ? null : buttonType.getButtonData())
-                == ButtonBar.ButtonData.OK_DONE ? passwordField.getText() : null);
+        setInputDescription("Passwort");
     }
 
-    /**
-     * Kreation des Dialoggitters
-     *
-     * @return Dialoggitter
-     * @since 1.0
-     */
-    private GridPane createGrid() {
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setMaxWidth(Double.MAX_VALUE);
-        gridPane.setAlignment(Pos.CENTER_LEFT);
-
-
-        Label passwordLabel = new Label("Passwort:");
-        gridPane.add(passwordLabel, 0, 0);
-
-        passwordField = new PasswordField();
-        passwordField.setPrefColumnCount(20);
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> incorrectLabel.setVisible(false));
-        GridPane.setHgrow(passwordField, Priority.ALWAYS);
-        GridPane.setFillWidth(passwordField, true);
-        gridPane.add(passwordField, 1, 0);
-
-        incorrectLabel = new Label("Passwort inkorrekt!");
-        incorrectLabel.setTextFill(Color.RED);
-        incorrectLabel.setVisible(false);
-        gridPane.add(incorrectLabel, 1, 1);
-
-        return gridPane;
-    }
-
-    /**
-     * Initialisierung des OK-Buttons
-     *
-     * @since 1.0
-     */
-    private void initOkButton() {
+    @Override
+    protected void initOkButton() {
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
         okButton.addEventFilter(ActionEvent.ACTION, a -> {
             okButton.setDisable(true);
@@ -121,7 +64,7 @@ public class PasswordDialog extends TextInputDialog {
                         Platform.runLater(() -> {
                             okButton.setDisable(false);
                             okButton.setText(text);
-                            incorrectLabel.setVisible(false);
+                            infoLabel.setVisible(false);
                         });
                         timer.cancel();
                         timer.purge();
@@ -129,15 +72,16 @@ public class PasswordDialog extends TextInputDialog {
                 }
             }, 0, 1000);
 
-            if (!hash(passwordField.getText()).equals(HASHED_PASSWORD)) {
-                incorrectLabel.setVisible(true);
+            if (!hash(textField.getText()).equals(HASHED_PASSWORD)) {
+                infoLabel.setText("Passwort inkorrekt!");
+                infoLabel.setVisible(true);
                 a.consume();
             }
         });
     }
 
     /**
-     * Hashing einer Zeichenkette
+     * Hashing einer Zeichenkette.
      *
      * @param s Klartext
      * @return Hashwert

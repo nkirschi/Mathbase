@@ -23,28 +23,28 @@ import javafx.scene.layout.BorderPane;
 public class SidebarPane extends BorderPane {
 
     /**
-     * Basisanzeigefläche
+     * Basisanzeigefläche.
      *
      * @since 1.0
      */
     private MainPane mainPane;
 
     /**
-     * Themenbaumkontrolleur
+     * Themenbaumkontrolleur.
      *
      * @since 1.0
      */
     private TopicTreeController topicTreeController;
 
     /**
-     * GUI-Baumkomponente
+     * GUI-Baumkomponente.
      *
      * @since 1.0
      */
     private TopicTreeView treeView;
 
     /**
-     * Konstruktion der Sidebar
+     * Konstruktion der Sidebar.
      *
      * @param mainPane            Basisanzeigefläche
      * @param topicTreeController Themenbaumkontrolleur

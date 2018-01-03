@@ -8,9 +8,8 @@ package de.apian.mathbase.gui.topictree;
 
 import de.apian.mathbase.gui.ContentPane;
 import de.apian.mathbase.gui.MainPane;
-import de.apian.mathbase.gui.dialog.AddTopicDialog;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
-import de.apian.mathbase.gui.dialog.RenameTopicDialog;
+import de.apian.mathbase.gui.dialog.TopicTitleDialog;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
@@ -203,7 +202,8 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void addUnderSelected() {
-        AddTopicDialog dialog = new AddTopicDialog(mainPane, topicTreeController);
+        TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
+        dialog.setHeaderText("Neues Thema hinzufügen");
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
             TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
@@ -226,7 +226,8 @@ public class TopicTreeView extends TreeView<String> {
         if (selectedItem == null)
             return;
 
-        RenameTopicDialog dialog = new RenameTopicDialog(mainPane, topicTreeController);
+        TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
+        dialog.setHeaderText("Thema umbenennen");
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
             try {
@@ -251,6 +252,7 @@ public class TopicTreeView extends TreeView<String> {
             return;
 
         PasswordDialog dialog = new PasswordDialog(mainPane);
+        dialog.setHeaderText("Gewähltes Thema löschen");
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(pw -> {
             try {

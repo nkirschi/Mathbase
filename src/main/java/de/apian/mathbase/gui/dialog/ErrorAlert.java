@@ -8,21 +8,26 @@ package de.apian.mathbase.gui.dialog;
 
 import com.sun.javafx.stage.StageHelper;
 import de.apian.mathbase.util.Constants;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
+/**
+ * Allgemeine Fehlermeldung bei gröberen Sachen.
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
 public class ErrorAlert extends Alert {
     public ErrorAlert(Throwable t) {
         super(AlertType.ERROR);
 
-        ObservableList<Stage> stages = StageHelper.getStages();
-        if (stages.size() > 0) {
-            Stage stage = stages.get(0);
+        for (Stage stage : StageHelper.getStages()) {
             initOwner(stage);
             stage.hide();
         }
@@ -38,7 +43,7 @@ public class ErrorAlert extends Alert {
         StringWriter writer = new StringWriter();
         t.printStackTrace(new PrintWriter(writer));
 
-        Text text = new Text(Constants.FATAL_ERROR_MESSAGE + "\n\n" + t.getMessage() + "\n" + writer.toString());
+        Text text = new Text(Constants.FATAL_ERROR_MESSAGE + "\n\n" + writer.toString());
 
         scrollPane.setContent(text);
         getDialogPane().setContent(scrollPane);

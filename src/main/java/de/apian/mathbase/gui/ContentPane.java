@@ -33,14 +33,14 @@ import java.util.ResourceBundle;
  */
 public class ContentPane extends ScrollPane {
     /**
-     * Themenbaumkontrolleur
+     * Themenbaumkontrolleur.
      *
      * @since 1.0
      */
     private TopicTreeController topicTreeController;
 
     /**
-     * Konstruktion der Inhaltsanzeige
+     * Konstruktion der Inhaltsanzeige.
      *
      * @param title               Titel des zugehörigen Themas
      * @param topicTreeController Themenbaumkontrolleur

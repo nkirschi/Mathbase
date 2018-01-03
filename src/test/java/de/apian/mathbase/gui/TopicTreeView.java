@@ -6,8 +6,8 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.gui.dialog.AddTopicDialog;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
+import de.apian.mathbase.gui.dialog.TopicTitleDialog;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
@@ -200,7 +200,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void addUnderSelected() {
-        de.apian.mathbase.gui.dialog.AddTopicDialog dialog = new AddTopicDialog(mainPane, topicTreeController);
+        TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(value -> {
             String title = value.substring(0, value.indexOf(';'));

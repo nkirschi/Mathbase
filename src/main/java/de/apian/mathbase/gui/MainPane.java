@@ -21,7 +21,7 @@ import java.io.IOException;
 public class MainPane extends SplitPane {
 
     /**
-     * Konstruktion der Basisanzeigefläche
+     * Konstruktion der Basisanzeigefläche.
      *
      * @since 1.0
      */
