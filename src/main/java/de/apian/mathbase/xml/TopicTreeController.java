@@ -138,7 +138,7 @@ public class TopicTreeController {
                 // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
                 // dass die Datei nicht geladen werden konnte
                 e2.initCause(e1);
-                throw new IOException("Daten konnten nicht geladen werden! Kontaktieren Sie Ihren Systemadministrator!", e2);
+                throw new IOException("Daten konnten nicht geladen werden! Kontaktieren Sie umgehend Ihren Systemadministrator!", e2);
             }
         }
     }

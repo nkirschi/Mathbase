@@ -57,6 +57,8 @@ public class SidebarPane extends BorderPane {
         this.mainPane = mainPane;
         this.topicTreeController = topicTreeController;
 
+        setMinWidth(150);
+
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);

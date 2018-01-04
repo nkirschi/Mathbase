@@ -7,11 +7,21 @@
 package de.apian.mathbase.gui.dialog;
 
 import com.sun.javafx.stage.StageHelper;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import de.apian.mathbase.util.Constants;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.PrintWriter;
@@ -33,20 +43,20 @@ public class ErrorAlert extends Alert {
             stage.hide();
         }
 
-        setTitle(Constants.BUNDLE.getString("fatal_error"));
-        setHeaderText(Constants.FATAL_ERROR_MESSAGE);
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setPrefHeight(600);
+        setTitle(Constants.BUNDLE.getString("error"));
+        setHeaderText(Constants.BUNDLE.getString("error_header"));
+        setContentText(t.getMessage());
+        setResizable(true);
 
         StringWriter writer = new StringWriter();
         t.printStackTrace(new PrintWriter(writer));
 
-        Text text = new Text(writer.toString());
+        TextArea textArea = new TextArea(writer.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(false);
+        textArea.setPrefRowCount(30);
+        textArea.setPrefColumnCount(60);
 
-        scrollPane.setContent(text);
-        getDialogPane().setContent(scrollPane);
+        getDialogPane().setExpandableContent(new BorderPane(textArea));
     }
 }

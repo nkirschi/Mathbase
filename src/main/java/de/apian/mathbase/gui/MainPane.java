@@ -9,7 +9,6 @@ package de.apian.mathbase.gui;
 import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -17,7 +16,6 @@ import javafx.scene.control.SplitPane;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
 
 /**
  * Basisanzeigefläche der GUI.
@@ -34,32 +32,41 @@ public class MainPane extends SplitPane {
      * @since 1.0
      */
     public MainPane() {
+        setDividerPositions(0.35);
+
+        TopicTreeController topicTreeController = initController();
+
+        SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);
+        SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
+
+        getItems().addAll(sidebarPane, new HintPane());
+    }
+
+    /**
+     * Initialisierung des Themenbaumkontrolleurs mit Fehlerbehandlung
+     *
+     * @return Einzigster Themenbaumkontrolleur der Anwendung
+     */
+    private TopicTreeController initController() {
+        TopicTreeController topicTreeController = null;
         try {
-            TopicTreeController topicTreeController = new TopicTreeController();
-            SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);
-            sidebarPane.setMinWidth(150);
-            setDividerPositions(0.35);
-            getItems().addAll(sidebarPane, new ContentPane(null, this, topicTreeController));
-            SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
+            topicTreeController = new TopicTreeController();
         } catch (IOException e) {
             ErrorAlert errorAlert = new ErrorAlert(e);
-            errorAlert.show();
+            errorAlert.showAndWait();
             Optional<ButtonType> result = DialogUtils.showAlert(null, Alert.AlertType.INFORMATION,
-                    "Mathbase", Constants.BUNDLE.getString("no_data"),
-                    Constants.BUNDLE.getString("no_file"), ButtonType.YES, ButtonType.NO);
+                    "Mathbase", null, Constants.BUNDLE.getString("no_data"),
+                    ButtonType.YES, ButtonType.NO);
 
-            result.ifPresent(buttonType -> {
-                if (buttonType.equals(ButtonType.YES)) {
-                    try {
-                        TopicTreeController.recreateFile();
-                    } catch (IOException e1) {
-                        throw new InternalError();
-                    }
-                } else {
-                    Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
+                try {
+                    TopicTreeController.recreateFile();
+                } catch (IOException e1) {
+                    throw new InternalError();
                 }
-            });
+            }
             System.exit(0);
         }
+        return topicTreeController;
     }
 }
