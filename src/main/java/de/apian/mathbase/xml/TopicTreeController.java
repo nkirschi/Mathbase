@@ -263,17 +263,17 @@ public class TopicTreeController {
      */
     private Node getNode(String title) {
         String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']" : "//" + TAG_ROOT;
-        NodeList nodeList = xmlHandler.getNodeList(expr);
+        Node node = xmlHandler.getNode(expr);
 
-        if (nodeList.getLength() == 0) {
+        if (node == null) {
             //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
-            IllegalArgumentException e = new IllegalArgumentException("Es wurde nach einem nicht vorhanden Knoten " +
+            NodeNotFoundException e = new NodeNotFoundException("Es wurde nach einem nicht vorhanden Knoten " +
                     "gefordert: \"" + title + "\"");
             new ErrorAlert(e).showAndWait();
             Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
             throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
         }
-        return nodeList.item(0);
+        return node;
     }
 
     /**

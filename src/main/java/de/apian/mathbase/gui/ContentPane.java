@@ -69,7 +69,7 @@ public class ContentPane extends ScrollPane {
 
     private VBox createSpaceFiller() {
         VBox vBox = new VBox(10);
-        vBox.getChildren().add(new ImageView(Images.getInternal("logo/logo.png")));
+        vBox.getChildren().add(new ImageView(Images.getInternal("logo.png")));
         vBox.setAlignment(Pos.CENTER);
 
         Label hint = new Label(Constants.BUNDLE.getString("hint"));
