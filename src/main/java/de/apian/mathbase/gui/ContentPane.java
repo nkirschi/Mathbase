@@ -21,8 +21,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-import java.util.ResourceBundle;
-
 /**
  * Inhaltsanzeige eines gewählten Themas.
  *
@@ -56,7 +54,7 @@ public class ContentPane extends ScrollPane {
 
         BorderPane borderPane = new BorderPane();
         Label titleLabel = new Label(title);
-        titleLabel.setFont(Font.font(Constants.TITLE_FONT.getFamily(), FontWeight.BOLD, 24));
+        titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
 
         borderPane.setTop(titleLabel);
@@ -71,7 +69,7 @@ public class ContentPane extends ScrollPane {
 
     private VBox createSpaceFiller() {
         VBox vBox = new VBox(10);
-        vBox.getChildren().add(new ImageView(Images.getInternal("icon2.png")));
+        vBox.getChildren().add(new ImageView(Images.getInternal("logo/logo.png")));
         vBox.setAlignment(Pos.CENTER);
 
         Label hint = new Label(Constants.BUNDLE.getString("hint"));

@@ -173,27 +173,27 @@ public class TopicTreeView extends TreeView<String> {
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem addItem = new MenuItem(Constants.BUNDLE.getString("add"));
-        addItem.setGraphic(new ImageView(Images.getInternal("add.png")));
+        addItem.setGraphic(new ImageView(Images.getInternal("icons_x16/add.png")));
         addItem.setOnAction(a -> addUnderSelected());
 
         MenuItem renameItem = new MenuItem(Constants.BUNDLE.getString("rename"));
-        renameItem.setGraphic(new ImageView(Images.getInternal("rename.png")));
+        renameItem.setGraphic(new ImageView(Images.getInternal("icons_x16/rename.png")));
         renameItem.setOnAction(a -> renameSelected());
 
         MenuItem removeItem = new MenuItem(Constants.BUNDLE.getString("remove"));
-        removeItem.setGraphic(new ImageView(Images.getInternal("remove.png")));
+        removeItem.setGraphic(new ImageView(Images.getInternal("icons_x16/remove.png")));
         removeItem.setOnAction(a -> removeSelected());
 
         MenuItem expandItem = new MenuItem(Constants.BUNDLE.getString("expand_all"));
-        expandItem.setGraphic(new ImageView(Images.getInternal("expand.png")));
+        expandItem.setGraphic(new ImageView(Images.getInternal("icons_x16/expand.png")));
         expandItem.setOnAction(a -> setExpandedAll(getRoot(), true));
 
         MenuItem collapseItem = new MenuItem(Constants.BUNDLE.getString("collapse_all"));
-        collapseItem.setGraphic(new ImageView(Images.getInternal("collapse.png")));
+        collapseItem.setGraphic(new ImageView(Images.getInternal("icons_x16/collapse.png")));
         collapseItem.setOnAction(a -> setExpandedAll(getRoot(), false));
 
         MenuItem helpItem = new MenuItem(Constants.BUNDLE.getString("help"));
-        helpItem.setGraphic(new ImageView(Images.getInternal("help.png")));
+        helpItem.setGraphic(new ImageView(Images.getInternal("icons_x16/help.png")));
         helpItem.setOnAction(a -> new Stage().show());
 
         contextMenu.getItems().addAll(addItem, renameItem, removeItem, new SeparatorMenuItem(),

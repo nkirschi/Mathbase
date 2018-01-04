@@ -25,7 +25,7 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final String APP_VERSION = "1.0";
+    public static final String APP_VERSION = "v1.0";
 
     /**
      * Vom Klassenpfad ausgehender Pfad zum Bilderpaket.
@@ -39,8 +39,8 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final Font TITLE_FONT = Font.loadFont(
-            Constants.class.getResourceAsStream("/fonts/adam.cg_pro.otf"), 11.0);
+    public static final String TITLE_FONT_FAMILY =
+            Font.loadFont(Constants.class.getResourceAsStream("/fonts/adam.cg_pro.otf"), 11.0).getFamily();
 
     /**
      * Akzent-Farbe.
@@ -52,7 +52,7 @@ public class Constants {
     /**
      * Resource-Bundle für die GUI-Texte.
      */
-    public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("Mathbase");
+    public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("texts/Mathbase");
 
     /**
      * Gehashtes Admin-Passwort.
