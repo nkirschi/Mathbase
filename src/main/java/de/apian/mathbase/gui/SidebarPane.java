@@ -7,11 +7,14 @@
 package de.apian.mathbase.gui;
 
 import de.apian.mathbase.gui.topictree.TopicTreeView;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+
+import java.util.ResourceBundle;
 
 /**
  * Sidebar mit dem Themenbaum.
@@ -62,8 +65,9 @@ public class SidebarPane extends BorderPane {
         scrollPane.setContent(treeView);
         setCenter(scrollPane);
 
+
         TextField searchField = new TextField();
-        searchField.setPromptText("Suche...");
+        searchField.setPromptText(Constants.BUNDLE.getString("search"));
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty())
                 scrollPane.setContent(treeView);

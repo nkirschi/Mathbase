@@ -21,7 +21,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -75,8 +74,7 @@ public class ContentPane extends ScrollPane {
         vBox.getChildren().add(new ImageView(Images.getInternal("icon2.png")));
         vBox.setAlignment(Pos.CENTER);
 
-        ResourceBundle bundle = ResourceBundle.getBundle(Constants.RESOURCE_BUNDLE_PATH, Locale.GERMAN);
-        Label hint = new Label(bundle.getString("hint"));
+        Label hint = new Label(Constants.BUNDLE.getString("hint"));
         hint.setWrapText(true);
         hint.setMaxWidth(400);
 

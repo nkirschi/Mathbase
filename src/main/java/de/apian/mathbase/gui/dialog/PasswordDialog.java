@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.dialog;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.image.ImageView;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,9 +43,9 @@ public class PasswordDialog extends AbstractTextDialog {
      */
     public PasswordDialog(MainPane mainPane) {
         super(mainPane, new PasswordField());
-        setTitle("Authentifikation");
+        setTitle(Constants.BUNDLE.getString("authentication"));
         setGraphic(new ImageView(Images.getInternal("password.png")));
-        setInputDescription("Passwort");
+        setInputDescription(Constants.BUNDLE.getString("password"));
     }
 
     @Override
@@ -74,7 +76,7 @@ public class PasswordDialog extends AbstractTextDialog {
             }, 0, 1000);
 
             if (!hash(textField.getText()).equals(HASHED_PASSWORD)) {
-                infoLabel.setText("Passwort inkorrekt!");
+                infoLabel.setText(Constants.BUNDLE.getString("incorrect_pw"));
                 infoLabel.setVisible(true);
                 a.consume();
             }

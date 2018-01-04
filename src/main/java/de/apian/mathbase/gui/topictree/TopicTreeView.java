@@ -8,8 +8,10 @@ package de.apian.mathbase.gui.topictree;
 
 import de.apian.mathbase.gui.ContentPane;
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.TopicTitleDialog;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
@@ -18,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -169,28 +172,32 @@ public class TopicTreeView extends TreeView<String> {
     private void initContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
 
-        MenuItem addItem = new MenuItem("Hinzufügen");
+        MenuItem addItem = new MenuItem(Constants.BUNDLE.getString("add"));
         addItem.setGraphic(new ImageView(Images.getInternal("add.png")));
         addItem.setOnAction(a -> addUnderSelected());
 
-        MenuItem renameItem = new MenuItem("Umbenennen");
+        MenuItem renameItem = new MenuItem(Constants.BUNDLE.getString("rename"));
         renameItem.setGraphic(new ImageView(Images.getInternal("rename.png")));
         renameItem.setOnAction(a -> renameSelected());
 
-        MenuItem removeItem = new MenuItem("Entfernen");
+        MenuItem removeItem = new MenuItem(Constants.BUNDLE.getString("remove"));
         removeItem.setGraphic(new ImageView(Images.getInternal("remove.png")));
         removeItem.setOnAction(a -> removeSelected());
 
-        MenuItem expandItem = new MenuItem("Alle ausklappen");
+        MenuItem expandItem = new MenuItem(Constants.BUNDLE.getString("expand_all"));
         expandItem.setGraphic(new ImageView(Images.getInternal("expand.png")));
         expandItem.setOnAction(a -> setExpandedAll(getRoot(), true));
 
-        MenuItem collapseItem = new MenuItem("Alle einklappen");
+        MenuItem collapseItem = new MenuItem(Constants.BUNDLE.getString("collapse_all"));
         collapseItem.setGraphic(new ImageView(Images.getInternal("collapse.png")));
         collapseItem.setOnAction(a -> setExpandedAll(getRoot(), false));
 
-        contextMenu.getItems().addAll(addItem, new SeparatorMenuItem(), renameItem, removeItem,
-                new SeparatorMenuItem(), expandItem, collapseItem);
+        MenuItem helpItem = new MenuItem(Constants.BUNDLE.getString("help"));
+        helpItem.setGraphic(new ImageView(Images.getInternal("help.png")));
+        helpItem.setOnAction(a -> new Stage().show());
+
+        contextMenu.getItems().addAll(addItem, renameItem, removeItem, new SeparatorMenuItem(),
+                expandItem, collapseItem, new SeparatorMenuItem(), helpItem);
         setContextMenu(contextMenu);
     }
 
@@ -203,7 +210,7 @@ public class TopicTreeView extends TreeView<String> {
      */
     private void addUnderSelected() {
         TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
-        dialog.setHeaderText("Neues Thema hinzufügen");
+        dialog.setHeaderText(Constants.BUNDLE.getString("add_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
             TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
@@ -223,11 +230,14 @@ public class TopicTreeView extends TreeView<String> {
 
     private void renameSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-        if (selectedItem == null)
+        if (selectedItem == null) {
+            DialogUtils.showMessageDialog(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
+                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("rename_topic"), Constants.BUNDLE.getString("nothing_to_rename"));
             return;
+        }
 
         TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
-        dialog.setHeaderText("Thema umbenennen");
+        dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
             try {
@@ -248,18 +258,21 @@ public class TopicTreeView extends TreeView<String> {
      */
     private void removeSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-        if (selectedItem == null)
+        if (selectedItem == null) {
+            DialogUtils.showMessageDialog(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
+                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("remove_topic"), Constants.BUNDLE.getString("nothing_to_remove"));
             return;
+        }
 
         PasswordDialog dialog = new PasswordDialog(mainPane);
-        dialog.setHeaderText("Gewähltes Thema löschen");
+        dialog.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(pw -> {
             try {
                 selectedItem.getParent().getChildren().remove(selectedItem);
                 topicTreeController.removeNode(selectedItem.getValue());
                 getSelectionModel().select(null);
-            } catch (NodeNotFoundException | IOException | TransformerException e) {
+            } catch (NodeNotFoundException | TransformerException e) {
                 e.printStackTrace();
             }
         });

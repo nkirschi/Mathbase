@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.dialog;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.event.ActionEvent;
@@ -40,8 +41,8 @@ public class TopicTitleDialog extends AbstractTextDialog {
     public TopicTitleDialog(MainPane mainPane, TopicTreeController topicTreeController) {
         super(mainPane, new TextField());
         this.topicTreeController = topicTreeController;
-        setTitle("Themenverwaltung");
-        setInputDescription("Titel");
+        setTitle(Constants.BUNDLE.getString("topic_management"));
+        setInputDescription(Constants.BUNDLE.getString("add_topic"));
     }
 
     @Override
@@ -50,11 +51,11 @@ public class TopicTitleDialog extends AbstractTextDialog {
         okButton.addEventFilter(ActionEvent.ACTION, a -> {
             String title = textField.getText();
             if (title == null || title.isEmpty()) {
-                infoLabel.setText("Titel darf nicht leer sein!");
+                infoLabel.setText(Constants.BUNDLE.getString("empty_title"));
                 infoLabel.setVisible(true);
                 a.consume();
-            } else if (topicTreeController.doesExist(FileUtils.normalize(textField.getText()))) {
-                infoLabel.setText("Thema mit diesem Titel existiert bereits!");
+            } else if (topicTreeController.doesExist(textField.getText())) {
+                infoLabel.setText(Constants.BUNDLE.getString("existing_title"));
                 infoLabel.setVisible(true);
                 a.consume();
             }

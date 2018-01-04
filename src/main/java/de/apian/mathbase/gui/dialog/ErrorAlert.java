@@ -32,7 +32,7 @@ public class ErrorAlert extends Alert {
             stage.hide();
         }
 
-        setTitle("Fatal Error");
+        setTitle(Constants.BUNDLE.getString("fatal_error"));
         setHeaderText(t.getClass().toString());
 
         ScrollPane scrollPane = new ScrollPane();

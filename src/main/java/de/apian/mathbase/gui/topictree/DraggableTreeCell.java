@@ -8,6 +8,7 @@ package de.apian.mathbase.gui.topictree;
 
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
@@ -139,7 +140,7 @@ public class DraggableTreeCell extends TreeCell<String> {
             targetItem = getTreeView().getRoot();
 
         PasswordDialog dialog = new PasswordDialog(mainPane);
-        dialog.setHeaderText("Thema verschieben");
+        dialog.setHeaderText(Constants.BUNDLE.getString("move_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(pw -> {
             try {

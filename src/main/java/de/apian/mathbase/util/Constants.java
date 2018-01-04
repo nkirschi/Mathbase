@@ -9,6 +9,8 @@ package de.apian.mathbase.util;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.ResourceBundle;
+
 /**
  * Utility-Klasse mit statischen Konstanten zur universellen Anpassung bestimmter Parameter.
  *
@@ -48,9 +50,9 @@ public class Constants {
     public static final Color ACCENT_COLOR = Color.rgb(29, 105, 224);
 
     /**
-     * Pfad zum Resource-Bundle für die GUI-Texte relativ zum Ressourcenpfad.
+     * Resource-Bundle für die GUI-Texte.
      */
-    public static final String RESOURCE_BUNDLE_PATH = "Mathbase";
+    public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("Mathbase");
 
     /**
      * Gehashtes Admin-Passwort.
