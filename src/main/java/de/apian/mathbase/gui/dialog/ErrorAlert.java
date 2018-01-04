@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.dialog;
 
 import com.sun.javafx.stage.StageHelper;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import de.apian.mathbase.util.Constants;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
@@ -33,7 +34,7 @@ public class ErrorAlert extends Alert {
         }
 
         setTitle(Constants.BUNDLE.getString("fatal_error"));
-        setHeaderText(t.getClass().toString());
+        setHeaderText(Constants.FATAL_ERROR_MESSAGE);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
@@ -43,7 +44,7 @@ public class ErrorAlert extends Alert {
         StringWriter writer = new StringWriter();
         t.printStackTrace(new PrintWriter(writer));
 
-        Text text = new Text(Constants.FATAL_ERROR_MESSAGE + "\n\n" + writer.toString());
+        Text text = new Text(writer.toString());
 
         scrollPane.setContent(text);
         getDialogPane().setContent(scrollPane);

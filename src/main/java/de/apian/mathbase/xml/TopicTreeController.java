@@ -124,20 +124,21 @@ public class TopicTreeController {
         try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
             Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
-        } catch (IOException ex1) {
-            Logging.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", ex1);
+        } catch (IOException e1) {
+            Logging.log(Level.WARNING, "Original-Datei \"" + ORIGINAL_PATH + "\" konnte nicht geladen werden", e1);
             try { // Versuche im Fehlerfall die Backup-Datei wiederherzustellen
                 Files.copy(Paths.get(BACKUP_PATH), Paths.get(ORIGINAL_PATH), StandardCopyOption.REPLACE_EXISTING);
                 xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
                 Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich aus \""
                         + BACKUP_PATH + "\" wiederhergestellt und geladen");
-            } catch (IOException ex2) {
+            } catch (IOException e2) {
                 Logging.log(Level.SEVERE, "Datei \"" + ORIGINAL_PATH + "\" konnte nicht aus Backup-Datei \""
-                        + BACKUP_PATH + "\" wiederhergestellt werden", ex2);
+                        + BACKUP_PATH + "\" wiederhergestellt werden", e2);
 
                 // Schmeißt eine IOException, um den aufrufenden Klassen mitzuteilen,
                 // dass die Datei nicht geladen werden konnte
-                throw new IOException("Keine Datei konnte geladen werden! Kontaktieren Sie Ihren Systemadministrator!");
+                e2.initCause(e1);
+                throw new IOException("Daten konnten nicht geladen werden! Kontaktieren Sie Ihren Systemadministrator!", e2);
             }
         }
     }
@@ -342,7 +343,7 @@ public class TopicTreeController {
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
      * @throws NodeNotFoundException   wenn der Elternknoten nicht exisiert
      * @throws IOException             wenn Erstellen des Ordners fehlschlägt
-     * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException,
@@ -389,8 +390,8 @@ public class TopicTreeController {
      *
      * @param title  Titel des Knotens
      * @param parent Eltern-Knoten
-     * @throws IOException wenn Erstellen des Ordners fehlschlägt
-     *  @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws IOException          wenn Erstellen des Ordners fehlschlägt
+     * @throws TransformerException wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     private void addNode(String title, Node parent) throws IOException, TransformerException {
@@ -435,11 +436,11 @@ public class TopicTreeController {
      * @param from Titel des zu verschiebenden Knotens
      * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein). Wenn {@code NULL}, dann wird die Wurzel
      *             verwendet.
-     * @throws NodeNotFoundException wenn einer der beiden Knoten nicht existiert
+     * @throws NodeNotFoundException   wenn einer der beiden Knoten nicht existiert
      * @throws TitleCollisionException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
      *                                 oder {@code from} gleich {@code to} ist
      * @throws IOException             wenn Verschieben des Ordners fehlschlägt
-     *  @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException,
@@ -484,7 +485,7 @@ public class TopicTreeController {
      * @param to   Neuer Elternknoten (Darf nicht {@code node} sein)
      * @throws TitleCollisionException wenn {@code node} die Wurzel {@value TAG_ROOT} ist
      * @throws IOException             wenn Verschieben des Ordners fehlschlägt
-     *  @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     private void moveNode(Node node, Node to) throws TitleCollisionException, IOException, TransformerException {
@@ -586,7 +587,7 @@ public class TopicTreeController {
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
      * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
-     * @throws IOException             wenn Umbennenen des Ordners fehlschlägt
+     * @throws IOException           wenn Umbennenen des Ordners fehlschlägt
      * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */

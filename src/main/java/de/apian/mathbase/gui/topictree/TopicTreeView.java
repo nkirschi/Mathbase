@@ -231,7 +231,7 @@ public class TopicTreeView extends TreeView<String> {
     private void renameSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            DialogUtils.showMessageDialog(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
+            DialogUtils.showAlert(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
                     Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("rename_topic"), Constants.BUNDLE.getString("nothing_to_rename"));
             return;
         }
@@ -259,7 +259,7 @@ public class TopicTreeView extends TreeView<String> {
     private void removeSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            DialogUtils.showMessageDialog(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
+            DialogUtils.showAlert(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
                     Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("remove_topic"), Constants.BUNDLE.getString("nothing_to_remove"));
             return;
         }

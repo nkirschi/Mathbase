@@ -66,6 +66,5 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final String FATAL_ERROR_MESSAGE = "Uh-Oh! Das schaut nicht gut aus. Kontaktieren Sie umgehend " +
-            "Ihren Systemadministrator!";
+    public static final String FATAL_ERROR_MESSAGE = "Uh-Oh! Kontaktieren Sie umgehend Ihren Systemadministrator!";
 }

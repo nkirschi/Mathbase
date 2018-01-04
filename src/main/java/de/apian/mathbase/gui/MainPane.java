@@ -6,10 +6,18 @@
 
 package de.apian.mathbase.gui;
 
+import de.apian.mathbase.gui.dialog.DialogUtils;
+import de.apian.mathbase.gui.dialog.ErrorAlert;
+import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.TopicTreeController;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.SplitPane;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * Basisanzeigefläche der GUI.
@@ -33,8 +41,25 @@ public class MainPane extends SplitPane {
             setDividerPositions(0.35);
             getItems().addAll(sidebarPane, new ContentPane(null, this, topicTreeController));
             SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
-        } catch (IOException e) { // TODO Fehlerbehandlung
-            e.printStackTrace();
+        } catch (IOException e) {
+            ErrorAlert errorAlert = new ErrorAlert(e);
+            errorAlert.show();
+            Optional<ButtonType> result = DialogUtils.showAlert(null, Alert.AlertType.INFORMATION,
+                    "Mathbase", Constants.BUNDLE.getString("no_data"),
+                    Constants.BUNDLE.getString("no_file"), ButtonType.YES, ButtonType.NO);
+
+            result.ifPresent(buttonType -> {
+                if (buttonType.equals(ButtonType.YES)) {
+                    try {
+                        TopicTreeController.recreateFile();
+                    } catch (IOException e1) {
+                        throw new InternalError();
+                    }
+                } else {
+                    Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+                }
+            });
+            System.exit(0);
         }
     }
 }
