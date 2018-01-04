@@ -6,6 +6,8 @@
 
 package de.apian.mathbase.xml;
 
+import de.apian.mathbase.gui.dialog.ErrorAlert;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logging;
 import org.w3c.dom.Element;
@@ -369,16 +371,19 @@ public class TopicTreeController {
      *
      * @param title Titel des Knoten
      * @return Der Knoten
-     * @throws NodeNotFoundException wenn der Knoten nicht existiert
      */
-    private Node getNode(String title) throws NodeNotFoundException { //TODO überall verwenden. Soll die Exception
-        //TODO überhaupt geworfen werden, wir gehen ja davon aus dass nicht nach ungültigen Titeln gesucht wird ..
+    private Node getNode(String title) {
         String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']" : "//" + TAG_ROOT;
         NodeList nodeList = xmlHandler.getNodeList(expr);
 
-        if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException("Knoten \"" + title + "\" konnte nicht gefunden werden");
-
+        if (nodeList.getLength() == 0) {
+            //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
+            IllegalArgumentException e = new IllegalArgumentException("Es wurde nach einem nicht vorhanden Knoten " +
+                    "gefordert: \"" + title + "\"");
+            new ErrorAlert(e).showAndWait();
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
+        }
         return nodeList.item(0);
     }
 

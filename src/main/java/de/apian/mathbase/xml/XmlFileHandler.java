@@ -129,10 +129,10 @@ public class XmlFileHandler {
         return (NodeList) compileAndEvaluate(expr, XPathConstants.NODESET);
     }
 
+    //TODO wirklich nötig? ist ja durch die getNode in TopicTreeController erledigt ...
     public Node getNode(String expr) {
         return (Node) compileAndEvaluate(expr, XPathConstants.NODE);
     }
-
     private Object compileAndEvaluate(String expr, QName type) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
