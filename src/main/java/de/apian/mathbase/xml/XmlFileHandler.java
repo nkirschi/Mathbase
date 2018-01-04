@@ -130,9 +130,11 @@ public class XmlFileHandler {
     }
 
     //TODO wirklich nötig? ist ja durch die getNode in TopicTreeController erledigt ...
+    // TODO ist extrem nötig. Gutes Design steht über allem, nodeList.get(0) ist HÄSS-LICH :D
     public Node getNode(String expr) {
         return (Node) compileAndEvaluate(expr, XPathConstants.NODE);
     }
+
     private Object compileAndEvaluate(String expr, QName type) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
