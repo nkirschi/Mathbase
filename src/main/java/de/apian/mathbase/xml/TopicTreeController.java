@@ -11,7 +11,6 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logging;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -257,6 +256,27 @@ public class TopicTreeController {
     }
 
     /**
+     * Suchen eines Knoten anhand seines Titels. Ist der Titel {@code NULL}, dann wird die Wurzel zurückgegeben.
+     *
+     * @param title Titel des Knoten
+     * @return Der Knoten
+     */
+    private Node getNode(String title) {
+        String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']" : "//" + TAG_ROOT;
+        NodeList nodeList = xmlHandler.getNodeList(expr);
+
+        if (nodeList.getLength() == 0) {
+            //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
+            IllegalArgumentException e = new IllegalArgumentException("Es wurde nach einem nicht vorhanden Knoten " +
+                    "gefordert: \"" + title + "\"");
+            new ErrorAlert(e).showAndWait();
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
+        }
+        return nodeList.item(0);
+    }
+
+    /**
      * Ermitteln des Pfads des Ordners eines bestimmten Knotens relativ zum Arbeitsverzeichnis
      *
      * @param title Titel des Knotens
@@ -364,27 +384,6 @@ public class TopicTreeController {
         Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
                 parent == null ? "der Wurzel" : "\"" + parent + "\""));
 
-    }
-
-    /**
-     * Suchen eines Knoten anhand seines Titels. Ist der Titel {@code NULL}, dann wird die Wurzel zurückgegeben.
-     *
-     * @param title Titel des Knoten
-     * @return Der Knoten
-     */
-    private Node getNode(String title) {
-        String expr = title != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']" : "//" + TAG_ROOT;
-        NodeList nodeList = xmlHandler.getNodeList(expr);
-
-        if (nodeList.getLength() == 0) {
-            //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
-            IllegalArgumentException e = new IllegalArgumentException("Es wurde nach einem nicht vorhanden Knoten " +
-                    "gefordert: \"" + title + "\"");
-            new ErrorAlert(e).showAndWait();
-            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
-        }
-        return nodeList.item(0);
     }
 
     /**
@@ -657,21 +656,20 @@ public class TopicTreeController {
      * @since 1.0
      */
     public Content[] getContents(String title) {
-
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']/" + TAG_CONTENT;
         NodeList nodeList = xmlHandler.getNodeList(expr);
 
         Content[] contents = new Content[nodeList.getLength()];
         for (int i = 0; i < contents.length; i++) {
-            NamedNodeMap attributes = nodeList.item(i).getAttributes();
-            contents[i] = new Content(
-                    Content.Type.forName(attributes.getNamedItem(ATTR_TYPE).getNodeValue()),
-                    attributes.getNamedItem(ATTR_PATH).getNodeValue(),
-                    attributes.getNamedItem(ATTR_PATH).getNodeValue()
-            );
+            Node contentNode = nodeList.item(i);
+            if (contentNode.getNodeType() == Node.ELEMENT_NODE) { //Anderer Fall kann normalerweise nicht eintreten ...
+                Element contentElement = (Element) contentNode;
+                contents[i] = new Content(Content.Type.forName(contentElement.getAttribute(ATTR_TYPE)),
+                        contentElement.getAttribute(ATTR_PATH),
+                        contentElement.getAttribute(ATTR_TITLE)
+                );
+            }
         }
-
         return contents;
-
     }
 }

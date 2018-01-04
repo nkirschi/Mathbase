@@ -6,6 +6,12 @@
 
 package de.apian.mathbase.xml;
 
+import de.apian.mathbase.gui.dialog.ErrorAlert;
+import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Logging;
+
+import java.util.logging.Level;
+
 /**
  * Repräsentation eines Themeninhalts.
  *
@@ -65,14 +71,14 @@ public class Content {
     }
 
     /**
-     * @return
+     * @return Titel des Inhalts
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Wohldefinierte Typen (in der Definitionsphase...)
+     * Wohldefinierte Typen
      *
      * @author Benedikt Mödl
      * @author Nikolas Kirschstein
@@ -87,13 +93,22 @@ public class Content {
          *
          * @param name Typbezeichner
          * @return Gesuchte Enum-Typkonstante
-         * @throws IllegalArgumentException bei ungültigem Namen
          */
-        public static Type forName(String name) throws IllegalArgumentException {
-            for (Type type : values())
+        public static Type forName(String name) {
+            for (Type type : values()) {
                 if (type.name().equalsIgnoreCase(name))
                     return type;
-            throw new IllegalArgumentException("No enum constant " + Type.class.getCanonicalName() + "." + name);
+            }
+
+            /*
+             * Nichts gefunden?! Darf und wird nie vorkommen, es sei denn jemand pfuscht in der XML rum ... -> Loggen
+             * und Programm schließen
+             */
+            IllegalArgumentException e = new IllegalArgumentException("No enum constant " +
+                    Type.class.getCanonicalName() + "." + name);
+            new ErrorAlert(e).showAndWait();
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
         }
 
         /**
