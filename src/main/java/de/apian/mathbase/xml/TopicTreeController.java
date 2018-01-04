@@ -236,12 +236,9 @@ public class TopicTreeController {
      */
     public boolean doesExist(String title) {
         boolean exists = false;
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
+        String expr = "//" + TAG_NODE;
         NodeList nodeList = xmlHandler.getNodeList(expr);
-
         for (int i = 0; i < nodeList.getLength(); i++) {
-            //Eigentlich sollte ja nur ein Knoten mit dem Titel da sein, aber Meckern ist nicht Sinn der Methode
-
             // Titel des Knotens
             String anotherTitle = "";
             Node node = nodeList.item(i);
