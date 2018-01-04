@@ -57,6 +57,16 @@ public class Content {
     }
 
     /**
+     * Konvertierung des Inhalts in eine Zeichenkette
+     *
+     * @return Den Inhalt beschreibende Zeichenkette
+     */
+    @Override
+    public String toString() {
+        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + path + "\"";
+    }
+
+    /**
      * @return Typ des Inhalts
      */
     public Type getType() {

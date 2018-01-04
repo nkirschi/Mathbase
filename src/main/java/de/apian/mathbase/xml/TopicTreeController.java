@@ -383,7 +383,6 @@ public class TopicTreeController {
         addNode(title, parentNode);
         Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
                 parent == null ? "der Wurzel" : "\"" + parent + "\""));
-
     }
 
     /**
@@ -646,8 +645,6 @@ public class TopicTreeController {
         Logging.log(Level.INFO, "Titel des Knotens \"" + from + "\" zu \"" + to + "\" geändert");
     }
 
-    //TODO ALLE Inhalts-Operationen anpassen + implementieren
-
     /**
      * Ermitteln aller Inhalte eines bestimmten Knotens
      *
@@ -671,5 +668,71 @@ public class TopicTreeController {
             }
         }
         return contents;
+    }
+
+    /**
+     * Hinzufügen eines Inhalts zu einem bestimmten Knoten.
+     * Inhalte sind eindeutig identifizierbar über ihren Dateipfad.
+     *
+     * @param content Hinzuzufügender Inhalt
+     * @param parent  Titel des betreffenden Knotens
+     * @throws NodeNotFoundException wenn der Knoten nicht existiert
+     * @throws IOException           wenn das Kopieren der Datei fehlschlägt
+     * @throws TransformerException  wenn das Speichern der XML-Datei fehlschlägt
+     * @since 1.0
+     */
+    public void addContent(Content content, String parent) throws NodeNotFoundException, IOException,
+            TransformerException {
+        Node parentNode = getNode(parent);
+
+        //Finde benötigte Pfade from und to
+        Path from = Paths.get(content.getPath());
+        //Finde Dateiendung
+        String fileName = from.getFileName().toString(); //Alter Dateiname mit Dateiendung
+        String fileExstension = fileName.lastIndexOf('.') > 0 ? fileName.substring(fileName.lastIndexOf('.')) :
+                ""; //Nur Dateiendung mit Punkt!
+        //Erzeuge Dateinamen
+        String newFileName = content.getTitle().isEmpty() ? content.getType().toString() : content.getTitle();
+        String parentPath = localizeFolder(parentNode);
+        Path to = Paths.get(parentPath, newFileName + fileExstension);
+        for (int i = 0; to.toFile().exists(); i++) {
+            to = Paths.get(parentPath, newFileName + i + fileExstension);
+        }
+
+        //Erstelle Element-Objekt aus dem Content-Objekt und Hinzufügen zum Elternknoten
+        Element contentElement = xmlHandler.getDocument().createElement(TAG_CONTENT);
+        contentElement.setAttribute(ATTR_TYPE, content.getType().toString());
+        contentElement.setAttribute(ATTR_PATH, to.toString());
+        contentElement.setAttribute(ATTR_TITLE, content.getTitle());
+        parentNode.appendChild(contentElement);
+        Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
+
+        //Kopieren der Datei
+        try {
+            FileUtils.copy(from, to);
+            Logging.log(Level.INFO, "Datei von " + content.toString() + " erfolgreich kopiert");
+        } catch (IOException e) {
+            // Fehlgeschlagen, ändere XML im Speicher zurück, dann brich ab
+            parentNode.removeChild(contentElement);
+            throw e;
+        }
+
+        //Speichern der XML-Datei
+        try {
+            saveFile();
+        } catch (TransformerException e) {
+            // Fehlgeschlagen, ändere XML im Speicher zurück, lösche Datei, dann brich ab
+            parentNode.removeChild(contentElement);
+            try {
+                FileUtils.delete(to);
+            } catch (IOException e1) {
+                //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Datei in Ruhe und logge das Ganze
+                e1.addSuppressed(e);
+                Logging.log(Level.WARNING, "Datei \"" + to.toString() + "\" ist nun unnötig, Löschen schlug " +
+                        "allerdings fehl!", e1);
+            }
+            throw e;
+        }
+        Logging.log(Level.INFO, content.toString() + " unter dem Knoten \"" + parent + "\" eingefügt");
     }
 }
