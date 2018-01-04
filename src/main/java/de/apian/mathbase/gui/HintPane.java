@@ -12,13 +12,23 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 public class HintPane extends VBox {
     HintPane() {
-        setSpacing(10);
-        getChildren().add(new ImageView(Images.getInternal("icon2.png")));
+        setSpacing(20);
+
+        VBox vBox = new VBox(-10);
+        vBox.getChildren().add(new ImageView(Images.getInternal("logo/logo.png")));
         setAlignment(Pos.CENTER);
+
+        Label mathbase = new Label("Mathbase");
+        mathbase.setFont(Font.font(Constants.TITLE_FONT_FAMILY, 16));
+        vBox.getChildren().add(mathbase);
+        vBox.setAlignment(Pos.CENTER);
+
+        getChildren().add(vBox);
 
         Label hint = new Label(Constants.BUNDLE.getString("hint"));
         hint.setWrapText(true);

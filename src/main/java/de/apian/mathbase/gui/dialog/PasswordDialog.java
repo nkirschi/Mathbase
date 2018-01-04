@@ -44,7 +44,7 @@ public class PasswordDialog extends AbstractTextDialog {
     public PasswordDialog(MainPane mainPane) {
         super(mainPane, new PasswordField());
         setTitle(Constants.BUNDLE.getString("authentication"));
-        setGraphic(new ImageView(Images.getInternal("password.png")));
+        setGraphic(new ImageView(Images.getInternal("icons_x48/password.png")));
         setInputDescription(Constants.BUNDLE.getString("password"));
     }
 
