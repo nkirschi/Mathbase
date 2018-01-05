@@ -8,11 +8,10 @@
             <node title="(Gerade Bananen)-Saft"/>
         </node>
         <node title="Kiwisaft">
-            <node title="Gedöns">
-                <node title="Pissflitschensaft"/>
-            </node>
-            <node title="Nudelsaft"/>
+            <node title="Gedöns"/>
         </node>
+        <node title="Pissflitschensaft"/>
+        <node title="Nudelsaft"/>
     </node>
     <node title="Schiefe Bananen"/>
     <node title="Giebelgärtner"/>
