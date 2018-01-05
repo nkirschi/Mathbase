@@ -25,7 +25,7 @@ public class Constants {
      *
      * @since 1.0
      */
-    public static final String APP_VERSION = "v1.0";
+    public static final String APP_VERSION = "1.0";
 
     /**
      * Vom Klassenpfad ausgehender Pfad zum Bilderpaket.
