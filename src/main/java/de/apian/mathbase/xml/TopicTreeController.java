@@ -674,7 +674,7 @@ public class TopicTreeController {
      * Hinzufügen eines Inhalts zu einem bestimmten Knoten.
      * Inhalte sind eindeutig identifizierbar über ihren Dateipfad.
      *
-     * @param content Hinzuzufügender Inhalt
+     * @param content Hinzuzufügender Inhalt mit ursprünglichem Dateipfad
      * @param parent  Titel des betreffenden Knotens
      * @throws NodeNotFoundException wenn der Knoten nicht existiert
      * @throws IOException           wenn das Kopieren der Datei fehlschlägt
@@ -698,7 +698,7 @@ public class TopicTreeController {
         //Erstelle Element-Objekt aus dem Content-Objekt und Hinzufügen zum Elternknoten
         Element contentElement = xmlHandler.getDocument().createElement(TAG_CONTENT);
         contentElement.setAttribute(ATTR_TYPE, content.getType().toString());
-        contentElement.setAttribute(ATTR_PATH, to.toString());
+        contentElement.setAttribute(ATTR_PATH, to.getFileName().toString());
         contentElement.setAttribute(ATTR_TITLE, content.getTitle());
         parentNode.appendChild(contentElement);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
@@ -730,5 +730,17 @@ public class TopicTreeController {
             throw e;
         }
         Logging.log(Level.INFO, content.toString() + " unter dem Knoten \"" + parent + "\" eingefügt");
+    }
+
+    /**
+     * Löschenn eines Inhalts
+     *
+     * @param parent  Titel des Elternknotens
+     * @param content Zu entfernender Inhalt
+     * @throws TransformerException wenn das Speichern der XML-Datei fehlschlägt
+     * @since 1.0
+     */
+    public void removeContent(Content content, String parent) throws TransformerException {
+        //TODO impl. Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt irgendwo . . .
     }
 }
