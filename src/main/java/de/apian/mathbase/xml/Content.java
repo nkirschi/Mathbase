@@ -6,12 +6,6 @@
 
 package de.apian.mathbase.xml;
 
-import de.apian.mathbase.gui.dialog.ErrorAlert;
-import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.util.Logging;
-
-import java.util.logging.Level;
-
 /**
  * Repräsentation eines Themeninhalts.
  *
@@ -57,16 +51,6 @@ public class Content {
     }
 
     /**
-     * Konvertierung des Inhalts in eine Zeichenkette
-     *
-     * @return Den Inhalt beschreibende Zeichenkette
-     */
-    @Override
-    public String toString() {
-        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + path + "\"";
-    }
-
-    /**
      * @return Typ des Inhalts
      */
     public Type getType() {
@@ -85,6 +69,16 @@ public class Content {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Konvertierung des Inhalts in eine Zeichenkette
+     *
+     * @return Den Inhalt beschreibende Zeichenkette
+     */
+    @Override
+    public String toString() {
+        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + path + "\"";
     }
 
     /**
@@ -109,16 +103,7 @@ public class Content {
                 if (type.name().equalsIgnoreCase(name))
                     return type;
             }
-
-            /*
-             * Nichts gefunden?! Darf und wird nie vorkommen, es sei denn jemand pfuscht in der XML rum ... -> Loggen
-             * und Programm schließen
-             */
-            IllegalArgumentException e = new IllegalArgumentException("No enum constant " +
-                    Type.class.getCanonicalName() + "." + name);
-            new ErrorAlert(e).showAndWait();
-            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
-            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
+            throw new IllegalArgumentException("No enum constant " + Type.class.getCanonicalName() + "." + name);
         }
 
         /**
