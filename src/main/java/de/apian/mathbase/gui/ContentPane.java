@@ -46,11 +46,6 @@ public class ContentPane extends ScrollPane {
         this.topicTreeController = topicTreeController;
 
         setPadding(new Insets(10, 10, 10, 10));
-        // Kein Thema ausgewählt
-        if (title == null) {
-            setContent(createSpaceFiller());
-            return;
-        }
 
         BorderPane borderPane = new BorderPane();
         Label titleLabel = new Label(title);
@@ -69,7 +64,7 @@ public class ContentPane extends ScrollPane {
 
     private VBox createSpaceFiller() {
         VBox vBox = new VBox(10);
-        vBox.getChildren().add(new ImageView(Images.getInternal("logo.png")));
+        vBox.getChildren().add(new ImageView(Images.getInternal("logo/logo.png")));
         vBox.setAlignment(Pos.CENTER);
 
         Label hint = new Label(Constants.BUNDLE.getString("hint"));

@@ -28,7 +28,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -78,16 +78,16 @@ public class XmlFileHandler {
     }
 
     /**
-     * Speichern des {@code document}-Objekts als XML-Datei
+     * Speichern des {@code document}-Objekts als menschenlesbare XML-Datei.
      *
      * @param targetPath Pfad der Zieldatei relativ zum Arbeitsverzeichnis
      * @throws TransformerException wenn das Transformieren fehlgeschlagen ist
      * @since 1.0
      */
-    public void saveDocToXml(String targetPath) throws TransformerException {
+    public void saveDocTo(String targetPath) throws IOException, TransformerException {
 
         // Entfernen von Whitespace
-        document.normalize();
+        document.normalizeDocument();
         NodeList nodeList = getNodeList("//text()[normalize-space()='']");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -99,19 +99,16 @@ public class XmlFileHandler {
          * für den Transformer, der die XML-Datei schlussendlich erzeugt
          */
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File(targetPath));
+        StreamResult result = new StreamResult(new FileWriter(targetPath));
         TransformerFactory factory = TransformerFactory.newInstance();
         factory.setAttribute("indent-number", "4");
 
-
         Transformer transformer = factory.newTransformer();
-
-        // Setzen der Parameter, sodass die XML-Datei später auch lesbar ist
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
+        transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "4");
         transformer.transform(source, result); // Erzeugung der finalen XML-Datei
     }
 

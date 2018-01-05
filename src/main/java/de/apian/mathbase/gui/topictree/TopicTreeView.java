@@ -7,6 +7,8 @@
 package de.apian.mathbase.gui.topictree;
 
 import de.apian.mathbase.gui.ContentPane;
+import de.apian.mathbase.gui.HelpWindow;
+import de.apian.mathbase.gui.HintPane;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
@@ -150,10 +152,10 @@ public class TopicTreeView extends TreeView<String> {
     private void initSelectionBehavior() {
         getSelectionModel().select(null);
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            String title = newValue != null ? newValue.getValue() : null;
-            ContentPane contentPane = new ContentPane(title, mainPane, topicTreeController);
-            mainPane.getItems().set(1, contentPane);
+        getSelectionModel().selectedItemProperty().addListener((observable, oldItem, newItem) -> {
+            String title = newItem != null ? newItem.getValue() : null;
+            Node node = title != null ? new ContentPane(title, mainPane, topicTreeController) : new HintPane();
+            mainPane.getItems().set(1, node);
         });
 
         // Wenn auf leeren Platz im Themenbaum geclickt wird, soll nichts ausgewählt sein
@@ -194,7 +196,7 @@ public class TopicTreeView extends TreeView<String> {
 
         MenuItem helpItem = new MenuItem(Constants.BUNDLE.getString("help"));
         helpItem.setGraphic(new ImageView(Images.getInternal("icons_x16/help.png")));
-        helpItem.setOnAction(a -> new Stage().show());
+        helpItem.setOnAction(a -> new HelpWindow(mainPane).show());
 
         contextMenu.getItems().addAll(addItem, renameItem, removeItem, new SeparatorMenuItem(),
                 expandItem, collapseItem, new SeparatorMenuItem(), helpItem);
@@ -222,7 +224,7 @@ public class TopicTreeView extends TreeView<String> {
                 TreeItem<String> newItem = new TreeItem<>(title);
                 selectedItem.getChildren().add(newItem);
                 selectedItem.setExpanded(true);
-            } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
+            } catch (IOException | TitleCollisionException | TransformerException e) {
                 e.printStackTrace();
             }
         });
@@ -243,7 +245,7 @@ public class TopicTreeView extends TreeView<String> {
             try {
                 topicTreeController.renameNode(selectedItem.getValue(), title);
                 selectedItem.setValue(title);
-            } catch (NodeNotFoundException | IOException | TransformerException e) {
+            } catch (IOException | TransformerException e) {
                 e.printStackTrace();
             }
         });
@@ -272,7 +274,7 @@ public class TopicTreeView extends TreeView<String> {
                 selectedItem.getParent().getChildren().remove(selectedItem);
                 topicTreeController.removeNode(selectedItem.getValue());
                 getSelectionModel().select(null);
-            } catch (NodeNotFoundException | TransformerException e) {
+            } catch (IOException | TransformerException e) {
                 e.printStackTrace();
             }
         });

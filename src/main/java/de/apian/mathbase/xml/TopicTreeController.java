@@ -151,11 +151,11 @@ public class TopicTreeController {
      * @throws TransformerException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
-    private void saveFile() throws TransformerException {
+    private void saveFile() throws IOException, TransformerException {
         try {
-            xmlHandler.saveDocToXml(ORIGINAL_PATH);
+            xmlHandler.saveDocTo(ORIGINAL_PATH);
             Logging.log(Level.INFO, "Speichern von \"" + ORIGINAL_PATH + "\" erfolgreich abgeschlossen");
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             Logging.log(Level.WARNING, "Fehler beim Speichern von \"" + ORIGINAL_PATH + "\"", e);
             // Schmeißt eine IOException, um den aufrufenden Methoden mitzuteilen,
             // dass die Datei nicht gespeichert werden konnte
@@ -205,9 +205,6 @@ public class TopicTreeController {
         Files.createFile(xmlPath);
         try (BufferedWriter writer = Files.newBufferedWriter(xmlPath, Charset.forName("UTF-8"))) {
             writer.write(String.format("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n" +
-                    "<!--\n  ~ Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.\n" +
-                    "  ~ This product is licensed under the GNU General Public License v3.0.\n" +
-                    "  ~ See LICENSE file for further information.\n  -->\n\n" +
                     "<%s></%s>", TAG_ROOT, TAG_ROOT));
             Logging.log(Level.INFO, "Datei \"" + ORIGINAL_PATH + "\" erfolgreich neu erstellt");
         } catch (IOException e) {
@@ -284,14 +281,8 @@ public class TopicTreeController {
      * @throws NodeNotFoundException wenn der Knoten nicht exisiert
      * @since 1.0
      */
-    public String localizeFolder(String title) throws NodeNotFoundException {
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + title + "']";
-        NodeList nodeList = xmlHandler.getNodeList(expr);
-        if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException(String.format("Knoten \"%s\" konnte nicht gefunden werden!", title));
-        Node node = nodeList.item(0);
-        String path = localizeFolder(node) + File.pathSeparator;
-
+    public String localizeFolder(String title) {
+        String path = localizeFolder(getNode(title)) + File.pathSeparator;
         Logging.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
         return path;
     }
@@ -365,22 +356,12 @@ public class TopicTreeController {
      * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
-    public void addNode(String title, String parent) throws TitleCollisionException, NodeNotFoundException, IOException,
-            TransformerException {
+    public void addNode(String title, String parent) throws TitleCollisionException, IOException, TransformerException {
         if (doesExist(title))
             throw new TitleCollisionException("Knoten \"" + title + "\" existiert bereits!");
 
-        // Heraussuchen des Elternknotens
-        String expr = parent != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']" : "//" + TAG_ROOT;
-        NodeList nodeList = xmlHandler.getNodeList(expr);
-
-        if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException("Elternknoten konnte nicht gefunden werden");
-
-        Node parentNode = nodeList.item(0);
-
         //Knoten wird unter dem gefundenen Elternknoten erzeugt
-        addNode(title, parentNode);
+        addNode(title, getNode(parent));
         Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s eingefügt", title,
                 parent == null ? "der Wurzel" : "\"" + parent + "\""));
     }
@@ -443,39 +424,14 @@ public class TopicTreeController {
      * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
-    public void moveNode(String from, String to) throws NodeNotFoundException, TitleCollisionException, IOException,
-            TransformerException {
-        if (from.equals(to)) {
+    public void moveNode(String from, String to) throws TitleCollisionException, IOException, TransformerException {
+        if (from.equals(to))
             throw new TitleCollisionException("from und to dürfen nicht gleich sein!");
-        }
-
-        // Ermitteln des Elternknotens
-        Node parentNode;
-        {
-            String expr = to != null ? "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + to + "']" : "//" + TAG_ROOT;
-            NodeList nodeList = xmlHandler.getNodeList(expr);
-            if (nodeList.getLength() == 0) {
-                throw new NodeNotFoundException("Knoten / Wurzel konnte nicht gefunden werden!");
-            }
-            parentNode = nodeList.item(0);
-        }
-
-        // Ermitteln des zu verschiebenden Knotens
-        Node node;
-        {
-            String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
-            NodeList nodeList = xmlHandler.getNodeList(expr);
-            if (nodeList.getLength() == 0) {
-                throw new NodeNotFoundException("Knoten \"" + from + "\" konnte nicht gefunden werden!");
-            }
-            node = nodeList.item(0);
-        }
 
         // Verschieben des Knotens unter den Elternknoten
-        moveNode(node, parentNode);
+        moveNode(getNode(from), getNode(to));
         Logging.log(Level.INFO, String.format("Knoten \"%s\" unter %s verschoben", from,
                 to == null ? "die Wurzel" : "\"" + to + "\""));
-
     }
 
     /**
@@ -540,21 +496,15 @@ public class TopicTreeController {
     /**
      * Entfernen eines bestimmten Knotens mitsamt seinem Ordner
      *
-     * @param nodeTitle Titel des zu entfernenden Knotens
+     * @param title Titel des zu entfernenden Knotens
      * @throws NodeNotFoundException wenn der Knoten nicht existiert
      * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
-    public void removeNode(String nodeTitle) throws NodeNotFoundException, TransformerException {
+    public void removeNode(String title) throws IOException, TransformerException {
 
         // Ermitteln des Knotens
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + nodeTitle + "']";
-
-        NodeList nodeList = xmlHandler.getNodeList(expr);
-        if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException("Knoten \"" + nodeTitle + "\" nicht gefunden!");
-
-        Node node = nodeList.item(0);
+        Node node = getNode(title);
         Node parentNode = node.getParentNode();
         Path path = Paths.get(localizeFolder(node));
 
@@ -564,7 +514,7 @@ public class TopicTreeController {
         // Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, dann brich ab
             parentNode.appendChild(node);
             throw e;
@@ -573,7 +523,7 @@ public class TopicTreeController {
         // Entfernen des Ordners
         try {
             FileUtils.delete(path);
-            Logging.log(Level.INFO, "Knoten \"" + nodeTitle + "\" erfolgreich entfernt");
+            Logging.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich entfernt");
         } catch (IOException e) {
             // Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Ordner in Ruhe und Logge das Ganze
             Logging.log(Level.WARNING, "Ordner \"" + path.toString() + "\" ist nun unnötig, Löschen schlug " +
@@ -591,13 +541,9 @@ public class TopicTreeController {
      * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
-    public void renameNode(String from, String to) throws NodeNotFoundException, IOException, TransformerException {
+    public void renameNode(String from, String to) throws IOException, TransformerException {
         // Ermitteln des Knotens
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + from + "']";
-        NodeList nodeList = xmlHandler.getNodeList(expr);
-        if (nodeList.getLength() == 0)
-            throw new NodeNotFoundException("Knoten \"" + from + "\" nicht gefunden!");
-        Node node = nodeList.item(0);
+        Node node = getNode(from);
 
         Path oldPath = Paths.get(localizeFolder(node));
 
@@ -681,8 +627,7 @@ public class TopicTreeController {
      * @throws TransformerException  wenn das Speichern der XML-Datei fehlschlägt
      * @since 1.0
      */
-    public void addContent(Content content, String parent) throws NodeNotFoundException, IOException,
-            TransformerException {
+    public void addContent(Content content, String parent) throws IOException, TransformerException {
         Node parentNode = getNode(parent);
 
         //Finde benötigte Pfade from und to

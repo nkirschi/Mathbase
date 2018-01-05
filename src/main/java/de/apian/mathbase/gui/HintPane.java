@@ -16,7 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 public class HintPane extends VBox {
-    HintPane() {
+    public HintPane() {
         setSpacing(20);
 
         VBox vBox = new VBox(-10);

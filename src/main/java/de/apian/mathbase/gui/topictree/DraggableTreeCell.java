@@ -149,7 +149,7 @@ public class DraggableTreeCell extends TreeCell<String> {
                 targetItem.getChildren().add(sourceItem);
                 targetItem.setExpanded(true);
                 targetItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-            } catch (NodeNotFoundException | IOException | TitleCollisionException | TransformerException e) {
+            } catch (IOException | TitleCollisionException | TransformerException e) {
                 e.printStackTrace();
             }
         });
