@@ -6,7 +6,11 @@
 
 package de.apian.mathbase.gui.content;
 
-import javafx.scene.layout.BorderPane;
+import de.apian.mathbase.xml.Content;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 /**
  * Abstrakte Inhaltskachel.
@@ -16,4 +20,17 @@ import javafx.scene.layout.BorderPane;
  * @since 1.0
  */
 public class AbstractTile extends BorderPane {
+    public AbstractTile(Content content) {
+        HBox hBox = new HBox();
+
+        Label titleLabel = new Label(content.getTitle());
+
+        Button editButton = new Button("edit");
+        Button moveButton = new Button("move");
+
+        hBox.getChildren().addAll(titleLabel, editButton, moveButton);
+        setTop(hBox);
+
+        setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+    }
 }

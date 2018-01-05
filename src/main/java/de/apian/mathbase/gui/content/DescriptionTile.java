@@ -6,6 +6,8 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.xml.Content;
+
 /**
  * Beschreibungskachel.
  *
@@ -14,4 +16,7 @@ package de.apian.mathbase.gui.content;
  * @since 1.0
  */
 public class DescriptionTile extends AbstractTile {
+    public DescriptionTile(Content content) {
+        super(content);
+    }
 }

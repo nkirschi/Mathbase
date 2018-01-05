@@ -8,19 +8,17 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 
 /**
  * Inhaltsanzeige eines gewählten Themas.
@@ -29,7 +27,7 @@ import javafx.scene.text.TextAlignment;
  * @version 1.0
  * @since 1.0
  */
-public class ContentPane extends ScrollPane {
+public class ContentPane extends BorderPane {
     /**
      * Themenbaumkontrolleur.
      *
@@ -48,35 +46,22 @@ public class ContentPane extends ScrollPane {
 
         setPadding(new Insets(10, 10, 10, 10));
 
-        BorderPane borderPane = new BorderPane();
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
 
-        borderPane.setTop(titleLabel);
+        setTop(titleLabel);
 
-        VBox vBox = new VBox(10);
-        for (Content content : topicTreeController.getContents(title))
-            vBox.getChildren().add(new Label(content.getPath()));
-        borderPane.setCenter(vBox);
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
 
-        setContent(borderPane);
-    }
-
-    private VBox createSpaceFiller() {
-        VBox vBox = new VBox(10);
-        vBox.getChildren().add(new ImageView(Images.getInternal("logo/logo.png")));
-        vBox.setAlignment(Pos.CENTER);
-
-        Label hint = new Label(Constants.BUNDLE.getString("hint"));
-        hint.setWrapText(true);
-        hint.setMaxWidth(400);
-
-        hint.setTextAlignment(TextAlignment.CENTER);
-        vBox.getChildren().add(hint);
-
-        setFitToWidth(true);
-        setFitToHeight(true);
-        return vBox;
+        Content[] contents = topicTreeController.getContents(title);
+        for (int i = 0, column = 0; i < contents.length; i++, column = (column == 0) ? 1 : 0) {
+            AbstractTile tile = new DescriptionTile(contents[i]);
+            gridPane.add(tile, column, i / 2);
+            GridPane.setHgrow(tile,Priority.ALWAYS );
+        }
+        setCenter(gridPane);
     }
 }

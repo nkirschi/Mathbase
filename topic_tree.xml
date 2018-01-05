@@ -4,6 +4,8 @@
         <node title="Bananensaft">
             <content path="kacki.pdf" title="Kakki" type="worksheet"/>
             <content path="vid.mp4" type="video"/>
+            <content path="sachma.ggb" type="geogebra"/>
+            <content path="virus.exe" type="other" title="Wichtiges Programm"/>
             <node title="(Schiefe Bananen)-Saft"/>
             <node title="(Gerade Bananen)-Saft"/>
         </node>

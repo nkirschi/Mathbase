@@ -6,6 +6,8 @@
 
 package de.apian.mathbase.xml;
 
+import com.sun.istack.internal.Nullable;
+
 /**
  * Repräsentation eines Themeninhalts.
  *
@@ -47,7 +49,7 @@ public class Content {
      * @param path  Pfad des Inhalts
      * @param title Titel des Inhalts
      */
-    public Content(Type type, String path, String title) {
+    public Content(Type type, String path, @Nullable String title) {
         this.type = type;
         this.path = path;
         this.title = title;
