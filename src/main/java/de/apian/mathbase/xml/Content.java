@@ -24,7 +24,10 @@ public class Content {
     private Type type;
 
     /**
-     * Pfad der diesem Inhalt angehörigen Datei relativ zum Arbeitsverzeichnis
+     * Pfad der diesem Inhalt angehörigen Datei relativ zum Ordner des Elternknotens
+     * <p>
+     * Wenn ein neuer Inhalt zur XML-Datei hinzugefügt werden soll, so wird ein {@code Content}-Objekt erzeugt, welches
+     * als Pfad den ursprünglichen und vollständigen Pfad der Datei hat, damit diese dann kopiert werden kann.
      *
      * @since 1.0
      */
