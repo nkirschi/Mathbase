@@ -6,23 +6,21 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.gui.ContentPane;
+import de.apian.mathbase.gui.content.ContentPane;
 import de.apian.mathbase.gui.HelpWindow;
-import de.apian.mathbase.gui.HintPane;
+import de.apian.mathbase.gui.FillerPane;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.TopicTitleDialog;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
-import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -154,7 +152,7 @@ public class TopicTreeView extends TreeView<String> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         getSelectionModel().selectedItemProperty().addListener((observable, oldItem, newItem) -> {
             String title = newItem != null ? newItem.getValue() : null;
-            Node node = title != null ? new ContentPane(title, mainPane, topicTreeController) : new HintPane();
+            Node node = title != null ? new ContentPane(title, mainPane, topicTreeController) : new FillerPane();
             mainPane.getItems().set(1, node);
         });
 

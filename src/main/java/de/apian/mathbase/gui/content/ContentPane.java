@@ -4,8 +4,9 @@
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.gui;
+package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;

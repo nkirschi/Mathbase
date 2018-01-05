@@ -8,6 +8,7 @@ package de.apian.mathbase.gui;
 
 import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
+import de.apian.mathbase.gui.topictree.SidebarPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.Alert;
@@ -39,7 +40,7 @@ public class MainPane extends SplitPane {
         SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);
         SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
 
-        getItems().addAll(sidebarPane, new HintPane());
+        getItems().addAll(sidebarPane, new FillerPane());
     }
 
     /**

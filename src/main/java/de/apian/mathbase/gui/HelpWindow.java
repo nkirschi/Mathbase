@@ -12,8 +12,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class HelpWindow extends Stage {
-    public HelpWindow(MainPane mainPane) { // TODO nach dem Release hinzufügen
+/**
+ * Hilfefenster.
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
+public class HelpWindow extends Stage { // TODO nach dem Release weitermachen
+    public HelpWindow(MainPane mainPane) {
         initOwner(mainPane.getScene().getWindow());
         setTitle(Constants.BUNDLE.getString("help"));
         setWidth(500);

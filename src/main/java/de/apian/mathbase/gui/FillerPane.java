@@ -15,8 +15,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-public class HintPane extends VBox {
-    public HintPane() {
+/**
+ * Lückenfüller.
+ *
+ * @author Nikolas Kirschstein
+ * @version 1.0
+ * @since 1.0
+ */
+public class FillerPane extends VBox {
+    public FillerPane() {
         setSpacing(20);
 
         VBox vBox = new VBox(-10);
