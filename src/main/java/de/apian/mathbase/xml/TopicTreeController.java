@@ -687,15 +687,11 @@ public class TopicTreeController {
 
         //Finde benötigte Pfade from und to
         Path from = Paths.get(content.getPath());
-        //Finde Dateiendung
-        String fileName = from.getFileName().toString(); //Alter Dateiname mit Dateiendung
-        String fileExstension = fileName.lastIndexOf('.') > 0 ? fileName.substring(fileName.lastIndexOf('.')) :
-                ""; //Nur Dateiendung mit Punkt!
-        //Erzeuge Dateinamen
+        String fileExstension = FileUtils.getFileExtension(from); //Finde Dateiendung
         String newFileName = content.getTitle().isEmpty() ? content.getType().toString() : content.getTitle();
         String parentPath = localizeFolder(parentNode);
         Path to = Paths.get(parentPath, newFileName + fileExstension);
-        for (int i = 0; to.toFile().exists(); i++) {
+        for (int i = 0; to.toFile().exists(); i++) { //Finde iterativ einen geeigneten Dateinamen
             to = Paths.get(parentPath, newFileName + i + fileExstension);
         }
 

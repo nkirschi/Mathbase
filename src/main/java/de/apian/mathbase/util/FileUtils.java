@@ -20,6 +20,7 @@ import java.util.stream.Stream;
  * Nützlichkeiten für Dateioperationen
  *
  * @author Nikolas Kirschstein
+ * @author Benedikt Mödl
  * @version 1.0
  * @since 1.0
  */
@@ -85,5 +86,17 @@ public class FileUtils {
         try (Stream<Path> stream = Files.walk(path).sorted(Comparator.reverseOrder())){
             stream.map(Path::toFile).forEach(File::delete);
         }
+    }
+
+    /**
+     * Herausfiltern einer Dateiendung
+     *
+     * @param path Pfad der Datei
+     * @return Dateiendung (mit Punkt!) oder nichts, wenn es sich um einen Ordner handelt
+     * @since 1.0
+     */
+    public static String getFileExtension(Path path) {
+        String fileName = path.getFileName().toString(); //Dateiname mit Dateiendung
+        return fileName.lastIndexOf('.') == -1 ? "" : fileName.substring(fileName.lastIndexOf('.'));
     }
 }
