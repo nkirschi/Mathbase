@@ -278,7 +278,6 @@ public class TopicTreeController {
      *
      * @param title Titel des Knotens
      * @return Pfad des Ordners des Knotens relativ zum Arbeitsverzeichnis
-     * @throws NodeNotFoundException wenn der Knoten nicht exisiert
      * @since 1.0
      */
     public String localizeFolder(String title) {
@@ -351,7 +350,6 @@ public class TopicTreeController {
      * @param title  Titel des einzufügenden Knotens
      * @param parent Titel des gewünschten Elternknotens. Wenn {@code NULL}, dann wird die Wurzel verwendet.
      * @throws TitleCollisionException wenn bereits ein Knoten mit diesem Titel existiert
-     * @throws NodeNotFoundException   wenn der Elternknoten nicht exisiert
      * @throws IOException             wenn Erstellen des Ordners fehlschlägt
      * @throws TransformerException    wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
@@ -417,7 +415,6 @@ public class TopicTreeController {
      * @param from Titel des zu verschiebenden Knotens
      * @param to   Titel des neuen Elternknotens (Darf nicht {@code from} sein). Wenn {@code NULL}, dann wird die Wurzel
      *             verwendet.
-     * @throws NodeNotFoundException   wenn einer der beiden Knoten nicht existiert
      * @throws TitleCollisionException wenn {@code from} die Wurzel {@value TAG_ROOT} ist
      *                                 oder {@code from} gleich {@code to} ist
      * @throws IOException             wenn Verschieben des Ordners fehlschlägt
@@ -497,8 +494,8 @@ public class TopicTreeController {
      * Entfernen eines bestimmten Knotens mitsamt seinem Ordner
      *
      * @param title Titel des zu entfernenden Knotens
-     * @throws NodeNotFoundException wenn der Knoten nicht existiert
      * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws IOException wenn Entfernen des Ordners fehlschlägt
      * @since 1.0
      */
     public void removeNode(String title) throws IOException, TransformerException {
@@ -536,7 +533,6 @@ public class TopicTreeController {
      *
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
-     * @throws NodeNotFoundException wenn kein Knoten mit diesem Titel existiert
      * @throws IOException           wenn Umbennenen des Ordners fehlschlägt
      * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
@@ -622,7 +618,6 @@ public class TopicTreeController {
      *
      * @param content Hinzuzufügender Inhalt mit ursprünglichem Dateipfad
      * @param parent  Titel des betreffenden Knotens
-     * @throws NodeNotFoundException wenn der Knoten nicht existiert
      * @throws IOException           wenn das Kopieren der Datei fehlschlägt
      * @throws TransformerException  wenn das Speichern der XML-Datei fehlschlägt
      * @since 1.0
@@ -683,9 +678,38 @@ public class TopicTreeController {
      * @param parent  Titel des Elternknotens
      * @param content Zu entfernender Inhalt
      * @throws TransformerException wenn das Speichern der XML-Datei fehlschlägt
+     * @throws IOException wenn Löschen der Datei fehlschlägt
      * @since 1.0
      */
-    public void removeContent(Content content, String parent) throws TransformerException {
-        //TODO impl. Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt irgendwo . . .
+    public void removeContent(Content content, String parent) throws TransformerException, IOException {
+        //Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt noch rumliegen
+        Node parentNode = getNode(parent);
+        Path filePath = Paths.get(localizeFolder(parentNode), content.getPath());
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_PATH +
+                "='" + content.getPath() + "']";
+        Node contentNode = xmlHandler.getNode(expr);
+
+        //Entferne Inhalt aus der XML
+        parentNode.removeChild(contentNode);
+
+        //Speichern der XML-Datei
+        try {
+            saveFile();
+        } catch (TransformerException e) {
+            //Fehlgeschlagen, ändere XML im Speicher zurück und brich ab
+            parentNode.appendChild(contentNode);
+            throw e;
+        }
+
+        //Löschen der Datei
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            //Fehlgeschlagen, lass (jetzt nicht mehr benötigten) Datei in Ruhe und logge das Ganze
+            Logging.log(Level.WARNING, "Datei \"" + filePath.toString() + "\" ist nun unnötig, Löschen schlug " +
+                    "allerdings fehl!", e);
+        }
+
+        Logging.log(Level.INFO, content.toString() + " wurde vom Knoten \"" + parent + "\" entfernt");
     }
 }
