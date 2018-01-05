@@ -126,12 +126,28 @@ public class XmlFileHandler {
         return (NodeList) compileAndEvaluate(expr, XPathConstants.NODESET);
     }
 
-    //TODO wirklich nötig? ist ja durch die getNode in TopicTreeController erledigt ...
-    // TODO ist extrem nötig. Gutes Design steht über allem, nodeList.get(0) ist HÄSS-LICH :D
+    /**
+     * Erzeugen einer {@code Node} mithilfe des XPath-Parsers.
+     * <p>
+     * Diese Methode erlaubt das leichte Herausfiltern und Bearbeiten bestimmer Inhalte der XML-Datei.
+     * Im Gegensatz zu {@link #getNodeList(String)} gibt diese Methode nur eine {@code Node} zurück.
+     *
+     * @param expr XPath-Ausdruck
+     * @return {@code Node}, die vom XPath-Parser erzeugt wurde
+     * @see <a href="https://www.tutorialspoint.com/java_xml/java_xpath_parser.htm">Java XPath Parser</a>
+     * @since 1.0
+     */
     public Node getNode(String expr) {
         return (Node) compileAndEvaluate(expr, XPathConstants.NODE);
     }
 
+    /**
+     * Hilsmethode zum evaluieren von XPath-Ausdrücken
+     *
+     * @param expr XPath-Ausdruck
+     * @param type Der geforderte Rückgabe-Typ
+     * @return Das {@code Object} vom Typ {@code type}, welches das Ergebnis des evaluieren des XPath-Ausdrucks ist
+     */
     private Object compileAndEvaluate(String expr, QName type) {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
