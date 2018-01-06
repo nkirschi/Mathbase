@@ -427,6 +427,7 @@ public class TopicTreeController {
                 String newChildTitle = ((Element) newChild).getAttribute(ATTR_TITLE);
                 if (siblingTitle.compareToIgnoreCase(newChildTitle) <= 0) {
                     parent.insertBefore(newChild, sibling);
+                    break;
                 }
             }
         }
