@@ -52,7 +52,8 @@ public class Content {
     public Content(Type type, String path, @Nullable String title) {
         this.type = type;
         this.path = path;
-        this.title = title;
+        this.title = title == null ? "" : title; // Titel sollte nicht NULL sein, sonst bekommen wir beim Speichern in
+        // der XML ein Problem
     }
 
     /**
