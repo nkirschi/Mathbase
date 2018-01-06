@@ -666,7 +666,7 @@ public class TopicTreeController {
         Element contentElement = xmlHandler.getDocument().createElement(TAG_CONTENT);
         contentElement.setAttribute(ATTR_TYPE, content.getType().toString());
         contentElement.setAttribute(ATTR_PATH, to.getFileName().toString());
-        contentElement.setAttribute(ATTR_TITLE, content.getTitle());
+        contentElement.setAttribute(ATTR_TITLE, content.getTitle() == null ? "" : content.getTitle());
         parentNode.appendChild(contentElement);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
 
