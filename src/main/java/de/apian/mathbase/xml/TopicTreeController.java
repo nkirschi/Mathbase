@@ -374,10 +374,12 @@ public class TopicTreeController {
      * @since 1.0
      */
     private void addNode(String title, Node parent) throws IOException, TransformerException {
-        // Erstellung des Knotens und Hinzufügen zum Elternknoten
+        // Erstellung des Knotens
         Element element = xmlHandler.getDocument().createElement(TAG_NODE);
         element.setAttribute(ATTR_TITLE, title);
-        parent.appendChild(element);
+
+        //Fügt Knoten unter Beachtung der Alphabetischen Sortierung zum Elternknoten hinzu
+        insertNodeAlphabetically(parent, element);
         Logging.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
 
         // Erstellung des Ordners
@@ -406,6 +408,27 @@ public class TopicTreeController {
                         "allerdings fehl!", e1);
             }
             throw e;
+        }
+    }
+
+    /**
+     * Einfügen eines Knoten alphabetisch (nach den Titeln) unter einen bestimmten Elternknoten
+     *
+     * @param parent   Elternknoten
+     * @param newChild Einzufügender Knoten
+     */
+    private void insertNodeAlphabetically(Node parent, Node newChild) {
+        NodeList siblings = parent.getChildNodes(); //Zukünftige Geschwisterknoten des einzufügenden Knotens
+        for (int i = 0; i < siblings.getLength(); i++) {
+            Node sibling = siblings.item(i);
+            if (sibling.getNodeType() == Node.ELEMENT_NODE && newChild.getNodeType() == Node.ELEMENT_NODE) {
+                //Anderer Fall kann eigenlich nicht vorkommen
+                String siblingTitle = ((Element) sibling).getAttribute(ATTR_TITLE);
+                String newChildTitle = ((Element) newChild).getAttribute(ATTR_TITLE);
+                if (siblingTitle.compareToIgnoreCase(newChildTitle) <= 0) {
+                    parent.insertBefore(newChild, sibling);
+                }
+            }
         }
     }
 
@@ -449,7 +472,7 @@ public class TopicTreeController {
         Path oldPath = Paths.get(localizeFolder(node));
         Node from = node.getParentNode();
         from.removeChild(node);
-        to.appendChild(node);
+        insertNodeAlphabetically(to, node);
 
         // Kopieren des Ordners
         Path newPath = Paths.get(localizeFolder(node));
@@ -458,7 +481,7 @@ public class TopicTreeController {
         } catch (IOException e) {
             //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
             to.removeChild(node);
-            from.appendChild(node);
+            insertNodeAlphabetically(from, node);
             throw e;
         }
 
@@ -468,7 +491,7 @@ public class TopicTreeController {
         } catch (TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
             to.removeChild(node);
-            from.appendChild(node);
+            insertNodeAlphabetically(from, node);
             try {
                 FileUtils.delete(newPath);
             } catch (IOException e1) {
@@ -513,7 +536,7 @@ public class TopicTreeController {
             saveFile();
         } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, dann brich ab
-            parentNode.appendChild(node);
+            insertNodeAlphabetically(parentNode, node);
             throw e;
         }
 
