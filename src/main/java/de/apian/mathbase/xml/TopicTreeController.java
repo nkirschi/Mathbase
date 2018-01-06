@@ -122,6 +122,8 @@ public class TopicTreeController {
      * @since 1.0
      */
     private void loadFile() throws IOException {
+        if (!Paths.get(TOPICS_PATH).toFile().exists())
+            throw new IOException("Ordner \"" + TOPICS_PATH + "\" existiert nicht!");
         try { // Versuche zuerst die Original-Datei zu laden
             xmlHandler = new XmlFileHandler(ORIGINAL_PATH);
             Logging.log(Level.INFO, "Original-Datei \"" + ORIGINAL_PATH + "\" erfolgreich geladen");
