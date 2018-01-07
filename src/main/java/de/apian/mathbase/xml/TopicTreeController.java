@@ -654,8 +654,7 @@ public class TopicTreeController {
         //Finde benötigte Pfade from und to
         Path from = Paths.get(content.getPath());
         String fileExstension = FileUtils.getFileExtension(from); //Finde Dateiendung
-        String newFileName = FileUtils.normalize(content.getTitle().isEmpty() ? content.getType().toString() :
-                content.getTitle());
+        String newFileName = FileUtils.normalize(content.getTitle() != null ? content.getTitle() : content.getType().toString());
         String parentPath = localizeFolder(parentNode);
         Path to = Paths.get(parentPath, newFileName + fileExstension);
         for (int i = 0; to.toFile().exists(); i++) { //Finde iterativ einen geeigneten Dateinamen
@@ -666,7 +665,8 @@ public class TopicTreeController {
         Element contentElement = xmlHandler.getDocument().createElement(TAG_CONTENT);
         contentElement.setAttribute(ATTR_TYPE, content.getType().toString());
         contentElement.setAttribute(ATTR_PATH, to.getFileName().toString());
-        contentElement.setAttribute(ATTR_TITLE, content.getTitle() == null ? "" : content.getTitle());
+        if (content.getTitle() != null)
+            contentElement.setAttribute(ATTR_TITLE, content.getTitle());
         parentNode.appendChild(contentElement);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
 
