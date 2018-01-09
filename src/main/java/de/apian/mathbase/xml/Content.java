@@ -6,8 +6,6 @@
 
 package de.apian.mathbase.xml;
 
-import com.sun.istack.internal.Nullable;
-
 /**
  * Repräsentation eines Themeninhalts.
  *
@@ -33,7 +31,7 @@ public class Content {
      *
      * @since 1.0
      */
-    private String path;
+    private String filename;
 
     /**
      * Optionaler Titel des Inhalts
@@ -49,9 +47,9 @@ public class Content {
      * @param path  Pfad des Inhalts
      * @param title Titel des Inhalts
      */
-    public Content(Type type, String path, @Nullable String title) {
+    public Content(Type type, String path, String title) {
         this.type = type;
-        this.path = path;
+        this.filename = path;
         this.title = title;
     }
 
@@ -65,8 +63,8 @@ public class Content {
     /**
      * @return Pfad der diesem Inhalt angehörigen Datei relativ zum Arbeitsverzeichnis
      */
-    public String getPath() {
-        return path;
+    public String getFilename() {
+        return filename;
     }
 
     /**
@@ -83,7 +81,7 @@ public class Content {
      */
     @Override
     public String toString() {
-        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + path + "\"";
+        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + filename + "\"";
     }
 
     /**

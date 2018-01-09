@@ -282,8 +282,8 @@ public class TopicTreeController {
      * @return Pfad des Ordners des Knotens relativ zum Arbeitsverzeichnis
      * @since 1.0
      */
-    public String localizeFolder(String title) {
-        String path = localizeFolder(getNode(title)) + File.pathSeparator;
+    public String locateDirectory(String title) {
+        String path = locateDirectory(getNode(title)) + File.separator;
         Logging.log(Level.INFO, "Pfad zum Ordner des Knotens \"" + title + "\" gefunden.");
         return path;
     }
@@ -294,7 +294,7 @@ public class TopicTreeController {
      * @param node Der Ausgangsknoten
      * @return Pfad zum Ordner des Knotens ausgehend vom {@value TOPICS_PATH}-Ordner
      */
-    private String localizeFolder(Node node) {
+    private String locateDirectory(Node node) {
         if (node == null)
             return "";
 
@@ -311,7 +311,7 @@ public class TopicTreeController {
             return "";
 
         String path = FileSystems.getDefault().getSeparator() + FileUtils.normalize(title);
-        return localizeFolder(node.getParentNode()) + path;
+        return locateDirectory(node.getParentNode()) + path;
     }
 
     /**
@@ -385,7 +385,7 @@ public class TopicTreeController {
         Logging.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
 
         // Erstellung des Ordners
-        Path path = Paths.get(localizeFolder(element));
+        Path path = Paths.get(locateDirectory(element));
         try {
             Files.createDirectory(path);
             Logging.log(Level.INFO, "Ordner des Knotens \"" + title + "\" erfolgreich erstellt");
@@ -472,13 +472,13 @@ public class TopicTreeController {
         if (node.getNodeName().equals(TAG_ROOT))
             throw new TitleCollisionException("Knoten darf nicht die Wurzel \"" + TAG_ROOT + "\" sein!");
 
-        Path oldPath = Paths.get(localizeFolder(node));
+        Path oldPath = Paths.get(locateDirectory(node));
         Node from = node.getParentNode();
         from.removeChild(node);
         insertNodeAlphabetically(to, node);
 
         // Kopieren des Ordners
-        Path newPath = Paths.get(localizeFolder(node));
+        Path newPath = Paths.get(locateDirectory(node));
         try {
             FileUtils.copy(oldPath, newPath);
         } catch (IOException e) {
@@ -529,7 +529,7 @@ public class TopicTreeController {
         // Ermitteln des Knotens
         Node node = getNode(title);
         Node parentNode = node.getParentNode();
-        Path path = Paths.get(localizeFolder(node));
+        Path path = Paths.get(locateDirectory(node));
 
         // Entfernen des Knotens
         parentNode.removeChild(node);
@@ -567,12 +567,12 @@ public class TopicTreeController {
         // Ermitteln des Knotens
         Node node = getNode(from);
 
-        Path oldPath = Paths.get(localizeFolder(node));
+        Path oldPath = Paths.get(locateDirectory(node));
 
         if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
             ((Element) node).setAttribute(ATTR_TITLE, to);
 
-        Path newPath = Paths.get(localizeFolder(node));
+        Path newPath = Paths.get(locateDirectory(node));
         // Kopieren des Ordners
         try {
             FileUtils.copy(oldPath, newPath);
@@ -652,10 +652,10 @@ public class TopicTreeController {
         Node parentNode = getNode(parent);
 
         //Finde benötigte Pfade from und to
-        Path from = Paths.get(content.getPath());
+        Path from = Paths.get(content.getFilename());
         String fileExstension = FileUtils.getFileExtension(from); //Finde Dateiendung
         String newFileName = FileUtils.normalize(content.getTitle() != null ? content.getTitle() : content.getType().toString());
-        String parentPath = localizeFolder(parentNode);
+        String parentPath = locateDirectory(parentNode);
         Path to = Paths.get(parentPath, newFileName + fileExstension);
         for (int i = 0; to.toFile().exists(); i++) { //Finde iterativ einen geeigneten Dateinamen
             to = Paths.get(parentPath, newFileName + i + fileExstension);
@@ -711,9 +711,9 @@ public class TopicTreeController {
     public void removeContent(Content content, String parent) throws TransformerException, IOException {
         //Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt noch rumliegen
         Node parentNode = getNode(parent);
-        Path filePath = Paths.get(localizeFolder(parentNode), content.getPath());
+        Path filePath = Paths.get(locateDirectory(parentNode), content.getFilename());
         String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_PATH +
-                "='" + content.getPath() + "']";
+                "='" + content.getFilename() + "']";
         Node contentNode = xmlHandler.getNode(expr);
 
         //Entferne Inhalt aus der XML

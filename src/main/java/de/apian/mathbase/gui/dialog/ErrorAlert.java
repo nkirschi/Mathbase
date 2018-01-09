@@ -38,10 +38,8 @@ public class ErrorAlert extends Alert {
     public ErrorAlert(Throwable t) {
         super(AlertType.ERROR);
 
-        for (Stage stage : StageHelper.getStages()) {
+        for (Stage stage : StageHelper.getStages())
             initOwner(stage);
-            stage.hide();
-        }
 
         setTitle(Constants.BUNDLE.getString("error"));
         setHeaderText(Constants.BUNDLE.getString("error_header"));

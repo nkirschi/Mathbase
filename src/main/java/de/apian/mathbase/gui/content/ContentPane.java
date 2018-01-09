@@ -16,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -61,11 +60,11 @@ public class ContentPane extends BorderPane {
 
         Content[] contents = topicTreeController.getContents(title);
         for (Content content : contents)
-            gridPane.getChildren().add(createTile(content));
+            gridPane.getChildren().add(createTile(content, topicTreeController.locateDirectory(title)));
         setCenter(gridPane);
 
         widthProperty().addListener((observable, oldValue, newValue) -> {
-            int columnCount = newValue.intValue() / Constants.COL_MIN_WIDTH;
+            int columnCount = Math.max(newValue.intValue() / Constants.COL_MIN_WIDTH, 1);
             List<Node> children = new ArrayList<>(gridPane.getChildren());// reihenweise
 
             gridPane.getChildren().clear();
@@ -82,10 +81,10 @@ public class ContentPane extends BorderPane {
         });
     }
 
-    private AbstractTile createTile(Content content) {
+    private AbstractTile createTile(Content content, String directoryPath) {
         switch (content.getType()) {
             case DESCRIPTION:
-                return new DescriptionTile(content);
+                return new DescriptionTile(content, directoryPath);
             case GEOGEBRA:
                 return new GeogebraTile(content);
             case IMAGE:
