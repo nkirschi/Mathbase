@@ -13,7 +13,10 @@ import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -57,11 +60,8 @@ public class ContentPane extends BorderPane {
         gridPane.setHgap(10);
 
         Content[] contents = topicTreeController.getContents(title);
-        for (int i = 0, column = 0; i < contents.length; i++, column = (column == 0) ? 1 : 0) {
-            AbstractTile tile = new DescriptionTile(contents[i]);
-            gridPane.add(tile, column, i / 2);
-            GridPane.setHgrow(tile,Priority.ALWAYS );
-        }
+        for (Content content : contents)
+            gridPane.getChildren().add(createTile(content));
         setCenter(gridPane);
 
         widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -80,5 +80,24 @@ public class ContentPane extends BorderPane {
             }
 
         });
+    }
+
+    private AbstractTile createTile(Content content) {
+        switch (content.getType()) {
+            case DESCRIPTION:
+                return new DescriptionTile(content);
+            case GEOGEBRA:
+                return new GeogebraTile(content);
+            case IMAGE:
+                return new ImageTile(content);
+            case VIDEO:
+                return new VideoTile(content);
+            case WORKSHEET:
+                return new WorksheetTile(content);
+            case EDITABLE_WORKSHEET:
+                return new EditableWorksheetTile(content);
+            default:
+                return new LinkTile(content);
+        }
     }
 }

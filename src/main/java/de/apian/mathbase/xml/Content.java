@@ -95,7 +95,7 @@ public class Content {
      * @since 1.0
      */
     public enum Type {
-        IMAGE, WORKSHEET, VIDEO, GEOGEBRA, DESCRIPTION, OTHER;
+        DESCRIPTION, GEOGEBRA, IMAGE, VIDEO, WORKSHEET, EDITABLE_WORKSHEET, OTHER;
 
         /**
          * Ermitteln des Typs für einen vorgegebenen Namen

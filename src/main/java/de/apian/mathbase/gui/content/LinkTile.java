@@ -9,14 +9,14 @@ package de.apian.mathbase.gui.content;
 import de.apian.mathbase.xml.Content;
 
 /**
- * Geogebrakachel.
+ * Linkkachel.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */
-public class GeogebraTile extends LinkTile {
-    public GeogebraTile(Content content) {
+public class LinkTile extends AbstractTile {
+    public LinkTile(Content content) {
         super(content);
     }
 }

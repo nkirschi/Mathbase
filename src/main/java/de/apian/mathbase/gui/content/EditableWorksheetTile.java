@@ -9,14 +9,14 @@ package de.apian.mathbase.gui.content;
 import de.apian.mathbase.xml.Content;
 
 /**
- * Andereinhaltekachel.
+ * Kachel eines editierbaren Arbeitsblattes.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */
-public class OtherTile extends AbstractTile {
-    public OtherTile(Content content) {
+public class EditableWorksheetTile extends LinkTile {
+    public EditableWorksheetTile(Content content) {
         super(content);
     }
 }
