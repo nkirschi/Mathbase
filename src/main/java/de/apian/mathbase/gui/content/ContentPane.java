@@ -11,14 +11,14 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Inhaltsanzeige eines gewählten Themas.
@@ -63,5 +63,22 @@ public class ContentPane extends BorderPane {
             GridPane.setHgrow(tile,Priority.ALWAYS );
         }
         setCenter(gridPane);
+
+        widthProperty().addListener((observable, oldValue, newValue) -> {
+            int columnCount = newValue.intValue() / Constants.COL_MIN_WIDTH;
+            List<Node> children = new ArrayList<>(gridPane.getChildren());// reihenweise
+
+            gridPane.getChildren().clear();
+            for (int i = 0; i < children.size(); i++)
+                gridPane.add(children.get(i), i % columnCount, i / columnCount);
+
+            gridPane.getColumnConstraints().clear();
+            for (int i = 0; i < columnCount; i++) {
+                ColumnConstraints constraints = new ColumnConstraints();
+                constraints.setPercentWidth(100.0 / columnCount);
+                gridPane.getColumnConstraints().add(constraints);
+            }
+
+        });
     }
 }

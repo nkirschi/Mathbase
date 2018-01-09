@@ -35,6 +35,13 @@ public class Constants {
     public static final String IMAGE_ROOT = "/images/";
 
     /**
+     * Minimalgröße der Inhaltsspalten
+     *
+     * @since 1.0
+     */
+    public static final int COL_MIN_WIDTH = 250;
+
+    /**
      * Standard-Schriftart.
      *
      * @since 1.0
