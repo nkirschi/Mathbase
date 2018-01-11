@@ -8,20 +8,24 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Inhaltsanzeige eines gewählten Themas.
@@ -61,7 +65,21 @@ public class ContentPane extends BorderPane {
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
-        VBox titleBox = new VBox(5, titleLabel, new Separator());
+        Button addButton = new Button(Constants.BUNDLE.getString("add"),
+                new ImageView(Images.getInternal("icons_x16/add.png")));
+        addButton.setOnAction(a -> {
+            AddContentDialog dialog = new AddContentDialog();
+            Optional<Content> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                try {
+                    topicTreeController.addContent(result.get(), title);
+                } catch (IOException | TransformerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        BorderPane titlePane = new BorderPane();
+        VBox titleBox = new VBox(5, titlePane, new Separator());
         BorderPane.setMargin(titleBox, new Insets(0, 0, 10, 0));
         return titleBox;
     }
