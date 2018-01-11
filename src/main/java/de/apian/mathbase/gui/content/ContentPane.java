@@ -7,8 +7,10 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
@@ -20,13 +22,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * Inhaltsanzeige eines gewählten Themas.
@@ -75,7 +77,8 @@ public class ContentPane extends BorderPane {
                 try {
                     topicTreeController.addContent(result.get(), title);
                 } catch (IOException | TransformerException e) {
-                    e.printStackTrace();
+                    Logging.log(Level.WARNING, "Inhalt hinzufügen fehlgeschlagen!", e);
+                    new WarningAlert().showAndWait();
                 }
             }
         });

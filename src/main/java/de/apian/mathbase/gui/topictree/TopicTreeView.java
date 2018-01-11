@@ -6,14 +6,11 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.gui.content.ContentPane;
-import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.FillerPane;
+import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.MainPane;
-import de.apian.mathbase.gui.dialog.DialogUtils;
-import de.apian.mathbase.gui.dialog.ErrorAlert;
-import de.apian.mathbase.gui.dialog.PasswordDialog;
-import de.apian.mathbase.gui.dialog.TopicTitleDialog;
+import de.apian.mathbase.gui.content.ContentPane;
+import de.apian.mathbase.gui.dialog.*;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -250,7 +247,8 @@ public class TopicTreeView extends TreeView<String> {
                 topicTreeController.renameNode(selectedItem.getValue(), title);
                 selectedItem.setValue(title);
             } catch (IOException | TransformerException e) {
-                e.printStackTrace();
+                Logging.log(Level.WARNING, "Knoten umbenennen fehlgeschlagen!", e);
+                new WarningAlert().showAndWait();
             }
         });
     }
@@ -279,7 +277,8 @@ public class TopicTreeView extends TreeView<String> {
                 topicTreeController.removeNode(selectedItem.getValue());
                 getSelectionModel().select(null);
             } catch (IOException | TransformerException e) {
-                e.printStackTrace();
+                Logging.log(Level.WARNING, "Knoten löschen fehlgeschlagen!", e);
+                new WarningAlert().showAndWait();
             }
         });
 
