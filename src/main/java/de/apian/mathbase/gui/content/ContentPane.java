@@ -13,9 +13,11 @@ import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -30,8 +32,9 @@ import java.util.List;
  * @since 1.0
  */
 public class ContentPane extends BorderPane {
+
     /**
-     * Themenbaumkontrolleur.
+     * Themenbaumkontrolleur
      *
      * @since 1.0
      */
@@ -48,37 +51,51 @@ public class ContentPane extends BorderPane {
 
         setPadding(new Insets(10, 10, 10, 10));
 
+        VBox titleBox = initTitleBox(title);
+        setTop(titleBox);
+
+        GridPane contentGrid = initContentGrid(title);
+        setCenter(contentGrid);
+    }
+
+    private VBox initTitleBox(String title) {
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
+        VBox titleBox = new VBox(5, titleLabel, new Separator());
+        BorderPane.setMargin(titleBox, new Insets(0, 0, 10, 0));
+        return titleBox;
+    }
 
-        setTop(titleLabel);
+    private GridPane initContentGrid(String title) {
+        GridPane contentGrid = new GridPane();
+        contentGrid.setVgap(10);
+        contentGrid.setHgap(10);
 
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-
+        // Füllen mit Inhalt
         Content[] contents = topicTreeController.getContents(title);
         for (Content content : contents)
-            gridPane.getChildren().add(createTile(content, topicTreeController.locateDirectory(title)));
-        setCenter(gridPane);
+            contentGrid.getChildren().add(createTile(content, topicTreeController.locateDirectory(title)));
 
+        // Herstellen der Responsivität
         widthProperty().addListener((observable, oldValue, newValue) -> {
             int columnCount = Math.max(newValue.intValue() / Constants.COL_MIN_WIDTH, 1);
-            List<Node> children = new ArrayList<>(gridPane.getChildren());// reihenweise
+            List<Node> children = new ArrayList<>(contentGrid.getChildren());// reihenweise
 
-            gridPane.getChildren().clear();
+            contentGrid.getChildren().clear();
             for (int i = 0; i < children.size(); i++)
-                gridPane.add(children.get(i), i % columnCount, i / columnCount);
+                contentGrid.add(children.get(i), i % columnCount, i / columnCount);
 
-            gridPane.getColumnConstraints().clear();
+            contentGrid.getColumnConstraints().clear();
             for (int i = 0; i < columnCount; i++) {
                 ColumnConstraints constraints = new ColumnConstraints();
                 constraints.setPercentWidth(100.0 / columnCount);
-                gridPane.getColumnConstraints().add(constraints);
+                contentGrid.getColumnConstraints().add(constraints);
             }
 
         });
+
+        return contentGrid;
     }
 
     private AbstractTile createTile(Content content, String directoryPath) {
