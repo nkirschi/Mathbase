@@ -421,7 +421,8 @@ public class TopicTreeController {
     }
 
     /**
-     * Einfügen eines Knoten alphabetisch (nach den Titeln) unter einen bestimmten Elternknoten
+     * Einfügen eines Knoten alphabetisch (nach den Titeln) unter einen bestimmten Elternknoten. Ist der
+     * Knoten bereits in der XML-Datei vorhanden, so wird er vorher entfernt.
      *
      * @param child  Einzufügender Knoten
      * @param parent Elternknoten
@@ -624,6 +625,30 @@ public class TopicTreeController {
     }
 
     /**
+     * Finden eines Inhalts in der XML-Datei
+     *
+     * @param content Der zu suchende Inhalt
+     * @param parent  Elternknoten des Inhalts
+     * @return Den Inhalt als {@code Node}-Objekt
+     * @since 1.0
+     */
+    private Node getContent(Content content, String parent) {
+        String expr = "//" + TAG_NODE + "[@" + ATTR_CAPTION + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_FILENAME +
+                "='" + content.getFilename() + "']";
+        Node contentNode = xmlHandler.getNode(expr);
+
+        if (contentNode == null) {
+            //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
+            NodeNotFoundException e = new NodeNotFoundException("Es wurde nach einem nicht vorhanden Inhalt " +
+                    "gefordert: \"" + content.getFilename() + "\" unter dem Knoten \"" + parent + "\"");
+            new ErrorAlert(e).showAndWait();
+            Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
+            throw new InternalError(Constants.FATAL_ERROR_MESSAGE, e);
+        }
+        return contentNode;
+    }
+
+    /**
      * Ermitteln aller Inhalte eines bestimmten Knotens
      *
      * @param title Titel des betreffenden Knotens
@@ -677,7 +702,7 @@ public class TopicTreeController {
         contentElement.setAttribute(ATTR_FILENAME, to.getFileName().toString());
         if (content.getCaption() != null)
             contentElement.setAttribute(ATTR_CAPTION, content.getCaption());
-        parentNode.appendChild(contentElement);
+        insertContent(contentElement, parentNode, Integer.MAX_VALUE);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
 
         //Kopieren der Datei
@@ -710,6 +735,24 @@ public class TopicTreeController {
     }
 
     /**
+     * Hinzufügen eines Inhalts zu einem Elternknoten an eine bestimmte Position in dessen childNode-Liste. Ist der
+     * Inhalt bereits in der XML-Datei vorhanden, so wird er vorher entfernt.
+     *
+     * @param contentNode Der einzufügende Inhalt als {@code Node}-Objekt
+     * @param parentNode  Der Elternknoten
+     * @param index       Der Index in der childNode-Liste. Wenn über der Länge der Liste, wird der Inhalt am Ende eingefügt
+     * @since 1.0
+     */
+    private void insertContent(Node contentNode, Node parentNode, int index) {
+        NodeList siblings = parentNode.getChildNodes();
+        if (index > siblings.getLength() - 2) { //-2, da wir insertBefore benutzen
+            parentNode.appendChild(contentNode); //Füge Inhalt ans Ende der childNodes-Liste
+        } else {
+            parentNode.insertBefore(siblings.item(index + 1), contentNode);
+        }
+    }
+
+    /**
      * Löschenn eines Inhalts
      *
      * @param parent  Titel des Elternknotens
@@ -719,12 +762,9 @@ public class TopicTreeController {
      * @since 1.0
      */
     public void removeContent(Content content, String parent) throws TransformerException, IOException {
-        //Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt noch rumliegen
         Node parentNode = getNode(parent);
         Path filePath = Paths.get(locateDirectory(parentNode), content.getFilename());
-        String expr = "//" + TAG_NODE + "[@" + ATTR_CAPTION + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_FILENAME +
-                "='" + content.getFilename() + "']";
-        Node contentNode = xmlHandler.getNode(expr);
+        Node contentNode = getContent(content, parent);
 
         //Entferne Inhalt aus der XML
         parentNode.removeChild(contentNode);
@@ -734,7 +774,7 @@ public class TopicTreeController {
             saveFile();
         } catch (TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück und brich ab
-            parentNode.appendChild(contentNode);
+            parentNode.appendChild(contentNode); //Klatsch es einfach wieder hinten ran, es ist ja was schiefgelaufen
             throw e;
         }
 
