@@ -14,28 +14,20 @@ import java.nio.file.attribute.BasicFileAttributes;
 class CopyFileVisitor extends SimpleFileVisitor<Path> {
     private Path from, to;
 
-    public CopyFileVisitor(Path from, Path to) {
+    CopyFileVisitor(Path from, Path to) {
         this.from = from;
         this.to = to;
     }
 
     @Override
-    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) {
-        try {
-            Files.copy(dir, to.resolve(from.relativize(dir)), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            return FileVisitResult.TERMINATE;
-        }
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+        Files.createDirectories(to.resolve(from.relativize(dir)));
         return FileVisitResult.CONTINUE;
     }
 
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
-        try {
-            Files.copy(file, to.resolve(from.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            return FileVisitResult.TERMINATE;
-        }
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+        Files.copy(file, to.resolve(from.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
         return FileVisitResult.CONTINUE;
     }
 }

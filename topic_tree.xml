@@ -9,17 +9,5 @@
         <node title="(Schiefe Bananen)-Saft"/>
         <node title="(Gerade Bananen)-Saft"/>
     </node>
-    <node title="Säfte">
-        <node title="Kiwisaft">
-            <node title="Gedöns"/>
-        </node>
-        <node title="Pissflitschensaft"/>
-        <node title="Nudelsaft"/>
-    </node>
     <node title="Giebelgärtner"/>
-    <node title="Salate">
-        <node title="Gurkensalat">
-            <node title="Satz von Kack"/>
-        </node>
-    </node>
 </topic_tree>
