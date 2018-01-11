@@ -6,7 +6,16 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
+import javafx.scene.Cursor;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Bildkachel.
@@ -18,5 +27,24 @@ import de.apian.mathbase.xml.Content;
 public class ImageTile extends AbstractTile {
     public ImageTile(Content content, String directoryPath) {
         super(content, directoryPath);
+
+        try {
+            ImageView imageView = new ImageView(Images.getExternal(directoryPath + content.getFilename()));
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+            imageView.setFitWidth(Constants.COL_MIN_WIDTH - 30);
+            imageView.setCursor(Cursor.HAND);
+            imageView.setOnMouseClicked(a -> {
+                try {
+                    Desktop.getDesktop().open(Paths.get(directoryPath, content.getFilename()).toFile());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            setCenter(imageView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            setCenter(new Label("Bild konnte nicht geladen werden!"));
+        }
     }
 }

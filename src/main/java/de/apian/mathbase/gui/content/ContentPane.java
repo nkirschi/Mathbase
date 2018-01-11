@@ -10,14 +10,13 @@ import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -89,6 +88,7 @@ public class ContentPane extends BorderPane {
             contentGrid.getColumnConstraints().clear();
             for (int i = 0; i < columnCount; i++) {
                 ColumnConstraints constraints = new ColumnConstraints();
+                constraints.setHgrow(Priority.ALWAYS);
                 constraints.setPercentWidth(100.0 / columnCount);
                 contentGrid.getColumnConstraints().add(constraints);
             }

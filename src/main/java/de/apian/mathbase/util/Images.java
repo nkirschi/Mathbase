@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class Images {
     public static Image getExternal(String path) throws IOException {
         if (!externalCache.containsKey(path)) {
             try {
-                externalCache.put(path, new Image(path));
+                externalCache.put(path, new Image(Paths.get(path).toUri().toString()));
             } catch (Exception e) {
                 throw new IOException("Fehler beim Laden des externen Bildes \"" + path + "\"");
             }

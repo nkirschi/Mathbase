@@ -2,7 +2,7 @@
 <topic_tree>
     <node title="Asymmetrische Kryptologie">
         <content caption="A bisserl Erklärung" filename="public-key-verschluesselung.txt" type="description"/>
-        <content filename="key.jpg" type="image"/>
+        <content caption="Der Schlüssel" filename="key.jpg" type="image"/>
         <content caption="Harte Arbeit" filename="kacki.pdf" type="worksheet"/>
         <content filename="vid.mp4" type="video"/>
         <content filename="sachma.ggb" type="geogebra"/>
