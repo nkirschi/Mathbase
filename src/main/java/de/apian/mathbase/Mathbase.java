@@ -86,7 +86,7 @@ public class Mathbase extends Application {
         try {
             TopicTreeController.backupFile();
         } catch (IOException e) {
-            //TODO Soll hier noch eine kurze Fehlermeldung an den Schädel des Users geworfen werden?
+            Logging.log(Level.WARNING, "Backup konnte nicht erstellt werden", e);
         }
         stage.hide();
         Logging.log(Level.INFO, "Programm korrekt beendet");
