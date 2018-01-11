@@ -41,7 +41,7 @@ public class AbstractTile extends BorderPane {
         Button dragButton = new Button(null, new ImageView(Images.getInternal("icons_x16/drag.png")));
         topPane.setRight(new HBox(3, editButton, saveButton, dragButton));
 
-        Label titleLabel = new Label(content.getTitle());
+        Label titleLabel = new Label(content.getCaption());
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
         topPane.setCenter(titleLabel);
 

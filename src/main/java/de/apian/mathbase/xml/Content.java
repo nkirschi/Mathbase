@@ -38,19 +38,19 @@ public class Content {
      *
      * @since 1.0
      */
-    private String title;
+    private String caption;
 
     /**
      * Konstruktion eines neuen Inhaltes
      *
      * @param type  Typ des Inhalts
      * @param path  Pfad des Inhalts
-     * @param title Titel des Inhalts
+     * @param caption Titel des Inhalts
      */
-    public Content(Type type, String path, String title) {
+    public Content(Type type, String path, String caption) {
         this.type = type;
         this.filename = path;
-        this.title = title;
+        this.caption = caption;
     }
 
     /**
@@ -70,8 +70,8 @@ public class Content {
     /**
      * @return Titel des Inhalts
      */
-    public String getTitle() {
-        return title;
+    public String getCaption() {
+        return caption;
     }
 
     /**
@@ -81,7 +81,7 @@ public class Content {
      */
     @Override
     public String toString() {
-        return "Content: \"" + title + "\" | \"" + type.toString() + "\" | \"" + filename + "\"";
+        return "Content: \"" + caption + "\" | \"" + type.toString() + "\" | \"" + filename + "\"";
     }
 
     /**

@@ -91,6 +91,13 @@ public class TopicTreeController {
     private static final String ATTR_TITLE = "title";
 
     /**
+     * Bezeichner des Attributs {@code filename} (Dateipfad  relativ zum Ordner des Elternknoten) in der XML-Datei
+     *
+     * @since 1.0
+     */
+    private static final String ATTR_FILENAME = "filename";
+
+    /**
      * Bezeichner des Attributs {@code type} (Typ der Inhalte) in der XML-Datei
      *
      * @since 1.0
@@ -98,11 +105,11 @@ public class TopicTreeController {
     private static final String ATTR_TYPE = "type";
 
     /**
-     * Bezeichner des Attributs {@code path} (Dateipfad  relativ zum Ordner des Elternknoten) in der XML-Datei
+     * Bezeichner des Attributs {@code caption} in der XML-Datei
      *
      * @since 1.0
      */
-    private static final String ATTR_PATH = "path";
+    private static final String ATTR_CAPTION = "caption";
 
     /**
      * Konstruktion des Kontrolleurs
@@ -416,8 +423,8 @@ public class TopicTreeController {
     /**
      * Einfügen eines Knoten alphabetisch (nach den Titeln) unter einen bestimmten Elternknoten
      *
-     * @param child Einzufügender Knoten
-     * @param parent   Elternknoten
+     * @param child  Einzufügender Knoten
+     * @param parent Elternknoten
      */
     private void insertNodeAlphabetically(Node child, Node parent) {
         NodeList siblings = parent.getChildNodes(); //Zukünftige Geschwisterknoten des einzufügenden Knotens
@@ -526,8 +533,8 @@ public class TopicTreeController {
      * Entfernen eines bestimmten Knotens mitsamt seinem Ordner
      *
      * @param title Titel des zu entfernenden Knotens
-     * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
-     * @throws IOException wenn Entfernen des Ordners fehlschlägt
+     * @throws TransformerException wenn es einen Fehler beim Speichern der XML gab
+     * @throws IOException          wenn Entfernen des Ordners fehlschlägt
      * @since 1.0
      */
     public void removeNode(String title) throws IOException, TransformerException {
@@ -565,8 +572,8 @@ public class TopicTreeController {
      *
      * @param from Ursprünglicher Titel
      * @param to   neuer Titel
-     * @throws IOException           wenn Umbennenen des Ordners fehlschlägt
-     * @throws TransformerException  wenn es einen Fehler beim Speichern der XML gab
+     * @throws IOException          wenn Umbennenen des Ordners fehlschlägt
+     * @throws TransformerException wenn es einen Fehler beim Speichern der XML gab
      * @since 1.0
      */
     public void renameNode(String from, String to) throws IOException, TransformerException {
@@ -636,8 +643,8 @@ public class TopicTreeController {
             if (contentNode.getNodeType() == Node.ELEMENT_NODE) { //Anderer Fall kann normalerweise nicht eintreten ...
                 Element contentElement = (Element) contentNode;
                 contents[i] = new Content(Content.Type.forName(contentElement.getAttribute(ATTR_TYPE)),
-                        contentElement.getAttribute(ATTR_PATH),
-                        contentElement.getAttribute(ATTR_TITLE)
+                        contentElement.getAttribute(ATTR_FILENAME),
+                        contentElement.getAttribute(ATTR_CAPTION)
                 );
             }
         }
@@ -650,8 +657,8 @@ public class TopicTreeController {
      *
      * @param content Hinzuzufügender Inhalt mit ursprünglichem Dateipfad
      * @param parent  Titel des betreffenden Knotens
-     * @throws IOException           wenn das Kopieren der Datei fehlschlägt
-     * @throws TransformerException  wenn das Speichern der XML-Datei fehlschlägt
+     * @throws IOException          wenn das Kopieren der Datei fehlschlägt
+     * @throws TransformerException wenn das Speichern der XML-Datei fehlschlägt
      * @since 1.0
      */
     public void addContent(Content content, String parent) throws IOException, TransformerException {
@@ -660,7 +667,7 @@ public class TopicTreeController {
         //Finde benötigte Pfade from und to
         Path from = Paths.get(content.getFilename());
         String fileExstension = FileUtils.getFileExtension(from); //Finde Dateiendung
-        String newFileName = FileUtils.normalize(content.getTitle() != null ? content.getTitle() : content.getType().toString());
+        String newFileName = FileUtils.normalize(content.getCaption() != null ? content.getCaption() : content.getType().toString());
         String parentPath = locateDirectory(parentNode);
         Path to = Paths.get(parentPath, newFileName + fileExstension);
         for (int i = 0; to.toFile().exists(); i++) { //Finde iterativ einen geeigneten Dateinamen
@@ -670,9 +677,9 @@ public class TopicTreeController {
         //Erstelle Element-Objekt aus dem Content-Objekt und Hinzufügen zum Elternknoten
         Element contentElement = xmlHandler.getDocument().createElement(TAG_CONTENT);
         contentElement.setAttribute(ATTR_TYPE, content.getType().toString());
-        contentElement.setAttribute(ATTR_PATH, to.getFileName().toString());
-        if (content.getTitle() != null)
-            contentElement.setAttribute(ATTR_TITLE, content.getTitle());
+        contentElement.setAttribute(ATTR_FILENAME, to.getFileName().toString());
+        if (content.getCaption() != null)
+            contentElement.setAttribute(ATTR_CAPTION, content.getCaption());
         parentNode.appendChild(contentElement);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
 
@@ -711,14 +718,14 @@ public class TopicTreeController {
      * @param parent  Titel des Elternknotens
      * @param content Zu entfernender Inhalt
      * @throws TransformerException wenn das Speichern der XML-Datei fehlschlägt
-     * @throws IOException wenn Löschen der Datei fehlschlägt
+     * @throws IOException          wenn Löschen der Datei fehlschlägt
      * @since 1.0
      */
     public void removeContent(Content content, String parent) throws TransformerException, IOException {
         //Oder möchtest du lieber den Pfad mitgeben? Denk halt du hast des Content-Objekt noch rumliegen
         Node parentNode = getNode(parent);
         Path filePath = Paths.get(locateDirectory(parentNode), content.getFilename());
-        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_PATH +
+        String expr = "//" + TAG_NODE + "[@" + ATTR_CAPTION + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_FILENAME +
                 "='" + content.getFilename() + "']";
         Node contentNode = xmlHandler.getNode(expr);
 

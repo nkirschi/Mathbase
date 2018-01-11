@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <topic_tree>
     <node title="Asymmetrische Kryptologie">
-        <content path="public-key-verschluesselung.txt" title="A bisserl Erklärung" type="description"/>
-        <content path="kacki.pdf" title="Kakki" type="worksheet"/>
-        <content path="vid.mp4" type="video"/>
-        <content path="sachma.ggb" type="geogebra"/>
-        <content path="virus.exe" title="Wichtiges Programm" type="other"/>
+        <content caption="A bisserl Erklärung" filename="public-key-verschluesselung.txt" type="description"/>
+        <content filename="key.jpg" type="image"/>
+        <content caption="Harte Arbeit" filename="kacki.pdf" type="worksheet"/>
+        <content filename="vid.mp4" type="video"/>
+        <content filename="sachma.ggb" type="geogebra"/>
+        <content caption="Wichtiges Programm" filename="virus.exe" type="other"/>
     </node>
     <node title="Kombinatorik">
         <node title="Urnenmodelle">
