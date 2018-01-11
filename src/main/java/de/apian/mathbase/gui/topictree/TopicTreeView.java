@@ -11,10 +11,12 @@ import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.FillerPane;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.DialogUtils;
+import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.TopicTitleDialog;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;
@@ -26,6 +28,7 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * GUI-Repräsentation des Themenbaums.
@@ -225,7 +228,8 @@ public class TopicTreeView extends TreeView<String> {
                 selectedItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
                 selectedItem.setExpanded(true);
             } catch (IOException | TitleCollisionException | TransformerException e) {
-                e.printStackTrace();
+                Logging.log(Level.WARNING, "Knoten \"" + title + "\" konnte nicht erstellt werden.", e);
+                new ErrorAlert(e).showAndWait();
             }
         });
     }

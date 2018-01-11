@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -96,6 +97,7 @@ public class ContentPane extends BorderPane {
 
         // Herstellen der Responsivität
         widthProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(widthProperty().get());
             int columnCount = Math.max(newValue.intValue() / Constants.COL_MIN_WIDTH, 1);
             List<Node> children = new ArrayList<>(contentGrid.getChildren());// reihenweise
 
