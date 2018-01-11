@@ -487,7 +487,6 @@ public class TopicTreeController {
 
         Path oldPath = Paths.get(locateDirectory(node));
         Node from = node.getParentNode();
-        from.removeChild(node);
         insertNodeAlphabetically(node, to);
 
         // Kopieren des Ordners
@@ -496,7 +495,6 @@ public class TopicTreeController {
             FileUtils.copy(oldPath, newPath);
         } catch (IOException e) {
             //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
-            to.removeChild(node);
             insertNodeAlphabetically(node, from);
             throw e;
         }
@@ -506,7 +504,6 @@ public class TopicTreeController {
             saveFile();
         } catch (TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
-            to.removeChild(node);
             insertNodeAlphabetically(node, from);
             try {
                 FileUtils.delete(newPath);
