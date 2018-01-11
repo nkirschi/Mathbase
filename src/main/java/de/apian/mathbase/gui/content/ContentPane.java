@@ -80,6 +80,8 @@ public class ContentPane extends BorderPane {
             }
         });
         BorderPane titlePane = new BorderPane();
+        titlePane.setLeft(titleLabel);
+        titlePane.setRight(addButton);
         VBox titleBox = new VBox(5, titlePane, new Separator());
         BorderPane.setMargin(titleBox, new Insets(0, 0, 10, 0));
         return titleBox;
