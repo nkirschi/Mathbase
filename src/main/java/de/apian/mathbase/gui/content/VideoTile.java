@@ -16,7 +16,7 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 public class VideoTile extends AbstractTile {
-    public VideoTile(Content content) {
-        super(content);
+    public VideoTile(Content content, String directoryPath) {
+        super(content, directoryPath);
     }
 }

@@ -16,7 +16,7 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 public class EditableWorksheetTile extends LinkTile {
-    public EditableWorksheetTile(Content content) {
-        super(content);
+    public EditableWorksheetTile(Content content, String directoryPath) {
+        super(content, directoryPath);
     }
 }

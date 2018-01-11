@@ -16,7 +16,7 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 public class ImageTile extends AbstractTile {
-    public ImageTile(Content content) {
-        super(content);
+    public ImageTile(Content content, String directoryPath) {
+        super(content, directoryPath);
     }
 }

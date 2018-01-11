@@ -16,7 +16,7 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 public class WorksheetTile extends AbstractTile {
-    public WorksheetTile(Content content) {
-        super(content);
+    public WorksheetTile(Content content, String directoryPath) {
+        super(content, directoryPath);
     }
 }

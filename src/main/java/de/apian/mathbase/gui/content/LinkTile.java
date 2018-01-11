@@ -16,7 +16,7 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 public class LinkTile extends AbstractTile {
-    public LinkTile(Content content) {
-        super(content);
+    public LinkTile(Content content, String directoryPath) {
+        super(content, directoryPath);
     }
 }

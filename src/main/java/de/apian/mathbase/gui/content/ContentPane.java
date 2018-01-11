@@ -103,17 +103,17 @@ public class ContentPane extends BorderPane {
             case DESCRIPTION:
                 return new DescriptionTile(content, directoryPath);
             case GEOGEBRA:
-                return new GeogebraTile(content);
+                return new GeogebraTile(content, directoryPath);
             case IMAGE:
-                return new ImageTile(content);
+                return new ImageTile(content, directoryPath);
             case VIDEO:
-                return new VideoTile(content);
+                return new VideoTile(content, directoryPath);
             case WORKSHEET:
-                return new WorksheetTile(content);
+                return new WorksheetTile(content, directoryPath);
             case EDITABLE_WORKSHEET:
-                return new EditableWorksheetTile(content);
+                return new EditableWorksheetTile(content, directoryPath);
             default:
-                return new LinkTile(content);
+                return new LinkTile(content, directoryPath);
         }
     }
 }

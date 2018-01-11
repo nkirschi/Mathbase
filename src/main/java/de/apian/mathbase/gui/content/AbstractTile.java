@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.geometry.Insets;
@@ -16,6 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Abstrakte Inhaltskachel.
@@ -25,24 +31,40 @@ import javafx.scene.text.Font;
  * @since 1.0
  */
 public class AbstractTile extends BorderPane {
-    public AbstractTile(Content content) {
-        BorderPane borderPane = new BorderPane();
+    protected Button editButton, saveButton;
+
+    public AbstractTile(Content content, String directoryPath) {
+        BorderPane topPane = new BorderPane();
+
+        editButton = new Button(null, new ImageView(Images.getInternal("icons_x16/edit.png")));
+        saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
+        Button dragButton = new Button(null, new ImageView(Images.getInternal("icons_x16/drag.png")));
+        topPane.setRight(new HBox(3, editButton, saveButton, dragButton));
 
         Label titleLabel = new Label(content.getTitle());
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
-        borderPane.setCenter(titleLabel);
+        topPane.setCenter(titleLabel);
 
-        Button editButton = new Button(null, new ImageView(Images.getInternal("icons_x16/edit.png")));
-        Button dragButton = new Button(null, new ImageView(Images.getInternal("icons_x16/drag.png")));
-        borderPane.setRight(new HBox(3, editButton, dragButton));
+        BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
 
-
-        BorderPane.setMargin(borderPane, new Insets(0, 0, 5, 0));
-
-        setTop(borderPane);
+        setTop(topPane);
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(5));
         setBorder(new Border(new BorderStroke(Constants.ACCENT_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
+
+        saveButton.setOnAction(a -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Textdateien (*.txt)", "*.txt"));
+            File file = fileChooser.showSaveDialog(getScene().getWindow());
+            if (file != null) {
+                try {
+                    FileUtils.copy(Paths.get(directoryPath, content.getFilename()), file.toPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
