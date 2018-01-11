@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <topic_tree>
-    <node title="Satz des Leckmichamarschoras">
+    <node title="Asymmetrische Kryptologie">
         <content path="banana.txt" title="A bisserl Erklärung" type="description"/>
         <content path="kacki.pdf" title="Kakki" type="worksheet"/>
         <content path="vid.mp4" type="video"/>
         <content path="sachma.ggb" type="geogebra"/>
         <content path="virus.exe" title="Wichtiges Programm" type="other"/>
-        <node title="(Schiefe Bananen)-Saft"/>
-        <node title="(Gerade Bananen)-Saft"/>
     </node>
-    <node title="Giebelgärtner"/>
 </topic_tree>

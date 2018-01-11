@@ -381,7 +381,7 @@ public class TopicTreeController {
         element.setAttribute(ATTR_TITLE, title);
 
         //Fügt Knoten unter Beachtung der Alphabetischen Sortierung zum Elternknoten hinzu
-        insertNodeAlphabetically(parent, element);
+        insertNodeAlphabetically(element, parent);
         Logging.log(Level.INFO, "Knoten \"" + title + "\" erfolgreich erstellt");
 
         // Erstellung des Ordners
@@ -416,23 +416,29 @@ public class TopicTreeController {
     /**
      * Einfügen eines Knoten alphabetisch (nach den Titeln) unter einen bestimmten Elternknoten
      *
+     * @param child Einzufügender Knoten
      * @param parent   Elternknoten
-     * @param newChild Einzufügender Knoten
      */
-    private void insertNodeAlphabetically(Node parent, Node newChild) {
+    private void insertNodeAlphabetically(Node child, Node parent) {
         NodeList siblings = parent.getChildNodes(); //Zukünftige Geschwisterknoten des einzufügenden Knotens
+
+        boolean inserted = false;
         for (int i = 0; i < siblings.getLength(); i++) {
             Node sibling = siblings.item(i);
-            if (sibling.getNodeType() == Node.ELEMENT_NODE && newChild.getNodeType() == Node.ELEMENT_NODE) {
+            if (sibling.getNodeType() == Node.ELEMENT_NODE && child.getNodeType() == Node.ELEMENT_NODE) {
                 //Anderer Fall kann eigenlich nicht vorkommen
                 String siblingTitle = ((Element) sibling).getAttribute(ATTR_TITLE);
-                String newChildTitle = ((Element) newChild).getAttribute(ATTR_TITLE);
-                if (siblingTitle.compareToIgnoreCase(newChildTitle) >= 0) {
-                    parent.insertBefore(newChild, sibling);
+                String childTitle = ((Element) child).getAttribute(ATTR_TITLE);
+                if (siblingTitle.compareToIgnoreCase(childTitle) >= 0) {
+                    parent.insertBefore(child, sibling);
+                    inserted = true;
                     break;
                 }
             }
         }
+
+        if (!inserted)
+            parent.appendChild(child);
     }
 
     /**
@@ -475,7 +481,7 @@ public class TopicTreeController {
         Path oldPath = Paths.get(locateDirectory(node));
         Node from = node.getParentNode();
         from.removeChild(node);
-        insertNodeAlphabetically(to, node);
+        insertNodeAlphabetically(node, to);
 
         // Kopieren des Ordners
         Path newPath = Paths.get(locateDirectory(node));
@@ -484,7 +490,7 @@ public class TopicTreeController {
         } catch (IOException e) {
             //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
             to.removeChild(node);
-            insertNodeAlphabetically(from, node);
+            insertNodeAlphabetically(node, from);
             throw e;
         }
 
@@ -494,7 +500,7 @@ public class TopicTreeController {
         } catch (TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
             to.removeChild(node);
-            insertNodeAlphabetically(from, node);
+            insertNodeAlphabetically(node, from);
             try {
                 FileUtils.delete(newPath);
             } catch (IOException e1) {
@@ -539,7 +545,7 @@ public class TopicTreeController {
             saveFile();
         } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, dann brich ab
-            insertNodeAlphabetically(parentNode, node);
+            insertNodeAlphabetically(node, parentNode);
             throw e;
         }
 
