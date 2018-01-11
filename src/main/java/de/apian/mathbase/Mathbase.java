@@ -10,11 +10,12 @@ import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Locale;
+import java.io.IOException;
 import java.util.logging.Level;
 
 /**
@@ -82,6 +83,11 @@ public class Mathbase extends Application {
      * @since 1.0
      */
     private void cleanUp() {
+        try {
+            TopicTreeController.backupFile();
+        } catch (IOException e) {
+            //TODO Soll hier noch eine kurze Fehlermeldung an den Schädel des Users geworfen werden?
+        }
         stage.hide();
         Logging.log(Level.INFO, "Programm korrekt beendet");
         System.exit(0);

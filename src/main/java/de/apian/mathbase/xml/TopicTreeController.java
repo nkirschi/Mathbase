@@ -171,7 +171,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen und nicht erfolgreich war
      * @since 1.0
      */
-    public void backupFile() throws IOException {
+    public static void backupFile() throws IOException {
         try {
             Files.copy(Paths.get(ORIGINAL_PATH), Paths.get(BACKUP_PATH), StandardCopyOption.REPLACE_EXISTING);
             Logging.log(Level.INFO, "Erstellen eines Backups von \"" + ORIGINAL_PATH + "\" in \"" + BACKUP_PATH
