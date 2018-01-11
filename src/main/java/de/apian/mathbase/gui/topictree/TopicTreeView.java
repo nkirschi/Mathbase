@@ -24,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
@@ -221,6 +222,7 @@ public class TopicTreeView extends TreeView<String> {
                 topicTreeController.addNode(title, selectedItem.getValue());
                 TreeItem<String> newItem = new TreeItem<>(title);
                 selectedItem.getChildren().add(newItem);
+                selectedItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
                 selectedItem.setExpanded(true);
             } catch (IOException | TitleCollisionException | TransformerException e) {
                 e.printStackTrace();

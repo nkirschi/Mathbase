@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <topic_tree>
     <node title="Asymmetrische Kryptologie">
-        <content path="banana.txt" title="A bisserl Erklärung" type="description"/>
+        <content path="public-key-verschluesselung.txt" title="A bisserl Erklärung" type="description"/>
         <content path="kacki.pdf" title="Kakki" type="worksheet"/>
         <content path="vid.mp4" type="video"/>
         <content path="sachma.ggb" type="geogebra"/>
         <content path="virus.exe" title="Wichtiges Programm" type="other"/>
+    </node>
+    <node title="Kombinatorik">
+        <node title="Urnenmodelle">
+            <node title="Ziehen mit Zurücklegen mit Beachtung der Reihenfolge">
+                <node title="Zahlenschloss"/>
+            </node>
+            <node title="Ziehen mit Zurücklegen ohne Beachtung der Reihenfolge">
+                <node title="Bernoulli-Kette"/>
+            </node>
+            <node title="Ziehen ohne Zurücklegen mit Beachtung der Reihenfolge">
+                <node title="100-Meter-Sprint"/>
+            </node>
+            <node title="Ziehen ohne Zurücklegen ohne Beachtung der Reihenfolge">
+                <node title="Binomialkoeffizient"/>
+            </node>
+        </node>
+    </node>
+    <node title="Säfte">
+        <node title="Apfelsaft"/>
+        <node title="Bananensaft"/>
+        <node title="Kiwisaft"/>
+        <node title="Nudelsaft"/>
+        <node title="Pissflitschensaft"/>
     </node>
 </topic_tree>
