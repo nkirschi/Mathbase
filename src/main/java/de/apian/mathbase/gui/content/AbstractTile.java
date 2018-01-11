@@ -6,9 +6,11 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -22,6 +24,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 
 /**
  * Abstrakte Inhaltskachel.
@@ -62,7 +65,8 @@ public class AbstractTile extends BorderPane {
                 try {
                     FileUtils.copy(Paths.get(directoryPath, content.getFilename()), file.toPath());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logging.log(Level.WARNING, "Datei abspeichern fehlgeschlagen!", e);
+                    new WarningAlert().showAndWait();
                 }
             }
         });
