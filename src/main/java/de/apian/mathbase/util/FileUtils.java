@@ -8,10 +8,8 @@ package de.apian.mathbase.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.stream.Stream;
@@ -58,7 +56,8 @@ public class FileUtils {
     public static void move(Path from, Path to) throws IOException {
         if (Files.exists(to, LinkOption.NOFOLLOW_LINKS))
             delete(to);
-        Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
+        copy(from ,to);
+        delete(from);
     }
 
     /**
@@ -70,9 +69,7 @@ public class FileUtils {
      * @since 1.0
      */
     public static void copy(Path from, Path to) throws IOException {
-        if (Files.exists(to, LinkOption.NOFOLLOW_LINKS))
-            delete(to);
-        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+        Files.walkFileTree(from, new CopyFileVisitor(from, to));
     }
 
     /**
@@ -83,9 +80,7 @@ public class FileUtils {
      * @since 1.0
      */
     public static void delete(Path path) throws IOException {
-        try (Stream<Path> stream = Files.walk(path).sorted(Comparator.reverseOrder())){
-            stream.map(Path::toFile).forEach(File::delete);
-        }
+        Files.walkFileTree(path, new DeleteFileVisitor());
     }
 
     /**
