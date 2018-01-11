@@ -72,6 +72,7 @@ public class Mathbase extends Application {
         stage.setTitle("Mathbase v" + Constants.APP_VERSION);
         stage.setWidth(800);
         stage.setHeight(600);
+        stage.setMinWidth(500);
         stage.getIcons().add(Images.getInternal("logo/logo_empty.png"));
         stage.setOnCloseRequest(a -> cleanUp());
         stage.setScene(new Scene(new MainPane()));
