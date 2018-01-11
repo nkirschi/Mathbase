@@ -17,6 +17,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -61,7 +62,11 @@ public class ContentPane extends BorderPane {
         setTop(titleBox);
 
         GridPane contentGrid = initContentGrid(title);
-        setCenter(contentGrid);
+        ScrollPane contentScrollPane = new ScrollPane(contentGrid);
+        contentScrollPane.setFitToHeight(true);
+        contentScrollPane.setFitToWidth(true);
+        contentScrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
+        setCenter(contentScrollPane);
     }
 
     private VBox initTitleBox(String title) {
