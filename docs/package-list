@@ -1,5 +1,7 @@
 de.apian.mathbase
-de.apian.mathbase.exc
 de.apian.mathbase.gui
+de.apian.mathbase.gui.content
+de.apian.mathbase.gui.dialog
+de.apian.mathbase.gui.topictree
 de.apian.mathbase.util
 de.apian.mathbase.xml
