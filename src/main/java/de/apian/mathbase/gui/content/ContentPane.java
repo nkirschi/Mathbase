@@ -40,6 +40,13 @@ import java.util.logging.Level;
 public class ContentPane extends BorderPane {
 
     /**
+     * Hauptanzeigefläche
+     *
+     * @since 1.0
+     */
+    private MainPane mainPane;
+
+    /**
      * Themenbaumkontrolleur
      *
      * @since 1.0
@@ -53,6 +60,7 @@ public class ContentPane extends BorderPane {
      * @param topicTreeController Themenbaumkontrolleur
      */
     public ContentPane(String title, MainPane mainPane, TopicTreeController topicTreeController) {
+        this.mainPane = mainPane;
         this.topicTreeController = topicTreeController;
 
         setPadding(new Insets(10, 10, 10, 10));
@@ -71,7 +79,7 @@ public class ContentPane extends BorderPane {
         Button addButton = new Button(Constants.BUNDLE.getString("add"),
                 new ImageView(Images.getInternal("icons_x16/add.png")));
         addButton.setOnAction(a -> {
-            AddContentDialog dialog = new AddContentDialog();
+            AddContentDialog dialog = new AddContentDialog(mainPane.getScene().getWindow());
             Optional<Content> result = dialog.showAndWait();
             if (result.isPresent()) {
                 try {
