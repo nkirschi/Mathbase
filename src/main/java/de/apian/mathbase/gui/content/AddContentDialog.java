@@ -10,9 +10,12 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -47,6 +50,48 @@ public class AddContentDialog extends Dialog<Content> {
                 return null;
             }
         });
+
+        comboBox.setOnAction(a -> {
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+
+            gridPane.addRow(0, new Label("Inhaltstyp:"), comboBox);
+
+            Label titleLabel = new Label("Titel:");
+            TextField titleField = new TextField();
+            GridPane.setFillWidth(titleField, true);
+            GridPane.setHgrow(titleField, Priority.ALWAYS);
+            gridPane.addRow(1, titleLabel, titleField);
+
+            switch (comboBox.getSelectionModel().getSelectedItem()) {
+                case DESCRIPTION:
+                    Label descriptionLabel = new Label("Beschreibung:");
+                    TextArea descriptionArea = new TextArea();
+                    descriptionArea.setPrefRowCount(5);
+                    GridPane.setValignment(descriptionLabel, VPos.TOP);
+                    gridPane.addRow(2, descriptionLabel, descriptionArea);
+                    break;
+                case GEOGEBRA:
+                    break;
+                case IMAGE:
+                    break;
+                case VIDEO:
+                    break;
+                case WORKSHEET:
+                    break;
+                case EDITABLE_WORKSHEET:
+                    break;
+                default:
+                    break;
+            }
+
+            getDialogPane().setContent(gridPane);
+
+            getDialogPane().getScene().getWindow().sizeToScene();
+            getDialogPane().getScene().getWindow().centerOnScreen();
+        });
+
         getDialogPane().setContent(new HBox(comboBox));
 
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
