@@ -688,12 +688,13 @@ public class TopicTreeController {
 
         //Finde benötigte Pfade from und to
         Path from = Paths.get(content.getFilename());
-        String fileExstension = FileUtils.getFileExtension(from); //Finde Dateiendung
-        String newFileName = FileUtils.normalize(content.getCaption() != null ? content.getCaption() : content.getType().toString());
+        String fileExtension = FileUtils.getFileExtension(from); //Finde Dateiendung
+        String newFileName = FileUtils.normalize(content.getCaption() != null ? content.getCaption() : content.getType()
+                .toString());
         String parentPath = locateDirectory(parentNode);
-        Path to = Paths.get(parentPath, newFileName + fileExstension);
+        Path to = Paths.get(parentPath, newFileName + fileExtension);
         for (int i = 0; to.toFile().exists(); i++) { //Finde iterativ einen geeigneten Dateinamen
-            to = Paths.get(parentPath, newFileName + i + fileExstension);
+            to = Paths.get(parentPath, newFileName + i + fileExtension);
         }
 
         //Erstelle Element-Objekt aus dem Content-Objekt und Hinzufügen zum Elternknoten
