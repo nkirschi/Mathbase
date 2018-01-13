@@ -6,15 +6,12 @@
 
 package de.apian.mathbase.gui.content;
 
-import de.apian.mathbase.util.FileUtils;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.control.TextArea;
-import javafx.stage.FileChooser;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
@@ -39,7 +36,7 @@ public class DescriptionTile extends AbstractTile {
                 textArea.appendText(line + "\n");
             textArea.positionCaret(position);
         } catch (IOException e) {
-            textArea.setText("Leider konnte der Text nicht geladen werden!");
+            textArea.setText(Constants.BUNDLE.getString("text_load_fail"));
         }
 
         editButton.setOnAction(a -> {

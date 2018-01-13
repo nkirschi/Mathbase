@@ -44,7 +44,7 @@ public class ImageTile extends AbstractTile {
             setCenter(imageView);
         } catch (IOException e) {
             e.printStackTrace();
-            setCenter(new Label("Bild konnte nicht geladen werden!"));
+            setCenter(new Label(Constants.BUNDLE.getString("picture_load_fail")));
         }
     }
 }

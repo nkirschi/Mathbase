@@ -10,14 +10,13 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 /**
@@ -38,7 +37,7 @@ public class AddContentDialog extends Dialog<Content> {
 
 
         ComboBox<Content.Type> comboBox = new ComboBox<>(FXCollections.observableArrayList(Content.Type.values()));
-        comboBox.setPromptText("Bitte auswählen...");
+        comboBox.setPromptText(Constants.BUNDLE.getString("please_select"));
         comboBox.setConverter(new StringConverter<Content.Type>() {
             @Override
             public String toString(Content.Type object) {
@@ -56,9 +55,9 @@ public class AddContentDialog extends Dialog<Content> {
             gridPane.setHgap(10);
             gridPane.setVgap(10);
 
-            gridPane.addRow(0, new Label("Inhaltstyp:"), comboBox);
+            gridPane.addRow(0, new Label(Constants.BUNDLE.getString("content_type") + ":"), comboBox);
 
-            Label titleLabel = new Label("Titel:");
+            Label titleLabel = new Label(Constants.BUNDLE.getString("title") + ":");
             TextField titleField = new TextField();
             GridPane.setFillWidth(titleField, true);
             GridPane.setHgrow(titleField, Priority.ALWAYS);
@@ -66,7 +65,7 @@ public class AddContentDialog extends Dialog<Content> {
 
             switch (comboBox.getSelectionModel().getSelectedItem()) {
                 case DESCRIPTION:
-                    Label descriptionLabel = new Label("Beschreibung:");
+                    Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
                     TextArea descriptionArea = new TextArea();
                     descriptionArea.setPrefRowCount(5);
                     GridPane.setValignment(descriptionLabel, VPos.TOP);

@@ -59,7 +59,7 @@ public class AbstractTile extends BorderPane {
 
         saveButton.setOnAction(a -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Textdateien (*.txt)", "*.txt"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.getString("textfiles"), "*.txt"));
             File file = fileChooser.showSaveDialog(getScene().getWindow());
             if (file != null) {
                 try {
