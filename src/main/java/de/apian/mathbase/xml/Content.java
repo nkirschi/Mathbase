@@ -93,7 +93,39 @@ public class Content {
      * @since 1.0
      */
     public enum Type {
-        DESCRIPTION, GEOGEBRA, IMAGE, VIDEO, WORKSHEET, EDITABLE_WORKSHEET, OTHER;
+        DESCRIPTION(".txt"),
+        GEOGEBRA(".ggb"),
+        IMAGE(".png", ".jpg", ".jpeg"),
+        VIDEO(".mp4"),
+        WORKSHEET(".pdf"),
+        EDITABLE_WORKSHEET(".doc", ".docx", ".odt"),
+        OTHER;
+
+        /**
+         * Die dem Typ entsprechenden Dateiendungen im Format {@code .<Dateiendung>}
+         *
+         * @since 1.0
+         */
+        private String[] fileExtensions;
+
+        /**
+         * Privater Enum-Konstruktor
+         *
+         * @param fileExtensions Die dem Typ entsprechenden Dateiendungen im Format {@code .<Dateiendung>}
+         * @since 1.0
+         */
+        Type(String... fileExtensions) {
+            this.fileExtensions = fileExtensions;
+        }
+
+        /**
+         * Abrufen der dem Typ entsprechenden Dateiendungen
+         *
+         * @return Dem Typ entsprechenden Dateiendungen im Format {@code .<Dateiendung>}
+         */
+        public String[] getFileExtensions() {
+            return fileExtensions;
+        }
 
         /**
          * Ermitteln des Typs für einen vorgegebenen Namen
