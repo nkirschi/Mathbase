@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
@@ -58,12 +59,14 @@ public class AbstractTile extends BorderPane {
 
 
         saveButton.setOnAction(a -> {
+            Path from = Paths.get(directoryPath, content.getFilename());
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.getString("textfiles"), "*.txt"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.
+                    getString("file"), "*" + FileUtils.getFileExtension(from)));
             File file = fileChooser.showSaveDialog(getScene().getWindow());
             if (file != null) {
                 try {
-                    FileUtils.copy(Paths.get(directoryPath, content.getFilename()), file.toPath());
+                    FileUtils.copy(from, file.toPath());
                 } catch (IOException e) {
                     Logging.log(Level.WARNING, "Datei abspeichern fehlgeschlagen!", e);
                     new WarningAlert().showAndWait();

@@ -6,13 +6,16 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 
 
 /**
@@ -41,7 +44,7 @@ public class DescriptionTile extends AbstractTile {
 
         editButton.setOnAction(a -> {
             if (editButton.getText() == null) {
-                editButton.setText("Fertig");
+                editButton.setText(Constants.BUNDLE.getString("done"));
                 saveButton.setVisible(false);
                 textArea.setEditable(true);
             } else {
@@ -51,7 +54,8 @@ public class DescriptionTile extends AbstractTile {
                 try {
                     Files.write(Paths.get(directoryPath, content.getFilename()), textArea.getText().getBytes("utf-8"));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logging.log(Level.WARNING, "Text abspeichern fehlgeschlagen!", e);
+                    new WarningAlert().showAndWait();
                 }
             }
         });
