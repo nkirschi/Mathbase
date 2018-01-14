@@ -35,15 +35,17 @@ import java.util.logging.Level;
  * @since 1.0
  */
 public class AbstractTile extends BorderPane {
-    protected Button editButton, saveButton;
+    protected Button saveButton;
+    protected Button removeButton;
+    protected HBox buttonBox;
 
     public AbstractTile(Content content, String directoryPath) {
         BorderPane topPane = new BorderPane();
 
-        editButton = new Button(null, new ImageView(Images.getInternal("icons_x16/edit.png")));
         saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
-        Button dragButton = new Button(null, new ImageView(Images.getInternal("icons_x16/drag.png")));
-        topPane.setRight(new HBox(3, editButton, saveButton, dragButton));
+        removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
+        buttonBox = new HBox(3, saveButton, removeButton);
+        topPane.setRight(buttonBox);
 
         Label titleLabel = new Label(content.getCaption());
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));

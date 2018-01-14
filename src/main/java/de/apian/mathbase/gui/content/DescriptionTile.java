@@ -8,9 +8,12 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +29,8 @@ import java.util.logging.Level;
  * @since 1.0
  */
 public class DescriptionTile extends AbstractTile {
+    private Button editButton;
+
     public DescriptionTile(Content content, String directoryPath) {
         super(content, directoryPath);
 
@@ -42,6 +47,7 @@ public class DescriptionTile extends AbstractTile {
             textArea.setText(Constants.BUNDLE.getString("text_load_fail"));
         }
 
+        editButton = new Button(null, new ImageView(Images.getInternal("icons_x16/edit.png")));
         editButton.setOnAction(a -> {
             if (editButton.getText() == null) {
                 editButton.setText(Constants.BUNDLE.getString("done"));
@@ -59,6 +65,7 @@ public class DescriptionTile extends AbstractTile {
                 }
             }
         });
+        buttonBox.getChildren().add(editButton);
 
         setCenter(textArea);
     }
