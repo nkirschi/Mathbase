@@ -10,14 +10,19 @@ import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
+
+import java.io.File;
 
 /**
  * Dialog zum Hinzufügen eines Inhalts
@@ -31,10 +36,11 @@ public class AddContentDialog extends Dialog<Content> {
     private Content.Type type;
     private String filePath;
     private String caption;
+    private Label infoLabel;
 
     public AddContentDialog(Window owner) {
         type = Content.Type.OTHER;
-        filePath = "";
+        filePath = null;
         caption = null;
 
         initOwner(owner);
@@ -67,14 +73,17 @@ public class AddContentDialog extends Dialog<Content> {
 
             Label titleLabel = new Label(Constants.BUNDLE.getString("title") + ":");
             TextField titleField = new TextField();
+            infoLabel = new Label();
+            infoLabel.setTextFill(Color.RED);
+            infoLabel.setVisible(false);
             GridPane.setFillWidth(titleField, true);
             GridPane.setHgrow(titleField, Priority.ALWAYS);
             gridPane.addRow(1, titleLabel, titleField);
+            gridPane.addRow(3, infoLabel);
 
-            //TODO Abspeichern in Datei implementieren! -> Variable "filePath"
             type = comboBox.getSelectionModel().getSelectedItem();
             if (type.equals(Content.Type.DESCRIPTION)) {
-                type = Content.Type.DESCRIPTION;
+                infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
                 Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
                 TextArea descriptionArea = new TextArea();
                 descriptionArea.setPrefRowCount(5);
@@ -82,17 +91,24 @@ public class AddContentDialog extends Dialog<Content> {
                 gridPane.addRow(2, descriptionLabel, descriptionArea);
                 //TODO impl
             } else if (type.equals(Content.Type.OTHER)) {
-                Label selectFileLabel = new Label(Constants.BUNDLE.getString("please_select"));
-                Button selectFileButton = new Button(Constants.BUNDLE.getString("file"));
-                gridPane.addRow(3, selectFileLabel, selectFileButton);
+                infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
+                Label selectFileLabel = new Label(Constants.BUNDLE.getString("file"));
+                Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
+                gridPane.addRow(2, selectFileLabel, selectFileButton);
                 selectFileButton.setOnAction(a1 -> {
-                    //TODO impl
+                    FileChooser fileChooser = new FileChooser();
+                    File file = fileChooser.showOpenDialog(owner);
+                    if (file != null) {
+                        filePath = file.getAbsolutePath();
+                        selectFileButton.setText(file.getName());
+                    }
                 });
             } else {
+                infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
                 //Bringt Dateierweiterungen in ein schönes Format
                 StringBuilder fileExtensionsBuilder = new StringBuilder();
                 for (String s : type.getFileExtensions()) {
-                    fileExtensionsBuilder.append("*").append(s).append(", ");
+                    fileExtensionsBuilder.append(s).append(", ");
                 }
                 if (fileExtensionsBuilder.length() > 1) {
                     //Herrauslöschen des letzten ", ", da es unnötig ist.
@@ -103,12 +119,19 @@ public class AddContentDialog extends Dialog<Content> {
                     fileExtensionsBuilder.append("*.*");
                 }
 
-                Label selectFileLabel = new Label(Constants.BUNDLE.getString("please_select"));
-                Button selectFileButton = new Button(Constants.BUNDLE.getString("file") + " (" +
-                        fileExtensionsBuilder.toString() + ")");
-                gridPane.addRow(3, selectFileLabel, selectFileButton);
+                Label selectFileLabel = new Label(Constants.BUNDLE.getString("file") + " (" +
+                        fileExtensionsBuilder.toString() + "):");
+                Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
+                gridPane.addRow(2, selectFileLabel, selectFileButton);
                 selectFileButton.setOnAction(a1 -> {
-                    //TODO impl
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.
+                            getString("file"), type.getFileExtensions()));
+                    File file = fileChooser.showOpenDialog(owner);
+                    if (file != null) {
+                        filePath = file.getAbsolutePath();
+                        selectFileButton.setText(file.getName());
+                    }
                 });
             }
 
@@ -121,10 +144,21 @@ public class AddContentDialog extends Dialog<Content> {
         getDialogPane().setContent(new HBox(comboBox));
 
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        initOkButton();
         setResultConverter(buttonType -> {
             if (buttonType.equals(ButtonType.OK))
                 return new Content(type, filePath, caption);
             return null;
+        });
+    }
+
+    private void initOkButton() {
+        Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(ActionEvent.ACTION, a -> {
+            if (filePath == null || filePath.isEmpty()) {
+                infoLabel.setVisible(true);
+                a.consume();
+            }
         });
     }
 }

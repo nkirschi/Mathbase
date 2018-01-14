@@ -25,10 +25,14 @@
         </node>
     </node>
     <node title="Säfte">
-        <node title="Apfelsaft"/>
-        <node title="Bananensaft"/>
+        <node title="Apfelsaft">
+            <content filename="image.jpg" type="image"/>
+            <content filename="geogebra.ggb" type="geogebra"/>
+        </node>
+        <node title="Bananensaft">
+            <content filename="image.png" type="image"/>
+        </node>
         <node title="Kiwisaft"/>
         <node title="Nudelsaft"/>
-        <node title="Pissflitschensaft"/>
     </node>
 </topic_tree>

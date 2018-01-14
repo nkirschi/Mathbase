@@ -68,13 +68,7 @@ public class ContentPane extends BorderPane {
 
         VBox titleBox = initTitleBox(title);
         setTop(titleBox);
-
-        GridPane contentGrid = initContentGrid(title);
-        ScrollPane contentScrollPane = new ScrollPane(contentGrid);
-        contentScrollPane.setFitToHeight(true);
-        contentScrollPane.setFitToWidth(true);
-        contentScrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
-        setCenter(contentScrollPane);
+        setCenter(initContentScrollPane(title));
     }
 
     private VBox initTitleBox(String title) {
@@ -89,6 +83,7 @@ public class ContentPane extends BorderPane {
             if (result.isPresent()) {
                 try {
                     topicTreeController.addContent(result.get(), title);
+                    setCenter(initContentScrollPane(title)); //Damit die Inhalte geupdatet werden
                 } catch (IOException | TransformerException e) {
                     Logging.log(Level.WARNING, "Inhalt hinzufügen fehlgeschlagen!", e);
                     new WarningAlert().showAndWait();
@@ -103,6 +98,15 @@ public class ContentPane extends BorderPane {
         return titleBox;
     }
 
+    private ScrollPane initContentScrollPane(String title) {
+        GridPane contentGrid = initContentGrid(title);
+        ScrollPane contentScrollPane = new ScrollPane(contentGrid);
+        contentScrollPane.setFitToHeight(true);
+        contentScrollPane.setFitToWidth(true);
+        contentScrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
+        return contentScrollPane;
+    }
+
     private GridPane initContentGrid(String title) {
         GridPane contentGrid = new GridPane();
         contentGrid.setVgap(10);
@@ -115,7 +119,6 @@ public class ContentPane extends BorderPane {
 
         // Herstellen der Responsivität
         widthProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(widthProperty().get());
             int columnCount = Math.max(newValue.intValue() / Constants.COL_MIN_WIDTH, 1);
             List<Node> children = new ArrayList<>(contentGrid.getChildren());// reihenweise
 
