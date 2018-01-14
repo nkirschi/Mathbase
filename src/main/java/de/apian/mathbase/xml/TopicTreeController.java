@@ -633,7 +633,7 @@ public class TopicTreeController {
      * @since 1.0
      */
     private Node getContent(Content content, String parent) {
-        String expr = "//" + TAG_NODE + "[@" + ATTR_CAPTION + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_FILENAME +
+        String expr = "//" + TAG_NODE + "[@" + ATTR_TITLE + "='" + parent + "']/" + TAG_CONTENT + "[@" + ATTR_FILENAME +
                 "='" + content.getFilename() + "']";
         Node contentNode = xmlHandler.getNode(expr);
 
