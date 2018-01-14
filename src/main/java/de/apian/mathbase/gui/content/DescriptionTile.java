@@ -65,7 +65,7 @@ public class DescriptionTile extends AbstractTile {
                 }
             }
         });
-        buttonBox.getChildren().add(editButton);
+        buttonBox.getChildren().add(0, editButton);
 
         setCenter(textArea);
     }
