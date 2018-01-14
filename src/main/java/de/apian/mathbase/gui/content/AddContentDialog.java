@@ -83,56 +83,11 @@ public class AddContentDialog extends Dialog<Content> {
 
             type = comboBox.getSelectionModel().getSelectedItem();
             if (type.equals(Content.Type.DESCRIPTION)) {
-                infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
-                Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
-                TextArea descriptionArea = new TextArea();
-                descriptionArea.setPrefRowCount(5);
-                GridPane.setValignment(descriptionLabel, VPos.TOP);
-                gridPane.addRow(2, descriptionLabel, descriptionArea);
-                //TODO impl
+                initDescriptionMask(gridPane);
             } else if (type.equals(Content.Type.OTHER)) {
-                infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
-                Label selectFileLabel = new Label(Constants.BUNDLE.getString("file"));
-                Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
-                gridPane.addRow(2, selectFileLabel, selectFileButton);
-                selectFileButton.setOnAction(a1 -> {
-                    FileChooser fileChooser = new FileChooser();
-                    File file = fileChooser.showOpenDialog(owner);
-                    if (file != null) {
-                        filePath = file.getAbsolutePath();
-                        selectFileButton.setText(file.getName());
-                    }
-                });
+                initOtherMask(gridPane);
             } else {
-                infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
-                //Bringt Dateierweiterungen in ein schönes Format
-                StringBuilder fileExtensionsBuilder = new StringBuilder();
-                for (String s : type.getFileExtensions()) {
-                    fileExtensionsBuilder.append(s).append(", ");
-                }
-                if (fileExtensionsBuilder.length() > 1) {
-                    //Herrauslöschen des letzten ", ", da es unnötig ist.
-                    fileExtensionsBuilder.delete(fileExtensionsBuilder.length() - 2, fileExtensionsBuilder.length() - 1);
-                } else {
-                    // Sollte nicht vorkommen, da jeder Typ außer OTHER besondere Dateierweiterungen
-                    // zugeordnet bekommen sollte
-                    fileExtensionsBuilder.append("*.*");
-                }
-
-                Label selectFileLabel = new Label(Constants.BUNDLE.getString("file") + " (" +
-                        fileExtensionsBuilder.toString() + "):");
-                Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
-                gridPane.addRow(2, selectFileLabel, selectFileButton);
-                selectFileButton.setOnAction(a1 -> {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.
-                            getString("file"), type.getFileExtensions()));
-                    File file = fileChooser.showOpenDialog(owner);
-                    if (file != null) {
-                        filePath = file.getAbsolutePath();
-                        selectFileButton.setText(file.getName());
-                    }
-                });
+                initDefaultMask(gridPane);
             }
 
             getDialogPane().setContent(gridPane);
@@ -158,6 +113,63 @@ public class AddContentDialog extends Dialog<Content> {
             if (filePath == null || filePath.isEmpty()) {
                 infoLabel.setVisible(true);
                 a.consume();
+            }
+        });
+    }
+
+    private void initDescriptionMask(GridPane gridPane) {
+        infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
+        Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
+        TextArea descriptionArea = new TextArea();
+        descriptionArea.setPrefRowCount(5);
+        GridPane.setValignment(descriptionLabel, VPos.TOP);
+        gridPane.addRow(2, descriptionLabel, descriptionArea);
+        //TODO impl
+    }
+
+    private void initOtherMask(GridPane gridPane) {
+        infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
+        Label selectFileLabel = new Label(Constants.BUNDLE.getString("file"));
+        Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
+        gridPane.addRow(2, selectFileLabel, selectFileButton);
+        selectFileButton.setOnAction(a1 -> {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(getOwner());
+            if (file != null) {
+                filePath = file.getAbsolutePath();
+                selectFileButton.setText(file.getName());
+            }
+        });
+    }
+
+    private void initDefaultMask(GridPane gridPane) {
+        infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
+        //Bringt Dateierweiterungen in ein schönes Format
+        StringBuilder fileExtensionsBuilder = new StringBuilder();
+        for (String s : type.getFileExtensions()) {
+            fileExtensionsBuilder.append(s).append(", ");
+        }
+        if (fileExtensionsBuilder.length() > 1) {
+            //Herrauslöschen des letzten ", ", da es unnötig ist.
+            fileExtensionsBuilder.delete(fileExtensionsBuilder.length() - 2, fileExtensionsBuilder.length() - 1);
+        } else {
+            // Sollte nicht vorkommen, da jeder Typ außer OTHER besondere Dateierweiterungen
+            // zugeordnet bekommen sollte
+            fileExtensionsBuilder.append("*.*");
+        }
+
+        Label selectFileLabel = new Label(Constants.BUNDLE.getString("file") + " (" +
+                fileExtensionsBuilder.toString() + "):");
+        Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
+        gridPane.addRow(2, selectFileLabel, selectFileButton);
+        selectFileButton.setOnAction(a1 -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.
+                    getString("file"), type.getFileExtensions()));
+            File file = fileChooser.showOpenDialog(getOwner());
+            if (file != null) {
+                filePath = file.getAbsolutePath();
+                selectFileButton.setText(file.getName());
             }
         });
     }
