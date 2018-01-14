@@ -34,16 +34,15 @@ import java.util.logging.Level;
  * @version 1.0
  * @since 1.0
  */
-public class AbstractTile extends BorderPane {
+class AbstractTile extends BorderPane {
     protected Button saveButton;
-    protected Button removeButton;
-    protected HBox buttonBox;
+    HBox buttonBox;
 
-    public AbstractTile(Content content, String directoryPath) {
+    AbstractTile(Content content, String directoryPath, ContentPane contentPane) {
         BorderPane topPane = new BorderPane();
 
         saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
-        removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
+        Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
         buttonBox = new HBox(3, saveButton, removeButton);
         topPane.setRight(buttonBox);
 
@@ -75,5 +74,7 @@ public class AbstractTile extends BorderPane {
                 }
             }
         });
+
+        removeButton.setOnAction(a -> contentPane.removeContent(content));
     }
 }

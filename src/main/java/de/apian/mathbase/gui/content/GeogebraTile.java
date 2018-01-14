@@ -15,8 +15,8 @@ import de.apian.mathbase.xml.Content;
  * @version 1.0
  * @since 1.0
  */
-public class GeogebraTile extends LinkTile {
-    public GeogebraTile(Content content, String directoryPath) {
-        super(content, directoryPath);
+class GeogebraTile extends LinkTile {
+    GeogebraTile(Content content, String directoryPath, ContentPane contentPane) {
+        super(content, directoryPath, contentPane);
     }
 }

@@ -31,8 +31,8 @@ import java.util.logging.Level;
 public class DescriptionTile extends AbstractTile {
     private Button editButton;
 
-    public DescriptionTile(Content content, String directoryPath) {
-        super(content, directoryPath);
+    public DescriptionTile(Content content, String directoryPath, ContentPane contentPane) {
+        super(content, directoryPath, contentPane);
 
         TextArea textArea = new TextArea();
         textArea.setWrapText(true);

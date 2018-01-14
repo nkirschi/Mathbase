@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
@@ -55,6 +56,13 @@ public class ContentPane extends BorderPane {
     private TopicTreeController topicTreeController;
 
     /**
+     * Titel des zugehörigen Themas
+     *
+     * @since 1.0
+     */
+    private String title;
+
+    /**
      * Konstruktion der Inhaltsanzeige.
      *
      * @param title               Titel des zugehörigen Themas
@@ -63,15 +71,16 @@ public class ContentPane extends BorderPane {
     public ContentPane(String title, MainPane mainPane, TopicTreeController topicTreeController) {
         this.mainPane = mainPane;
         this.topicTreeController = topicTreeController;
+        this.title = title;
 
         setPadding(new Insets(10, 10, 10, 10));
 
-        VBox titleBox = initTitleBox(title);
+        VBox titleBox = initTitleBox();
         setTop(titleBox);
-        setCenter(initContentScrollPane(title));
+        setCenter(initContentScrollPane());
     }
 
-    private VBox initTitleBox(String title) {
+    private VBox initTitleBox() {
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
@@ -83,7 +92,7 @@ public class ContentPane extends BorderPane {
             if (result.isPresent()) {
                 try {
                     topicTreeController.addContent(result.get(), title);
-                    setCenter(initContentScrollPane(title)); //Damit die Inhalte geupdatet werden
+                    updateContents();
                 } catch (IOException | TransformerException e) {
                     Logging.log(Level.WARNING, "Inhalt hinzufügen fehlgeschlagen!", e);
                     new WarningAlert().showAndWait();
@@ -98,8 +107,8 @@ public class ContentPane extends BorderPane {
         return titleBox;
     }
 
-    private ScrollPane initContentScrollPane(String title) {
-        GridPane contentGrid = initContentGrid(title);
+    private ScrollPane initContentScrollPane() {
+        GridPane contentGrid = initContentGrid();
         ScrollPane contentScrollPane = new ScrollPane(contentGrid);
         contentScrollPane.setFitToHeight(true);
         contentScrollPane.setFitToWidth(true);
@@ -107,7 +116,7 @@ public class ContentPane extends BorderPane {
         return contentScrollPane;
     }
 
-    private GridPane initContentGrid(String title) {
+    private GridPane initContentGrid() {
         GridPane contentGrid = new GridPane();
         contentGrid.setVgap(10);
         contentGrid.setHgap(10);
@@ -142,19 +151,38 @@ public class ContentPane extends BorderPane {
     private AbstractTile createTile(Content content, String directoryPath) {
         switch (content.getType()) {
             case DESCRIPTION:
-                return new DescriptionTile(content, directoryPath);
+                return new DescriptionTile(content, directoryPath, this);
             case GEOGEBRA:
-                return new GeogebraTile(content, directoryPath);
+                return new GeogebraTile(content, directoryPath, this);
             case IMAGE:
-                return new ImageTile(content, directoryPath);
+                return new ImageTile(content, directoryPath, this);
             case VIDEO:
-                return new VideoTile(content, directoryPath);
+                return new VideoTile(content, directoryPath, this);
             case WORKSHEET:
-                return new WorksheetTile(content, directoryPath);
+                return new WorksheetTile(content, directoryPath, this);
             case EDITABLE_WORKSHEET:
-                return new EditableWorksheetTile(content, directoryPath);
+                return new EditableWorksheetTile(content, directoryPath, this);
             default:
-                return new LinkTile(content, directoryPath);
+                return new LinkTile(content, directoryPath, this);
         }
+    }
+
+    private void updateContents() {
+        setCenter(initContentScrollPane()); //Damit die Inhalte geupdatet werden
+    }
+
+    void removeContent(Content content) { //Zum löschen eines diesem ContentPane angehörigen Inhalts
+        PasswordDialog dialog = new PasswordDialog(mainPane);
+        dialog.setHeaderText(Constants.BUNDLE.getString("remove_content"));
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(pw -> {
+            try {
+                topicTreeController.removeContent(content, title);
+                updateContents();
+            } catch (IOException | TransformerException e) {
+                Logging.log(Level.WARNING, "Inhalt löschen fehlgeschlagen!", e);
+                new WarningAlert().showAndWait();
+            }
+        });
     }
 }

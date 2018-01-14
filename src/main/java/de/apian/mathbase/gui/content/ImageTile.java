@@ -8,6 +8,7 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 
 /**
  * Bildkachel.
@@ -24,9 +26,9 @@ import java.nio.file.Paths;
  * @version 1.0
  * @since 1.0
  */
-public class ImageTile extends AbstractTile {
-    public ImageTile(Content content, String directoryPath) {
-        super(content, directoryPath);
+class ImageTile extends AbstractTile {
+    ImageTile(Content content, String directoryPath, ContentPane contentPane) {
+        super(content, directoryPath, contentPane);
 
         try {
             ImageView imageView = new ImageView(Images.getExternal(directoryPath + content.getFilename()));
@@ -38,12 +40,12 @@ public class ImageTile extends AbstractTile {
                 try {
                     Desktop.getDesktop().open(Paths.get(directoryPath, content.getFilename()).toFile());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logging.log(Level.WARNING, "Bild konnte nicht geöffnet werden.", e);
                 }
             });
             setCenter(imageView);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logging.log(Level.WARNING, "Bild konnte nicht geöffnet werden.", e);
             setCenter(new Label(Constants.BUNDLE.getString("picture_load_fail")));
         }
     }

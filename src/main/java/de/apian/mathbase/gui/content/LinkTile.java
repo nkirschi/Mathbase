@@ -22,9 +22,9 @@ import java.util.logging.Level;
  * @version 1.0
  * @since 1.0
  */
-public class LinkTile extends AbstractTile {
-    public LinkTile(Content content, String directoryPath) {
-        super(content, directoryPath);
+class LinkTile extends AbstractTile {
+    LinkTile(Content content, String directoryPath, ContentPane contentPane) {
+        super(content, directoryPath, contentPane);
 
         String filename = content.getFilename();
 
