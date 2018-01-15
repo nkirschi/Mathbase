@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
@@ -43,6 +44,7 @@ class LinkTile extends AbstractTile {
                 Desktop.getDesktop().open(Paths.get(directoryPath, filename).toFile());
             } catch (IOException e) {
                 Logging.log(Level.WARNING, "Datei " + filename + " konnte nicht geöffnet werden.");
+                new WarningAlert().showAndWait();
             }
         });
         setCenter(imageView);
