@@ -6,7 +6,9 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
+import javafx.scene.image.Image;
 
 /**
  * Geogebrakachel.
@@ -22,7 +24,7 @@ class GeogebraTile extends LinkTile {
     }
 
     @Override
-    protected String getImagePath() {
-        return "icons_x64/geogebra.png";
+    protected Image getImage() {
+        return Images.getInternal("icons_x64/geogebra.png");
     }
 }

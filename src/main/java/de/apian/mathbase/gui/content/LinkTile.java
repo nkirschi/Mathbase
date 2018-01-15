@@ -10,6 +10,7 @@ import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.Cursor;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.awt.*;
@@ -31,7 +32,7 @@ class LinkTile extends AbstractTile {
 
         String filename = content.getFilename();
 
-        ImageView imageView = new ImageView(Images.getInternal(getImagePath()));
+        ImageView imageView = new ImageView(getImage());
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
         //imageView.setFitWidth(Constants.COL_MIN_WIDTH - 30);
@@ -47,8 +48,7 @@ class LinkTile extends AbstractTile {
         setCenter(imageView);
     }
 
-    protected String getImagePath() {
-        return "icons_x64/file.png";
+    protected Image getImage() {
+        return Images.getInternal("icons_x64/file.png");
     }
-
 }

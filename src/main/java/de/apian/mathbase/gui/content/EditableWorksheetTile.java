@@ -6,7 +6,9 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
+import javafx.scene.image.Image;
 
 /**
  * Kachel eines editierbaren Arbeitsblattes.
@@ -21,7 +23,7 @@ class EditableWorksheetTile extends LinkTile {
     }
 
     @Override
-    protected String getImagePath() {
-        return "icons_x64/editableworksheet.png";
+    protected Image getImage() {
+        return Images.getInternal("icons_x64/editableworksheet.png");
     }
 }
