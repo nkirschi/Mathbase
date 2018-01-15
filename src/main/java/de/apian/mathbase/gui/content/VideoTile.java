@@ -15,8 +15,13 @@ import de.apian.mathbase.xml.Content;
  * @version 1.0
  * @since 1.0
  */
-class VideoTile extends AbstractTile {
+class VideoTile extends LinkTile {
     VideoTile(Content content, String directoryPath, ContentPane contentPane) {
         super(content, directoryPath, contentPane);
+    }
+
+    @Override
+    protected String getImagePath() {
+        return "icons_x64/video.png";
     }
 }

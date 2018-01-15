@@ -16,7 +16,13 @@ import de.apian.mathbase.xml.Content;
  * @since 1.0
  */
 class GeogebraTile extends LinkTile {
+
     GeogebraTile(Content content, String directoryPath, ContentPane contentPane) {
         super(content, directoryPath, contentPane);
+    }
+
+    @Override
+    protected String getImagePath() {
+        return "icons_x64/geogebra.png";
     }
 }

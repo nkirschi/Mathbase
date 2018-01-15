@@ -69,8 +69,6 @@ public class Images {
      *
      * @param fileName Pfad des Bildes ausgehend von der Wurzel des Klassenpfades
      * @return Gewünschtes Bild in Originalgröße als {@code Image} -Objekt
-     * @throws IOException Bei fehlender/korrupter Bilddatei bzw. unzureichenden Zugriffsrechten
-     *                     oder sonstigen Dateisystemfehlern
      * @since 1.0
      */
     public static Image getInternal(String fileName) {

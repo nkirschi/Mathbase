@@ -6,9 +6,11 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.Cursor;
+import javafx.scene.image.ImageView;
 
 import java.awt.*;
 import java.io.IOException;
@@ -23,19 +25,30 @@ import java.util.logging.Level;
  * @since 1.0
  */
 class LinkTile extends AbstractTile {
+
     LinkTile(Content content, String directoryPath, ContentPane contentPane) {
         super(content, directoryPath, contentPane);
 
         String filename = content.getFilename();
 
-        Hyperlink hyperlink = new Hyperlink(filename.substring(0, filename.lastIndexOf('.')));
-        hyperlink.setOnAction(a -> {
+        ImageView imageView = new ImageView(Images.getInternal(getImagePath()));
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        //imageView.setFitWidth(Constants.COL_MIN_WIDTH - 30);
+        imageView.setCursor(Cursor.HAND);
+        imageView.setPickOnBounds(true); //Damit auch die Transparenten Teile der Bilder klickbar sind
+        imageView.setOnMouseClicked(a -> {
             try {
                 Desktop.getDesktop().open(Paths.get(directoryPath, filename).toFile());
             } catch (IOException e) {
                 Logging.log(Level.WARNING, "Datei " + filename + " konnte nicht geöffnet werden.");
             }
         });
-        setCenter(hyperlink);
+        setCenter(imageView);
     }
+
+    protected String getImagePath() {
+        return "icons_x64/file.png";
+    }
+
 }

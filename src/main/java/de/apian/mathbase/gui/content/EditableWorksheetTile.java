@@ -19,4 +19,9 @@ class EditableWorksheetTile extends LinkTile {
     EditableWorksheetTile(Content content, String directoryPath, ContentPane contentPane) {
         super(content, directoryPath, contentPane);
     }
+
+    @Override
+    protected String getImagePath() {
+        return "icons_x64/editableworksheet.png";
+    }
 }
