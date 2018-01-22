@@ -7,15 +7,16 @@
 package de.apian.mathbase.gui.topictree;
 
 import de.apian.mathbase.gui.MainPane;
-import de.apian.mathbase.gui.topictree.TopicTreeView;
+import de.apian.mathbase.gui.AboutWindow;
 import de.apian.mathbase.util.Constants;
+import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-
-import java.util.ResourceBundle;
 
 /**
  * Sidebar mit dem Themenbaum.
@@ -77,8 +78,15 @@ public class SidebarPane extends BorderPane {
             else
                 scrollPane.setContent(treeView.filter(newValue));
         });
+
         BorderPane borderPane = new BorderPane(searchField);
+
+        Button aboutButton = new Button("", new ImageView(Images.getInternal("icons_x16/info.png")));
+        aboutButton.setOnAction(a -> new AboutWindow(getScene().getWindow()).show());
+
+        BorderPane.setMargin(aboutButton, new Insets(0, 0, 0, 4));
+        borderPane.setRight(aboutButton);
+        BorderPane.setMargin(borderPane, new Insets(4, 4, 4, 4));
         setBottom(borderPane);
-        borderPane.setPadding(new Insets(4, 4, 4, 4));
     }
 }
