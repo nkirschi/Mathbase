@@ -26,21 +26,13 @@ import javafx.scene.control.TextField;
 public class TopicTitleDialog extends AbstractTextDialog {
 
     /**
-     * Themenbaumkontrolleur.
-     *
-     * @since 1.0
-     */
-    private TopicTreeController topicTreeController;
-
-    /**
      * Konstruktion des Thementiteldialogs.
      *
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    public TopicTitleDialog(MainPane mainPane, TopicTreeController topicTreeController) {
+    public TopicTitleDialog(MainPane mainPane) {
         super(mainPane, new TextField());
-        this.topicTreeController = topicTreeController;
         setTitle(Constants.BUNDLE.getString("topic_management"));
         setInputDescription(Constants.BUNDLE.getString("title"));
     }
@@ -54,7 +46,7 @@ public class TopicTitleDialog extends AbstractTextDialog {
                 infoLabel.setText(Constants.BUNDLE.getString("empty_title"));
                 infoLabel.setVisible(true);
                 a.consume();
-            } else if (topicTreeController.doesExist(textField.getText())) {
+            } else if (TopicTreeController.getInstance().doesExist(textField.getText())) {
                 infoLabel.setText(Constants.BUNDLE.getString("existing_title"));
                 infoLabel.setVisible(true);
                 a.consume();

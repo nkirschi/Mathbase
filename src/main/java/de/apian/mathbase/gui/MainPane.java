@@ -11,6 +11,7 @@ import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.gui.topictree.SidebarPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.TopicTreeController;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.SplitPane;
@@ -35,39 +36,13 @@ public class MainPane extends SplitPane {
     public MainPane() {
         setDividerPositions(0.35);
 
-        TopicTreeController topicTreeController = initController();
-
-        SidebarPane sidebarPane = new SidebarPane(this, topicTreeController);
+        SidebarPane sidebarPane = new SidebarPane(this);
         SplitPane.setResizableWithParent(sidebarPane, Boolean.FALSE);
 
         getItems().addAll(sidebarPane, new FillerPane());
     }
 
-    /**
-     * Initialisierung des Themenbaumkontrolleurs mit Fehlerbehandlung
-     *
-     * @return Einzigster Themenbaumkontrolleur der Anwendung
-     */
-    private TopicTreeController initController() {
-        TopicTreeController topicTreeController = null;
-        try {
-            topicTreeController = new TopicTreeController();
-        } catch (IOException e) {
-            ErrorAlert errorAlert = new ErrorAlert(e);
-            errorAlert.showAndWait();
-            Optional<ButtonType> result = DialogUtils.showAlert(null, Alert.AlertType.INFORMATION,
-                    "Mathbase", null, Constants.BUNDLE.getString("no_data"),
-                    ButtonType.YES, ButtonType.NO);
-
-            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
-                try {
-                    TopicTreeController.recreateFile();
-                } catch (IOException e1) {
-                    throw new InternalError();
-                }
-            }
-            System.exit(0);
-        }
-        return topicTreeController;
+    public void setContent(Node node) {
+        getItems().set(1, node);
     }
 }

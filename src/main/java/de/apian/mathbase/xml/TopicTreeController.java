@@ -6,10 +6,13 @@
 
 package de.apian.mathbase.xml;
 
+import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Logging;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -34,19 +38,19 @@ import java.util.logging.Level;
 public class TopicTreeController {
 
     /**
-     * Pfad des Topic-Ordners relativ zum Arbeitsverzeichnis. Hier werden die eigentlichen Dateien gespeichert
-     *
-     * @since 1.0
-     */
-    private static final String TOPICS_PATH = "topics";
-
-    /**
      * {@code XmlFileHandler} der XML-Datei
      *
      * @see <a href="{@docRoot}/de/apian/mathbase/util/XmlFileHandler.html">XmlFileHandler</a>
      * @since 1.0
      */
     private XmlFileHandler xmlHandler;
+
+    /**
+     * Pfad des Topic-Ordners relativ zum Arbeitsverzeichnis. Hier werden die eigentlichen Dateien gespeichert
+     *
+     * @since 1.0
+     */
+    private static final String TOPICS_PATH = "topics";
 
     /**
      * Pfad der Originaldatei relativ zum Arbeitsverzeichnis
@@ -112,13 +116,49 @@ public class TopicTreeController {
     private static final String ATTR_CAPTION = "caption";
 
     /**
-     * Konstruktion des Kontrolleurs
+     * Einzigste Instanz des Themenbaumkontrolleurs
      *
-     * @throws IOException wenn das Laden der XML-Datei fehlschlägt oder der Topics-Ordner nicht existiert
      * @since 1.0
      */
-    public TopicTreeController() throws IOException {
-        loadFile();
+    private static TopicTreeController instance;
+
+    /**
+     * Konstruktion des Kontrolleurs
+     *
+     * @since 1.0
+     */
+    private TopicTreeController() {
+        try {
+            loadFile();
+        } catch (IOException e) {
+            ErrorAlert errorAlert = new ErrorAlert(e);
+            errorAlert.showAndWait();
+            Optional<ButtonType> result = DialogUtils.showAlert(null, Alert.AlertType.INFORMATION,
+                    "Mathbase", null, Constants.BUNDLE.getString("no_data"),
+                    ButtonType.YES, ButtonType.NO);
+
+            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
+                try {
+                    TopicTreeController.recreateFile();
+                } catch (IOException e1) {
+                    throw new InternalError();
+                }
+            }
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Singleton-Instanzoperation
+     *
+     * @return Einzigste Instanz des Themenbaumkontrolleurs
+     * @since 1.0
+     */
+    public static TopicTreeController getInstance() {
+        if (instance == null) {
+            instance = new TopicTreeController();
+        }
+        return instance;
     }
 
     /**
@@ -273,7 +313,7 @@ public class TopicTreeController {
 
         if (node == null) {
             //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
-            NodeNotFoundException e = new NodeNotFoundException("Es wurde nach einem nicht vorhanden Knoten " +
+            NullPointerException e = new NullPointerException("Es wurde nach einem nicht vorhanden Knoten " +
                     "gefordert: \"" + title + "\"");
             new ErrorAlert(e).showAndWait();
             Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);
@@ -590,7 +630,7 @@ public class TopicTreeController {
         } catch (IOException e) {
             //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
             if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
-                ((Element) node).setAttribute(ATTR_TITLE, to);
+                ((Element) node).setAttribute(ATTR_TITLE, from);
             throw e;
         }
 
@@ -639,7 +679,7 @@ public class TopicTreeController {
 
         if (contentNode == null) {
             //Darf und wird nicht vorkommen. Sollte es doch -> Loggen und das Programm schließen
-            NodeNotFoundException e = new NodeNotFoundException("Es wurde nach einem nicht vorhanden Inhalt " +
+            NullPointerException e = new NullPointerException("Es wurde nach einem nicht vorhanden Inhalt " +
                     "gefordert: \"" + content.getFilename() + "\" unter dem Knoten \"" + parent + "\"");
             new ErrorAlert(e).showAndWait();
             Logging.log(Level.SEVERE, Constants.FATAL_ERROR_MESSAGE, e);

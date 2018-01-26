@@ -35,13 +35,6 @@ public class SidebarPane extends BorderPane {
     private MainPane mainPane;
 
     /**
-     * Themenbaumkontrolleur.
-     *
-     * @since 1.0
-     */
-    private TopicTreeController topicTreeController;
-
-    /**
      * GUI-Baumkomponente.
      *
      * @since 1.0
@@ -52,19 +45,16 @@ public class SidebarPane extends BorderPane {
      * Konstruktion der Sidebar.
      *
      * @param mainPane            Basisanzeigefläche
-     * @param topicTreeController Themenbaumkontrolleur
      * @since 1.0
      */
-    public SidebarPane(MainPane mainPane, TopicTreeController topicTreeController) {
+    public SidebarPane(MainPane mainPane) {
         this.mainPane = mainPane;
-        this.topicTreeController = topicTreeController;
-
         setMinWidth(150);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
-        treeView = new TopicTreeView(mainPane, topicTreeController);
+        treeView = new TopicTreeView(mainPane);
         treeView.build();
         scrollPane.setContent(treeView);
         setCenter(scrollPane);

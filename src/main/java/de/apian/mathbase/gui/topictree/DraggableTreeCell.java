@@ -9,7 +9,6 @@ package de.apian.mathbase.gui.topictree;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.xml.NodeNotFoundException;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
@@ -49,20 +48,12 @@ public class DraggableTreeCell extends TreeCell<String> {
     private MainPane mainPane;
 
     /**
-     * Themenbaumkontrolleur
-     *
-     * @since 1.0
-     */
-    private TopicTreeController topicTreeController;
-
-    /**
      * Konstruktion des Themenbaumeintrages
      *
      * @since 1.0
      */
-    DraggableTreeCell(MainPane mainPane, TopicTreeController topicTreeController) {
+    DraggableTreeCell(MainPane mainPane) {
         this.mainPane = mainPane;
-        this.topicTreeController = topicTreeController;
 
         setOnDragDetected(this::dragDetected);
         setOnDragOver(this::dragOver);
@@ -144,7 +135,7 @@ public class DraggableTreeCell extends TreeCell<String> {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(pw -> {
             try {
-                topicTreeController.moveNode(sourceItem.getValue(), targetItem.getValue());
+                TopicTreeController.getInstance().moveNode(sourceItem.getValue(), targetItem.getValue());
                 sourceItem.getParent().getChildren().remove(sourceItem);
                 targetItem.getChildren().add(sourceItem);
                 targetItem.setExpanded(true);

@@ -37,6 +37,7 @@ public class AddContentDialog extends Dialog<Content> {
     private String filePath;
     private String caption;
     private Label infoLabel;
+    private TextField titleField;
 
     public AddContentDialog(Window owner) {
         type = Content.Type.OTHER;
@@ -72,7 +73,7 @@ public class AddContentDialog extends Dialog<Content> {
             gridPane.addRow(0, new Label(Constants.BUNDLE.getString("content_type") + ":"), comboBox);
 
             Label titleLabel = new Label(Constants.BUNDLE.getString("title") + ":");
-            TextField titleField = new TextField();
+            titleField = new TextField();
             infoLabel = new Label();
             infoLabel.setTextFill(Color.RED);
             infoLabel.setVisible(false);
@@ -114,6 +115,7 @@ public class AddContentDialog extends Dialog<Content> {
                 infoLabel.setVisible(true);
                 a.consume();
             }
+            caption = titleField.getText();
         });
     }
 
@@ -144,6 +146,7 @@ public class AddContentDialog extends Dialog<Content> {
 
     private void initDefaultMask(GridPane gridPane) {
         infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
+
         //Bringt Dateierweiterungen in ein schönes Format
         StringBuilder fileExtensionsBuilder = new StringBuilder();
         for (String s : type.getFileExtensions()) {

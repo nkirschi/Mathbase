@@ -44,21 +44,12 @@ public class TopicTreeView extends TreeView<String> {
     private MainPane mainPane;
 
     /**
-     * Themenbaumkontrolleur
-     *
-     * @since 1.0
-     */
-    private TopicTreeController topicTreeController;
-
-    /**
      * Konstruktion eines Themenbaums
      *
-     * @param mainPane            Basisanzeigefläche
-     * @param topicTreeController Themenbaumkontrolleur
+     * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    public TopicTreeView(MainPane mainPane, TopicTreeController topicTreeController) {
-        this.topicTreeController = topicTreeController;
+    public TopicTreeView(MainPane mainPane) {
         this.mainPane = mainPane;
 
         setRoot(new TreeItem<>());
@@ -68,7 +59,7 @@ public class TopicTreeView extends TreeView<String> {
         initSelectionBehavior();
         initContextMenu();
 
-        setCellFactory(param -> new DraggableTreeCell(mainPane, topicTreeController));
+        setCellFactory(param -> new DraggableTreeCell(mainPane));
     }
 
     /**
@@ -87,7 +78,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void build(TreeItem<String> parent) {
-        for (String s : topicTreeController.getChildren(parent.getValue())) {
+        for (String s : TopicTreeController.getInstance().getChildren(parent.getValue())) {
             TreeItem<String> child = new TreeItem<>(s);
             parent.getChildren().add(child);
             build(child);
@@ -102,7 +93,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     public TreeView<String> filter(String key) {
-        TopicTreeView treeView = new TopicTreeView(mainPane, topicTreeController);
+        TopicTreeView treeView = new TopicTreeView(mainPane);
         filter(getRoot(), treeView.getRoot(), key);
         return treeView;
     }
@@ -153,8 +144,8 @@ public class TopicTreeView extends TreeView<String> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         getSelectionModel().selectedItemProperty().addListener((observable, oldItem, newItem) -> {
             String title = newItem != null ? newItem.getValue() : null;
-            Node node = title != null ? new ContentPane(title, mainPane, topicTreeController) : new FillerPane();
-            mainPane.getItems().set(1, node);
+            Node node = title != null ? new ContentPane(title, mainPane) : new FillerPane();
+            mainPane.setContent(node);
         });
 
         // Wenn auf leeren Platz im Themenbaum geclickt wird, soll nichts ausgewählt sein
@@ -210,7 +201,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void addUnderSelected() {
-        TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
+        TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
         dialog.setHeaderText(Constants.BUNDLE.getString("add_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
@@ -219,7 +210,7 @@ public class TopicTreeView extends TreeView<String> {
                 selectedItem = getRoot();
 
             try {
-                topicTreeController.addNode(title, selectedItem.getValue());
+                TopicTreeController.getInstance().addNode(title, selectedItem.getValue());
                 TreeItem<String> newItem = new TreeItem<>(title);
                 selectedItem.getChildren().add(newItem);
                 selectedItem.getChildren().sort(Comparator.comparing(TreeItem::getValue));
@@ -231,21 +222,28 @@ public class TopicTreeView extends TreeView<String> {
         });
     }
 
+    /**
+     * Festlegung der Aktionen beim Umbenennen eines Themas
+     *
+     * @since 1.0
+     */
     private void renameSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             DialogUtils.showAlert(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
-                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("rename_topic"), Constants.BUNDLE.getString("nothing_to_rename"));
+                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("rename_topic"),
+                    Constants.BUNDLE.getString("nothing_to_rename"));
             return;
         }
 
-        TopicTitleDialog dialog = new TopicTitleDialog(mainPane, topicTreeController);
+        TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
         dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
             try {
-                topicTreeController.renameNode(selectedItem.getValue(), title);
+                TopicTreeController.getInstance().renameNode(selectedItem.getValue(), title);
                 selectedItem.setValue(title);
+                mainPane.setContent(new ContentPane(title, mainPane));
             } catch (IOException | TransformerException e) {
                 Logging.log(Level.WARNING, "Knoten umbenennen fehlgeschlagen!", e);
                 new WarningAlert().showAndWait();
@@ -274,7 +272,7 @@ public class TopicTreeView extends TreeView<String> {
         result.ifPresent(pw -> {
             try {
                 selectedItem.getParent().getChildren().remove(selectedItem);
-                topicTreeController.removeNode(selectedItem.getValue());
+                TopicTreeController.getInstance().removeNode(selectedItem.getValue());
                 getSelectionModel().select(null);
             } catch (IOException | TransformerException e) {
                 Logging.log(Level.WARNING, "Knoten löschen fehlgeschlagen!", e);

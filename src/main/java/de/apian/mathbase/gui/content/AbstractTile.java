@@ -36,7 +36,7 @@ import java.util.logging.Level;
  */
 class AbstractTile extends BorderPane {
     protected Button saveButton;
-    HBox buttonBox;
+    protected HBox buttonBox;
 
     AbstractTile(Content content, String directoryPath, ContentPane contentPane) {
         BorderPane topPane = new BorderPane();

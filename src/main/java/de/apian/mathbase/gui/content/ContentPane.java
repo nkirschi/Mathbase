@@ -49,13 +49,6 @@ public class ContentPane extends BorderPane {
     private MainPane mainPane;
 
     /**
-     * Themenbaumkontrolleur
-     *
-     * @since 1.0
-     */
-    private TopicTreeController topicTreeController;
-
-    /**
      * Titel des zugehörigen Themas
      *
      * @since 1.0
@@ -66,20 +59,25 @@ public class ContentPane extends BorderPane {
      * Konstruktion der Inhaltsanzeige.
      *
      * @param title               Titel des zugehörigen Themas
-     * @param topicTreeController Themenbaumkontrolleur
+     * @since 1.0
      */
-    public ContentPane(String title, MainPane mainPane, TopicTreeController topicTreeController) {
+    public ContentPane(String title, MainPane mainPane) {
         this.mainPane = mainPane;
-        this.topicTreeController = topicTreeController;
         this.title = title;
 
-        setPadding(new Insets(10, 10, 10, 10));
+        setPadding(Insets.EMPTY);
+        setBorder(Border.EMPTY);
 
-        VBox titleBox = initTitleBox();
-        setTop(titleBox);
-        setCenter(initContentScrollPane());
+        setTop(initTitleBox());
+        setCenter(initScrollPane());
     }
 
+    /**
+     * Initialisierung der Überschrift
+     *
+     * @return Titelbox
+     * @since 1.0
+     */
     private VBox initTitleBox() {
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
@@ -91,8 +89,8 @@ public class ContentPane extends BorderPane {
             Optional<Content> result = dialog.showAndWait();
             if (result.isPresent()) {
                 try {
-                    topicTreeController.addContent(result.get(), title);
-                    updateContents();
+                    TopicTreeController.getInstance().addContent(result.get(), title);
+                    mainPane.setContent(new ContentPane(title, mainPane));
                 } catch (IOException | TransformerException e) {
                     Logging.log(Level.WARNING, "Inhalt hinzufügen fehlgeschlagen!", e);
                     new WarningAlert().showAndWait();
@@ -103,28 +101,42 @@ public class ContentPane extends BorderPane {
         titlePane.setCenter(titleLabel);
         titlePane.setRight(addButton);
         VBox titleBox = new VBox(5, titlePane, new Separator());
-        BorderPane.setMargin(titleBox, new Insets(0, 0, 10, 0));
+        BorderPane.setMargin(titleBox, new Insets(10, 10, 10, 10));
+
         return titleBox;
     }
 
-    private ScrollPane initContentScrollPane() {
+    /**
+     * Initialiserung des Scrollbuben
+     *
+     * @return Scrollbarer Inhaltsanzeiger
+     * @since 1.0
+     */
+    private ScrollPane initScrollPane() {
         GridPane contentGrid = initContentGrid();
-        ScrollPane contentScrollPane = new ScrollPane(contentGrid);
-        contentScrollPane.setFitToHeight(true);
-        contentScrollPane.setFitToWidth(true);
-        contentScrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
-        return contentScrollPane;
+        ScrollPane scrollPane = new ScrollPane(contentGrid);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
+        scrollPane.setPadding(new Insets(10, 10, 10, 10));
+        return scrollPane;
     }
 
+    /**
+     * Initialierung des Inhaltsgitters
+     *
+     * @return Inhaltsgitter
+     * @since 1.0
+     */
     private GridPane initContentGrid() {
         GridPane contentGrid = new GridPane();
         contentGrid.setVgap(10);
         contentGrid.setHgap(10);
 
         // Füllen mit Inhalt
-        Content[] contents = topicTreeController.getContents(title);
+        Content[] contents = TopicTreeController.getInstance().getContents(title);
         for (Content content : contents)
-            contentGrid.getChildren().add(createTile(content, topicTreeController.locateDirectory(title)));
+            contentGrid.getChildren().add(createTile(content, TopicTreeController.getInstance().locateDirectory(title)));
 
         // Herstellen der Responsivität
         widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -148,6 +160,14 @@ public class ContentPane extends BorderPane {
         return contentGrid;
     }
 
+    /**
+     * Erstellung einer passenden Inhaltskachel
+     *
+     * @param content       Inhalt
+     * @param directoryPath Verzeichnispfad
+     * @return neue Inhaltskachel
+     * @since 1.0
+     */
     private AbstractTile createTile(Content content, String directoryPath) {
         switch (content.getType()) {
             case DESCRIPTION:
@@ -167,18 +187,20 @@ public class ContentPane extends BorderPane {
         }
     }
 
-    private void updateContents() {
-        setCenter(initContentScrollPane()); //Damit die Inhalte geupdatet werden
-    }
-
-    void removeContent(Content content) { //Zum löschen eines diesem ContentPane angehörigen Inhalts
+    /**
+     * Entfernen einer Inhaltskachel
+     *
+     * @param content Inhalt
+     * @since 1.0
+     */
+    void removeContent(Content content) {
         PasswordDialog dialog = new PasswordDialog(mainPane);
         dialog.setHeaderText(Constants.BUNDLE.getString("remove_content"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(pw -> {
             try {
-                topicTreeController.removeContent(content, title);
-                updateContents();
+                TopicTreeController.getInstance().removeContent(content, title);
+                mainPane.setContent(new ContentPane(title, mainPane));
             } catch (IOException | TransformerException e) {
                 Logging.log(Level.WARNING, "Inhalt löschen fehlgeschlagen!", e);
                 new WarningAlert().showAndWait();
