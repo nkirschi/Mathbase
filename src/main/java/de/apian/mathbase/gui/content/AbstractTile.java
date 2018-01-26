@@ -81,7 +81,7 @@ class AbstractTile extends BorderPane {
             setEffect(null);
         });
 
-        topPane.setOnDragDropped(a -> {
+        setOnDragDropped(a -> {
             TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
             mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
         });
