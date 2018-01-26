@@ -9,7 +9,6 @@ package de.apian.mathbase.gui.content;
 import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.ContentAdditionDialog;
-import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
@@ -173,19 +172,19 @@ public class ContentPane extends BorderPane {
     private AbstractTile createTile(Content content, String directoryPath) {
         switch (content.getType()) {
             case DESCRIPTION:
-                return new DescriptionTile(content, directoryPath, this);
+                return new DescriptionTile(content, directoryPath, this, mainPane);
             case GEOGEBRA:
-                return new GeogebraTile(content, directoryPath, this);
+                return new GeogebraTile(content, directoryPath, this, mainPane);
             case IMAGE:
-                return new ImageTile(content, directoryPath, this);
+                return new ImageTile(content, directoryPath, this, mainPane);
             case VIDEO:
-                return new VideoTile(content, directoryPath, this);
+                return new VideoTile(content, directoryPath, this, mainPane);
             case WORKSHEET:
-                return new WorksheetTile(content, directoryPath, this);
+                return new WorksheetTile(content, directoryPath, this, mainPane);
             case EDITABLE_WORKSHEET:
-                return new EditableWorksheetTile(content, directoryPath, this);
+                return new EditableWorksheetTile(content, directoryPath, this, mainPane);
             default:
-                return new LinkTile(content, directoryPath, this);
+                return new LinkTile(content, directoryPath, this, mainPane);
         }
     }
 
@@ -205,5 +204,9 @@ public class ContentPane extends BorderPane {
                 new WarningAlert().showAndWait();
             }
         }
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

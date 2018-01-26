@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.image.Image;
@@ -18,8 +19,8 @@ import javafx.scene.image.Image;
  * @since 1.0
  */
 class EditableWorksheetTile extends LinkTile {
-    EditableWorksheetTile(Content content, String directoryPath, ContentPane contentPane) {
-        super(content, directoryPath, contentPane);
+    EditableWorksheetTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
+        super(content, directoryPath, contentPane, mainPane);
     }
 
     @Override

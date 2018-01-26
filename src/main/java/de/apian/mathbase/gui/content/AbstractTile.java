@@ -6,19 +6,18 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -44,7 +43,9 @@ import java.util.logging.Level;
 class AbstractTile extends BorderPane {
     protected HBox buttonBox;
 
-    AbstractTile(Content content, String directoryPath, ContentPane contentPane) {
+    private static Content sourceContent, targetContent;
+
+    AbstractTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
         BorderPane topPane = new BorderPane();
 
         Button saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
@@ -57,6 +58,7 @@ class AbstractTile extends BorderPane {
         topPane.setCenter(titleLabel);
 
         topPane.setOnDragDetected(a -> {
+            sourceContent = content;
             Dragboard db = topPane.startDragAndDrop(TransferMode.MOVE);
             db.setDragView(this.snapshot(null, null));
             ClipboardContent clipboardContent = new ClipboardContent();
@@ -65,9 +67,23 @@ class AbstractTile extends BorderPane {
             a.consume();
         });
 
-        topPane.setOnDragOver(a -> {
-            System.out.println("hoppla");
-            
+        setOnDragOver(a -> {
+            targetContent = content;
+            a.acceptTransferModes(TransferMode.MOVE);
+            InnerShadow shadow = new InnerShadow();
+            shadow.setOffsetX(1.0);
+            shadow.setColor(Color.web("#666666"));
+            shadow.setOffsetY(1.0);
+            setEffect(shadow);
+        });
+
+        setOnDragExited(a -> {
+            setEffect(null);
+        });
+
+        setOnDragDropped(a -> {
+            TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
+            mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
         });
 
         BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));

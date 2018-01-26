@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
@@ -31,8 +32,8 @@ import java.util.logging.Level;
 public class DescriptionTile extends AbstractTile {
     private Button editButton;
 
-    public DescriptionTile(Content content, String directoryPath, ContentPane contentPane) {
-        super(content, directoryPath, contentPane);
+    public DescriptionTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
+        super(content, directoryPath, contentPane, mainPane);
 
         TextArea textArea = new TextArea();
         textArea.setWrapText(true);

@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -27,8 +28,8 @@ import java.util.logging.Level;
  * @since 1.0
  */
 class ImageTile extends AbstractTile {
-    ImageTile(Content content, String directoryPath, ContentPane contentPane) {
-        super(content, directoryPath, contentPane);
+    ImageTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
+        super(content, directoryPath, contentPane, mainPane);
 
         try {
             ImageView imageView = new ImageView(Images.getExternal(directoryPath + content.getFilename()));
