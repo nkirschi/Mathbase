@@ -6,9 +6,8 @@
 
 package de.apian.mathbase.gui.topictree;
 
+import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.MainPane;
-import de.apian.mathbase.gui.dialog.PasswordDialog;
-import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.control.TreeCell;
@@ -20,7 +19,6 @@ import javafx.scene.paint.Color;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * Ziehbarer Themenbaumeintrag für Drag and Drop.
@@ -100,6 +98,7 @@ public class DraggableTreeCell extends TreeCell<String> {
 
     /**
      * Aktionen beim Gedrückthalten der linken Maustaste und Ziehen über andere Elemente
+     *
      * @param event Ziehereignis
      * @since 1.0
      */
@@ -123,6 +122,7 @@ public class DraggableTreeCell extends TreeCell<String> {
 
     /**
      * Aktionen beim Loslassen der linken Maustaste über einem Knoten
+     *
      * @param event Ziehereignis
      * @since 1.0
      */
@@ -130,10 +130,7 @@ public class DraggableTreeCell extends TreeCell<String> {
         if (targetItem == null)
             targetItem = getTreeView().getRoot();
 
-        PasswordDialog dialog = new PasswordDialog(mainPane);
-        dialog.setHeaderText(Constants.BUNDLE.getString("move_topic"));
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(pw -> {
+        if (Mathbase.authenticate(mainPane)) {
             try {
                 TopicTreeController.getInstance().moveNode(sourceItem.getValue(), targetItem.getValue());
                 sourceItem.getParent().getChildren().remove(sourceItem);
@@ -143,7 +140,7 @@ public class DraggableTreeCell extends TreeCell<String> {
             } catch (IOException | TitleCollisionException | TransformerException e) {
                 e.printStackTrace();
             }
-        });
+        }
     }
 
     /**

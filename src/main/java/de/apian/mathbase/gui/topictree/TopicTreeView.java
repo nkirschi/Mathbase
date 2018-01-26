@@ -6,11 +6,15 @@
 
 package de.apian.mathbase.gui.topictree;
 
+import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.FillerPane;
 import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.content.ContentPane;
-import de.apian.mathbase.gui.dialog.*;
+import de.apian.mathbase.gui.dialog.DialogUtils;
+import de.apian.mathbase.gui.dialog.ErrorAlert;
+import de.apian.mathbase.gui.dialog.TopicTitleDialog;
+import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -236,19 +240,21 @@ public class TopicTreeView extends TreeView<String> {
             return;
         }
 
-        TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
-        dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(title -> {
-            try {
-                TopicTreeController.getInstance().renameNode(selectedItem.getValue(), title);
-                selectedItem.setValue(title);
-                mainPane.setContent(new ContentPane(title, mainPane));
-            } catch (IOException | TransformerException e) {
-                Logging.log(Level.WARNING, "Knoten umbenennen fehlgeschlagen!", e);
-                new WarningAlert().showAndWait();
-            }
-        });
+        if (Mathbase.authenticate(mainPane)) {
+            TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
+            dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(title -> {
+                try {
+                    TopicTreeController.getInstance().renameNode(selectedItem.getValue(), title);
+                    selectedItem.setValue(title);
+                    mainPane.setContent(new ContentPane(title, mainPane));
+                } catch (IOException | TransformerException e) {
+                    Logging.log(Level.WARNING, "Knoten umbenennen fehlgeschlagen!", e);
+                    new WarningAlert().showAndWait();
+                }
+            });
+        }
     }
 
     /**
@@ -266,20 +272,23 @@ public class TopicTreeView extends TreeView<String> {
             return;
         }
 
-        PasswordDialog dialog = new PasswordDialog(mainPane);
-        dialog.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(pw -> {
-            try {
-                selectedItem.getParent().getChildren().remove(selectedItem);
-                TopicTreeController.getInstance().removeNode(selectedItem.getValue());
-                getSelectionModel().select(null);
-            } catch (IOException | TransformerException e) {
-                Logging.log(Level.WARNING, "Knoten löschen fehlgeschlagen!", e);
-                new WarningAlert().showAndWait();
-            }
-        });
+        if (Mathbase.authenticate(mainPane)) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    Constants.BUNDLE.getString("remove_confirmation"), ButtonType.YES, ButtonType.NO);
+            alert.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
+            Optional<ButtonType> result = alert.showAndWait();
 
+            if (result.isPresent() && result.get() == ButtonType.YES) {
+                try {
+                    selectedItem.getParent().getChildren().remove(selectedItem);
+                    TopicTreeController.getInstance().removeNode(selectedItem.getValue());
+                    getSelectionModel().select(null);
+                } catch (IOException | TransformerException e) {
+                    Logging.log(Level.WARNING, "Knoten löschen fehlgeschlagen!", e);
+                    new WarningAlert().showAndWait();
+                }
+            }
+        }
     }
 
     private void setExpandedAll(TreeItem<String> parent, boolean expanded) {

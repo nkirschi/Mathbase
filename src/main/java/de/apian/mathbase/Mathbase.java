@@ -7,6 +7,7 @@
 package de.apian.mathbase;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -16,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -32,7 +34,14 @@ import java.util.logging.Level;
 public class Mathbase extends Application {
 
     /**
-     * Referenz auf das Hauptfenster {@code stage}
+     * Wahrheitsaussage über die Authentifikation eines Administrators.
+     *
+     * @since 1.0
+     */
+    private static boolean auth;
+
+    /**
+     * Referenz auf das Hauptfenster {@code stage}.
      *
      * @see <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html">Stage</a>
      * @since 1.0
@@ -40,7 +49,7 @@ public class Mathbase extends Application {
     private Stage stage;
 
     /**
-     * Einstiegspunkt der Applikation
+     * Einstiegspunkt der Applikation.
      *
      * @param args Kommandozeilenargumente
      * @since 1.0
@@ -50,8 +59,18 @@ public class Mathbase extends Application {
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
     }
 
+    public static boolean authenticate(MainPane mainPane) {
+        if (!auth) {
+            PasswordDialog dialog = new PasswordDialog(mainPane);
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent())
+                auth = true;
+        }
+        return auth;
+    }
+
     /**
-     * Start der JavaFX-Anwendung
+     * Start der JavaFX-Anwendung.
      *
      * @param stage Vom Framework übergebenes Hauptfenster
      * @since 1.0
@@ -64,7 +83,7 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Initialisierung des Hauptfensters
+     * Initialisierung des Hauptfensters.
      *
      * @since 1.0
      */
@@ -80,7 +99,7 @@ public class Mathbase extends Application {
     }
 
     /**
-     * Aufräumen vor Beendigung des Programms
+     * Aufräumen vor Beendigung des Programms.
      *
      * @since 1.0
      */
