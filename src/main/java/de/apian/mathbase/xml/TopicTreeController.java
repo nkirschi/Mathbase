@@ -743,7 +743,7 @@ public class TopicTreeController {
         contentElement.setAttribute(ATTR_FILENAME, to.getFileName().toString());
         if (content.getCaption() != null)
             contentElement.setAttribute(ATTR_CAPTION, content.getCaption());
-        insertContent(contentElement, parentNode, Integer.MAX_VALUE);
+        parentNode.appendChild(contentElement);
         Logging.log(Level.INFO, content.toString() + " erfolgreich erstellt");
 
         //Kopieren der Datei
@@ -776,25 +776,7 @@ public class TopicTreeController {
     }
 
     /**
-     * Hinzufügen eines Inhalts zu einem Elternknoten an eine bestimmte Position in dessen childNode-Liste. Ist der
-     * Inhalt bereits in der XML-Datei vorhanden, so wird er vorher entfernt.
-     *
-     * @param contentNode Der einzufügende Inhalt als {@code Node}-Objekt
-     * @param parentNode  Der Elternknoten
-     * @param index       Der Index in der childNode-Liste. Wenn über der Länge der Liste, wird der Inhalt am Ende eingefügt
-     * @since 1.0
-     */
-    private void insertContent(Node contentNode, Node parentNode, int index) {
-        NodeList siblings = parentNode.getChildNodes();
-        if (index > siblings.getLength() - 2) { //-2, da wir insertBefore benutzen
-            parentNode.appendChild(contentNode); //Füge Inhalt ans Ende der childNodes-Liste
-        } else {
-            parentNode.insertBefore(siblings.item(index + 1), contentNode);
-        }
-    }
-
-    /**
-     * Löschenn eines Inhalts
+     * Löschen eines Inhalts
      *
      * @param parent  Titel des Elternknotens
      * @param content Zu entfernender Inhalt
