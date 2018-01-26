@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.ContentAdditionDialog;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
@@ -195,10 +196,7 @@ public class ContentPane extends BorderPane {
      * @since 1.0
      */
     void removeContent(Content content) {
-        PasswordDialog dialog = new PasswordDialog(mainPane);
-        dialog.setHeaderText(Constants.BUNDLE.getString("remove_content"));
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(pw -> {
+        if (Mathbase.authenticate(mainPane)) {
             try {
                 TopicTreeController.getInstance().removeContent(content, title);
                 mainPane.setContent(new ContentPane(title, mainPane));
@@ -206,6 +204,6 @@ public class ContentPane extends BorderPane {
                 Logging.log(Level.WARNING, "Inhalt löschen fehlgeschlagen!", e);
                 new WarningAlert().showAndWait();
             }
-        });
+        }
     }
 }
