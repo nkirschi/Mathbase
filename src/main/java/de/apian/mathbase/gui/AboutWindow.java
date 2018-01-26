@@ -9,7 +9,7 @@ package de.apian.mathbase.gui;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -21,16 +21,16 @@ public class AboutWindow extends Stage {
     public AboutWindow(Window owner) {
         initOwner(owner);
         setTitle(Constants.BUNDLE.getString("about_title"));
-        setWidth(520);
-        setHeight(450);
+        setWidth(570);
+        setHeight(530);
         setResizable(false);
         getIcons().add(Images.getInternal("icons_x16/mathsbox.png"));
 
         setScene(new Scene(initContentPane()));
     }
 
-    private ScrollPane initContentPane() {
-        return new ScrollPane(initText());
+    private BorderPane initContentPane() {
+        return new BorderPane(initText());
     }
 
     private Text initText() {
