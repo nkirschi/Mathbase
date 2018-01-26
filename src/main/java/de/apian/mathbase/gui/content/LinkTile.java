@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -28,8 +29,8 @@ import java.util.logging.Level;
  */
 class LinkTile extends AbstractTile {
 
-    LinkTile(Content content, String directoryPath, ContentPane contentPane) {
-        super(content, directoryPath, contentPane);
+    LinkTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
+        super(content, directoryPath, contentPane, mainPane);
 
         String filename = content.getFilename();
 

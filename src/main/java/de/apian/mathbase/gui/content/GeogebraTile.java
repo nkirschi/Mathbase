@@ -6,6 +6,7 @@
 
 package de.apian.mathbase.gui.content;
 
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.xml.Content;
 import javafx.scene.image.Image;
@@ -19,8 +20,8 @@ import javafx.scene.image.Image;
  */
 class GeogebraTile extends LinkTile {
 
-    GeogebraTile(Content content, String directoryPath, ContentPane contentPane) {
-        super(content, directoryPath, contentPane);
+    GeogebraTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
+        super(content, directoryPath, contentPane, mainPane);
     }
 
     @Override
