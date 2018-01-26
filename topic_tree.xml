@@ -4,9 +4,9 @@
         <content caption="A bisserl Erklärung" filename="public-key-verschluesselung.txt" type="description"/>
         <content caption="Der Schlüssel" filename="key.jpg" type="image"/>
         <content caption="Harte Arbeit" filename="kacki.pdf" type="worksheet"/>
-        <content filename="vid.mp4" type="video"/>
         <content filename="sachma.ggb" type="geogebra"/>
         <content caption="Wichtiges Programm" filename="virus.exe" type="other"/>
+        <content caption="Benes Gurke" filename="benes_gurke.mp4" type="video"/>
     </node>
     <node title="Kombinatorik">
         <node title="Urnenmodelle">

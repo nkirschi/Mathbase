@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -82,8 +83,12 @@ class AbstractTile extends BorderPane {
         });
 
         setOnDragDropped(a -> {
-            TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
-            mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
+            try {
+                TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
+                mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
+            } catch (IOException | TransformerException e) {
+                new WarningAlert().showAndWait();
+            }
         });
 
         BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
