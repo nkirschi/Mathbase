@@ -819,6 +819,8 @@ public class TopicTreeController {
      * @param c1     Erster Inhalt
      * @param c2     Zweiter Inhalt
      * @param parent Elternknoten
+     * @throws TransformerException wenn das Speichern der XML-Datei fehlschlägt
+     * @throws IOException          wenn das Speichern der XML-Datei fehlschlägt
      */
     public void swapContents(Content c1, Content c2, String parent) throws IOException, TransformerException {
         Node parentNode = getNode(parent);
