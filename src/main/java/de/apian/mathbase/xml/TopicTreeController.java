@@ -445,7 +445,7 @@ public class TopicTreeController {
         // Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             // Fehlgeschlagen, ändere XML im Speicher zurück, lösche Ordner, dann brich ab
             parent.removeChild(element);
             try {
@@ -543,7 +543,7 @@ public class TopicTreeController {
         // Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
             insertNodeAlphabetically(node, from);
             try {
@@ -637,7 +637,7 @@ public class TopicTreeController {
         // Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück, lösche kopierten Ordner, dann brich ab
             if (node.getNodeType() == Node.ELEMENT_NODE) //Anderer Fall kann normalerweise nicht eintreten ...
                 ((Element) node).setAttribute(ATTR_TITLE, to);
@@ -759,7 +759,7 @@ public class TopicTreeController {
         //Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             // Fehlgeschlagen, ändere XML im Speicher zurück, lösche Datei, dann brich ab
             parentNode.removeChild(contentElement);
             try {
@@ -795,7 +795,7 @@ public class TopicTreeController {
         //Speichern der XML-Datei
         try {
             saveFile();
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             //Fehlgeschlagen, ändere XML im Speicher zurück und brich ab
             parentNode.appendChild(contentNode); //Klatsch es einfach wieder hinten ran, es ist ja was schiefgelaufen
             throw e;
@@ -820,7 +820,7 @@ public class TopicTreeController {
      * @param c2     Zweiter Inhalt
      * @param parent Elternknoten
      */
-    public void swapContents(Content c1, Content c2, String parent) {
+    public void swapContents(Content c1, Content c2, String parent) throws IOException, TransformerException {
         Node parentNode = getNode(parent);
         Node n1 = getContent(c1, parent);
         Node n2 = getContent(c2, parent);
@@ -833,5 +833,12 @@ public class TopicTreeController {
             parentNode.appendChild(n2);
         else
             parentNode.insertBefore(n2, anotherNode);
+
+        try {
+            saveFile();
+        } catch (IOException | TransformerException e) {
+            //Fehlgeschlagen, auch egal, wurde ja nur die Reihenfolge geändert
+            throw e;
+        }
     }
 }

@@ -39,11 +39,8 @@ public class AboutWindow extends Stage {
             while (scanner.hasNextLine())
                 text.setText(text.getText() + scanner.nextLine() + "\n");
         }
-        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/LICENSE"))) {
-            while (scanner.hasNextLine())
-                text.setText(text.getText() + scanner.nextLine() + "\n");
-        }
         text.setTextAlignment(TextAlignment.CENTER);
+
         return text;
     }
 }
