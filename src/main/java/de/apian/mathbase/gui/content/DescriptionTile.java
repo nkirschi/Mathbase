@@ -51,11 +51,9 @@ public class DescriptionTile extends AbstractTile {
         editButton.setOnAction(a -> {
             if (editButton.getText() == null) {
                 editButton.setText(Constants.BUNDLE.getString("done"));
-                saveButton.setVisible(false);
                 textArea.setEditable(true);
             } else {
                 editButton.setText(null);
-                saveButton.setVisible(true);
                 textArea.setEditable(false);
                 try {
                     Files.write(Paths.get(directoryPath, content.getFilename()), textArea.getText().getBytes("utf-8"));

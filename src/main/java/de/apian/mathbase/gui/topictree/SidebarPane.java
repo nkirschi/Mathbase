@@ -6,11 +6,10 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.AboutWindow;
+import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
-import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -42,23 +41,54 @@ public class SidebarPane extends BorderPane {
     private TopicTreeView treeView;
 
     /**
+     * Baumanzeigefläche.
+     *
+     * @since 1.0
+     */
+    private ScrollPane scrollPane;
+
+    /**
      * Konstruktion der Sidebar.
      *
-     * @param mainPane            Basisanzeigefläche
+     * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
     public SidebarPane(MainPane mainPane) {
         this.mainPane = mainPane;
         setMinWidth(150);
 
+        scrollPane = initTreePane();
+        setCenter(scrollPane);
+
+        BorderPane bottomPane = initBottomPane();
+        BorderPane.setMargin(bottomPane, new Insets(4, 4, 4, 4));
+        setBottom(bottomPane);
+    }
+
+    /**
+     * Initialisierung der Baumanzeigefläche.
+     *
+     * @return Baumanzeigefläche
+     * @since 1.0
+     */
+    private ScrollPane initTreePane() {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         treeView = new TopicTreeView(mainPane);
         treeView.build();
         scrollPane.setContent(treeView);
-        setCenter(scrollPane);
+        return scrollPane;
+    }
 
+    /**
+     * Initialisierung der Bodenfläche
+     *
+     * @return Bodenfläche
+     * @since 1.0
+     */
+    private BorderPane initBottomPane() {
+        BorderPane borderPane = new BorderPane();
 
         TextField searchField = new TextField();
         searchField.setPromptText(Constants.BUNDLE.getString("search"));
@@ -68,15 +98,13 @@ public class SidebarPane extends BorderPane {
             else
                 scrollPane.setContent(treeView.filter(newValue));
         });
-
-        BorderPane borderPane = new BorderPane(searchField);
+        borderPane.setCenter(searchField);
 
         Button aboutButton = new Button("", new ImageView(Images.getInternal("icons_x16/info.png")));
         aboutButton.setOnAction(a -> new AboutWindow(getScene().getWindow()).show());
-
         BorderPane.setMargin(aboutButton, new Insets(0, 0, 0, 4));
         borderPane.setRight(aboutButton);
-        BorderPane.setMargin(borderPane, new Insets(4, 4, 4, 4));
-        setBottom(borderPane);
+
+        return borderPane;
     }
 }

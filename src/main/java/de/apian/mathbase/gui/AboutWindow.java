@@ -23,12 +23,20 @@ public class AboutWindow extends Stage {
         setHeight(450);
         getIcons().add(Images.getInternal("icons_x16/mathsbox.png"));
 
-        Text text = new Text();
 
+        setScene(new Scene(initContentPane()));
+    }
+
+    private ScrollPane initContentPane() {
+        return new ScrollPane(initLicenseText());
+    }
+
+    private Text initLicenseText() {
+        Text text = new Text();
         try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/LICENSE"))) {
             while (scanner.hasNextLine())
                 text.setText(text.getText() + scanner.nextLine() + "\n");
         }
-        setScene(new Scene(new ScrollPane(text)));
+        return text;
     }
 }

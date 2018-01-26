@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.ContentAdditionDialog;
 import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
@@ -85,7 +86,7 @@ public class ContentPane extends BorderPane {
         Button addButton = new Button(Constants.BUNDLE.getString("add"),
                 new ImageView(Images.getInternal("icons_x16/add.png")));
         addButton.setOnAction(a -> {
-            AddContentDialog dialog = new AddContentDialog(mainPane.getScene().getWindow());
+            ContentAdditionDialog dialog = new ContentAdditionDialog(mainPane.getScene().getWindow());
             Optional<Content> result = dialog.showAndWait();
             if (result.isPresent()) {
                 try {

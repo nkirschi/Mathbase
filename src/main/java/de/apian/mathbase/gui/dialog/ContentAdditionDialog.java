@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2018. MathBox P-Seminar 16/18. All rights reserved.
+ * Copyright (c) 2017 MathBox P-Seminar 16/18. All rights reserved.
  * This product is licensed under the GNU General Public License v3.0.
  * See LICENSE file for further information.
  */
 
-package de.apian.mathbase.gui.content;
+package de.apian.mathbase.gui.dialog;
 
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -23,6 +24,10 @@ import javafx.stage.Window;
 import javafx.util.StringConverter;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.logging.Level;
 
 /**
  * Dialog zum Hinzufügen eines Inhalts
@@ -32,14 +37,15 @@ import java.io.File;
  * @see de.apian.mathbase.xml.Content
  * @since 1.0
  */
-public class AddContentDialog extends Dialog<Content> {
+public class ContentAdditionDialog extends Dialog<Content> {
     private Content.Type type;
     private String filePath;
     private String caption;
     private Label infoLabel;
     private TextField titleField;
+    private TextArea descriptionArea;
 
-    public AddContentDialog(Window owner) {
+    public ContentAdditionDialog(Window owner) {
         type = Content.Type.OTHER;
         filePath = null;
         caption = null;
@@ -111,18 +117,34 @@ public class AddContentDialog extends Dialog<Content> {
     private void initOkButton() {
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
         okButton.addEventFilter(ActionEvent.ACTION, a -> {
+            caption = titleField.getText();
+
+            if (caption != null && caption.isEmpty())
+                caption = null;
+
+            if (type == Content.Type.DESCRIPTION) {
+                try {
+                    Path path = Files.createTempFile("mathbase", ".txt");
+                    Files.write(path, descriptionArea.getText().getBytes("utf-8"));
+                    filePath = path.toAbsolutePath().toString();
+                } catch (IOException e) {
+                    Logging.log(Level.WARNING, "Fehler beim Erstellen der temporären Datei zum Hinzufügen einer Beschreibung", e);
+                    new WarningAlert().show();
+                    a.consume();
+                }
+            }
+
             if (filePath == null || filePath.isEmpty()) {
                 infoLabel.setVisible(true);
                 a.consume();
             }
-            caption = titleField.getText();
         });
     }
 
     private void initDescriptionMask(GridPane gridPane) {
         infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
         Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
-        TextArea descriptionArea = new TextArea();
+        descriptionArea = new TextArea();
         descriptionArea.setPrefRowCount(5);
         GridPane.setValignment(descriptionLabel, VPos.TOP);
         gridPane.addRow(2, descriptionLabel, descriptionArea);
