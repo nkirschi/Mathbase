@@ -13,9 +13,16 @@ import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -35,13 +42,12 @@ import java.util.logging.Level;
  * @since 1.0
  */
 class AbstractTile extends BorderPane {
-    protected Button saveButton;
     protected HBox buttonBox;
 
     AbstractTile(Content content, String directoryPath, ContentPane contentPane) {
         BorderPane topPane = new BorderPane();
 
-        saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
+        Button saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
         Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
         buttonBox = new HBox(3, saveButton, removeButton);
         topPane.setRight(buttonBox);
@@ -49,6 +55,20 @@ class AbstractTile extends BorderPane {
         Label titleLabel = new Label(content.getCaption());
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
         topPane.setCenter(titleLabel);
+
+        topPane.setOnDragDetected(a -> {
+            Dragboard db = topPane.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(this.snapshot(null, null));
+            ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putString("tile");
+            db.setContent(clipboardContent);
+            a.consume();
+        });
+
+        topPane.setOnDragOver(a -> {
+            System.out.println("hoppla");
+            
+        });
 
         BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
 
