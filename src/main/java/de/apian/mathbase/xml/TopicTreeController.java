@@ -242,7 +242,7 @@ public class TopicTreeController {
      * @throws IOException wenn das Erstellen nicht erfolgreich war
      * @since 1.0
      */
-    public static void recreateFile() throws IOException {
+    private static void recreateFile() throws IOException {
 
         // Erstellen der XML-Datei
         Path xmlPath = Paths.get(ORIGINAL_PATH);
@@ -811,5 +811,27 @@ public class TopicTreeController {
         }
 
         Logging.log(Level.INFO, content.toString() + " wurde vom Knoten \"" + parent + "\" entfernt");
+    }
+
+    /**
+     * Vertauschen zweier Inhalte unterhalb eines bestimmten Elternknotens
+     *
+     * @param c1     Erster Inhalt
+     * @param c2     Zweiter Inhalt
+     * @param parent Elternknoten
+     */
+    public void swapContents(Content c1, Content c2, String parent) {
+        Node parentNode = getNode(parent);
+        Node n1 = getContent(c1, parent);
+        Node n2 = getContent(c2, parent);
+
+        Node anotherNode = n1.getNextSibling(); // Hol den Knoten, welcher auf n1 folgt; brauchen wir, um uns den Platz
+        // zu merken. Ist er NULL, auch egal, wird später n2 einfach ans Ende
+        // der childNodes-Liste gepackt
+        parentNode.insertBefore(n1, n2);
+        if (anotherNode == null)
+            parentNode.appendChild(n2);
+        else
+            parentNode.insertBefore(n2, anotherNode);
     }
 }
