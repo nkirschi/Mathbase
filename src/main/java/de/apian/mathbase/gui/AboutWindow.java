@@ -13,7 +13,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -22,7 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.util.Locale;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class AboutWindow extends Stage {
@@ -58,7 +59,8 @@ public class AboutWindow extends Stage {
 
     private Text initText() {
         Text text = new Text();
-        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/" + Constants.BUNDLE.getString("about_filename")))) {
+        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/" + Constants.BUNDLE.
+                getString("about_filename")), StandardCharsets.UTF_8.toString())) {
             while (scanner.hasNextLine())
                 text.setText(text.getText() + scanner.nextLine() + "\n");
         }
