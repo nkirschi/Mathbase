@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -30,6 +31,8 @@ public class AboutWindow extends Stage {
         setTitle(Constants.BUNDLE.getString("about_title"));
         setResizable(false);
         getIcons().add(Images.getInternal("icons_x16/mathsbox.png"));
+
+        initModality(Modality.WINDOW_MODAL);
 
         setScene(new Scene(initContentPane()));
     }
