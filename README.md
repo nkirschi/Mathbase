@@ -4,6 +4,31 @@
 Diese Applikation entstand im Rahmen eines P-Seminares am Apian-Gymnasium in Ingolstadt.
 Zielsetzung ist eine simple und präzise Verwaltung mannigfaltiger Themen aus der Mathematik, die von Schülern für Schüler erarbeitet und medial gestaltet wurden, z.B. in Form von Videos, Arbeitsblättern und Schaubildern. Außerdem kann die Sammlung überdies von anderen Kursen, Seminaren oder auch engagierten Lehrern erweitert werden.
 
-Eine Dokumentation des gesamten Projekts ist bei http://slaergh.github.io/Mathbase verfügbar.
+Ingolstadt, Januar 2018
 
-_Ingolstadt_, Januar 2018
+## Releases
+Eine Übersicht der Programmveröffentlichungen ist [hier](../../releases/) zu finden.
+
+## Systemvoraussetzungen
+Für die Exekution der Applikation ist Java in der Version 1.8 oder höher vonnöten. Anschließend kann Mathbase bequem via .jar-Archiv unter mindestens diesen Betriebssystemen ausgeführt werden:
+
+* Windows Vista und höher
+* MacOS X und höher
+* Linux (Desktop-Distributionen)
+
+Die vollständigen Systemvoraussetzungen sind der offiziellen Java-Website zu entnehmen.
+
+## Installation
+Für die Installation genügt es, die Datei `Mathbase.jar` der entsprechenden [Version](../../releases) in das gewünschte Verzeichnis herunterzuladen und anschließend je nach Destkopumgebung entweder mit einem Doppeklick oder von der Kommandozeile mit dem Befehl `java -jar Mathbase.jar` zu starten.
+
+## Quelltext
+Der gesamte Programmcode kann auf der Seite des [GitHub-Repositories](../../) des Projekts eingesehen werden. Implementierungsdetails befinden sich in der [offiziellen Dokumentation](http://slaergh.github.io/Mathbase).
+
+## Lizenz
+Dieses Projekt ist unter der GNU General Public License v3.0 lizensiert. Sie erlaubt die Veränderung, Verbreitung, Patentierung sowie den privaten und kommerziellen Gebraucht von Mathbase, solange dieselbe Lizenz verwendet und ein Copyright der Originalautoren eingefügt wird, schließt aber jedwege Garantie oder Haftungsansprüche aus.
+
+## Haftungsausschluss
+Die Autoren dieses Programms haften nicht für Schäden an Soft- oder Hardware oder Vermögensschäden,
+die durch das Benutzen des Programms entstehen, es sei denn diese beruhen auf einem grob fahrlässigen
+oder vorsätzlichen Handeln der Autoren, deren Erfüllungsgehilfen oder deren gesetzlichen Vertreter.
+Desweiteren wird keine Garantie auf Fehlerfreiheit der Software gegeben.
