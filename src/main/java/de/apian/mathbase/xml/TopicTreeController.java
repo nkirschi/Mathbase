@@ -197,7 +197,8 @@ public class TopicTreeController {
      * Speichern der Daten als XML-Datei im Pfad {@value #ORIGINAL_PATH} relativ zum Arbeitsverzeichnis.
      * Wird von den die XML-Datei bearbeitenden Methoden selbst aufgerufen.
      *
-     * @throws TransformerException wenn das Speichern nicht erfolgreich war
+     * @throws TransformerException wenn das Transformieren nicht erfolgreich war
+     * @throws IOException wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
     private void saveFile() throws IOException, TransformerException {

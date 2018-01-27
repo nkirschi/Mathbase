@@ -200,7 +200,6 @@ public class TopicTreeView extends TreeView<String> {
     /**
      * Festlegung der Aktionen beim Hinzufügen eines Themas
      *
-     * @return Implementierung des funktionalen Interfaces {@code EventHandler}
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda-Ausdrücke</a>
      * @since 1.0
      */
@@ -260,7 +259,6 @@ public class TopicTreeView extends TreeView<String> {
     /**
      * Festlegung der Aktionen beim Löschen eines Themas
      *
-     * @return Implementierung des funktionalen Interfaces {@code EventHandler}
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda-Ausdrücke</a>
      * @since 1.0
      */

@@ -17,7 +17,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
 /**
- * Abstrakter Texteingabedialog für mannigfaltigste Notwendigkeiten
+ * Abstrakter Texteingabedialog für mannigfaltigste Notwendigkeiten.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
@@ -49,7 +49,8 @@ public abstract class AbstractTextDialog extends TextInputDialog {
     /**
      * Konstruktion des Texteingabedialogs.
      *
-     * @param mainPane Basisanzeigefläche
+     * @param mainPane  Basisanzeigefläche
+     * @param textField Texteingabefeld
      * @since 1.0
      */
     protected AbstractTextDialog(MainPane mainPane, TextField textField) {

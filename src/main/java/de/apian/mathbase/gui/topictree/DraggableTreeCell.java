@@ -32,22 +32,23 @@ import java.util.Comparator;
 public class DraggableTreeCell extends TreeCell<String> {
 
     /**
-     * Aktuell gewählte Quell- und Zielknoten
+     * Aktuell gewählte Quell- und Zielknoten.
      *
      * @since 1.0
      */
     private static TreeItem<String> sourceItem, targetItem;
 
     /**
-     * Basisanzeigefläche
+     * Hauptanzeigefläche
      *
      * @since 1.0
      */
     private MainPane mainPane;
 
     /**
-     * Konstruktion des Themenbaumeintrages
+     * Konstruktion des Themenbaumeintrages.
      *
+     * @param mainPane Hauptanzeigefläche
      * @since 1.0
      */
     DraggableTreeCell(MainPane mainPane) {
@@ -60,7 +61,7 @@ public class DraggableTreeCell extends TreeCell<String> {
     }
 
     /**
-     * Korrekte Aktualisierung des Themenbaumeintrags
+     * Korrekte Aktualisierung des Themenbaumeintrags.
      *
      * @param item  zugehöriger Knoten im Themenbaum
      * @param empty Leerigkeit des Knotens
@@ -79,7 +80,7 @@ public class DraggableTreeCell extends TreeCell<String> {
     }
 
     /**
-     * Aktionen beim Drücken der linken Maustaste und gleichzeitigem Bewegen des Mauszeigers
+     * Aktionen beim Drücken der linken Maustaste und gleichzeitigem Bewegen des Mauszeigers.
      *
      * @param event Ziehereignis
      * @since 1.0
@@ -97,7 +98,7 @@ public class DraggableTreeCell extends TreeCell<String> {
     }
 
     /**
-     * Aktionen beim Gedrückthalten der linken Maustaste und Ziehen über andere Elemente
+     * Aktionen beim Gedrückthalten der linken Maustaste und Ziehen über andere Elemente.
      *
      * @param event Ziehereignis
      * @since 1.0
@@ -121,7 +122,7 @@ public class DraggableTreeCell extends TreeCell<String> {
     }
 
     /**
-     * Aktionen beim Loslassen der linken Maustaste über einem Knoten
+     * Aktionen beim Loslassen der linken Maustaste über einem Knoten.
      *
      * @param event Ziehereignis
      * @since 1.0
@@ -144,7 +145,7 @@ public class DraggableTreeCell extends TreeCell<String> {
     }
 
     /**
-     * Prüfung auf Elternschaft eines bestimmten Knotens bezüglich eines anderen
+     * Prüfung auf Elternschaft eines bestimmten Knotens bezüglich eines anderen.
      *
      * @param child  mutmaßlicher Kindknoten
      * @param parent Ausgangsknoten

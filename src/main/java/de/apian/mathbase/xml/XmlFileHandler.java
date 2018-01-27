@@ -82,6 +82,7 @@ public class XmlFileHandler {
      *
      * @param targetPath Pfad der Zieldatei relativ zum Arbeitsverzeichnis
      * @throws TransformerException wenn das Transformieren fehlgeschlagen ist
+     * @throws IOException wenn das Speichern fehlgeschlagen ist
      * @since 1.0
      */
     public void saveDocTo(String targetPath) throws IOException, TransformerException {

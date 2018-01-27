@@ -59,7 +59,8 @@ public class ContentPane extends BorderPane {
     /**
      * Konstruktion der Inhaltsanzeige.
      *
-     * @param title               Titel des zugehörigen Themas
+     * @param title    Titel des zugehörigen Themas
+     * @param mainPane Hauptanzeigefläche
      * @since 1.0
      */
     public ContentPane(String title, MainPane mainPane) {
