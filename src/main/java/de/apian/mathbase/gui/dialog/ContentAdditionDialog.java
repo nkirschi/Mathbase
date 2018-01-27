@@ -148,7 +148,6 @@ public class ContentAdditionDialog extends Dialog<Content> {
         descriptionArea.setPrefRowCount(5);
         GridPane.setValignment(descriptionLabel, VPos.TOP);
         gridPane.addRow(2, descriptionLabel, descriptionArea);
-        //TODO impl
     }
 
     private void initOtherMask(GridPane gridPane) {

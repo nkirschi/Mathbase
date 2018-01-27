@@ -1,5 +1,3 @@
-USAGE
-
 Click on a topic to select it and view all of its contents. Use the Search-Bar below the Topic-Tree
 to search for specific topics. Click on a Content-Tile to open its file, or click the Save-Icon to copy
 it to a destination of your choice.
@@ -8,9 +6,9 @@ it to a destination of your choice.
 In order to make changes, you need to enter a password. If you do not know it, make sure you
 are allowed to make changes and contact your System-Administrator.
 
-To modify/delete a topic and all of its contents (!), right click on a topic and choose the desired operation.
-To add a new topic, right click the topic under which it should be added, or right click on blank space,
-to add it to the top layer.
+To modify/delete a topic, right click on a topic and choose the desired operation.
+To add a new topic, right click the topic under which it should be added, or right click on blank space - to add
+it to the top layer - and click "Add topic"
 To Modify/delete a content, use the buttons on the Content-Tile.
 Click and drag a Content-Tile to change its position.
-To add a new Content, use the button in the top right. [Not the one with the red X, genious ;)]
+To add a new Content, use the button in the top right. [Not the one with the X, genious ;)]

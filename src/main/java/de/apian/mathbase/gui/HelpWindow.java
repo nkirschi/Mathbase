@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.Scanner;
@@ -24,11 +25,14 @@ import java.util.Scanner;
  * @version 1.0
  * @since 1.0
  */
-public class HelpWindow extends Stage { // TODO nach dem Release weitermachen
+public class HelpWindow extends Stage {
     public HelpWindow(MainPane mainPane) {
         initOwner(mainPane.getScene().getWindow());
         setTitle(Constants.BUNDLE.getString("help"));
-        getIcons().add(Images.getInternal("icons_x16/mathsbox.png"));
+        setResizable(false);
+        getIcons().add(Images.getInternal("icons_x16/help.png"));
+
+        initModality(Modality.WINDOW_MODAL);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(initText());
@@ -39,7 +43,7 @@ public class HelpWindow extends Stage { // TODO nach dem Release weitermachen
 
     private Text initText() {
         Text text = new Text();
-        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/HELP"))) {
+        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/" + Constants.BUNDLE.getString("help_filename")))) {
             while (scanner.hasNextLine())
                 text.setText(text.getText() + scanner.nextLine() + "\n");
         }
