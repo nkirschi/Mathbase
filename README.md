@@ -7,10 +7,10 @@ Zielsetzung ist eine simple und präzise Verwaltung mannigfaltiger Themen aus de
 Ingolstadt, Januar 2018
 
 ## Releases
-Eine Übersicht der Programmveröffentlichungen ist [hier](../../releases/) zu finden.
+Eine Übersicht aller Programmveröffentlichungen ist [hier](../../releases/) zu finden.
 
 ## Systemvoraussetzungen
-Für die Exekution der Applikation ist [Java](https://java.com/de/download/manual.jsp) in der Version 1.8 oder höher vonnöten. Anschließend kann Mathbase bequem via `.jar`-Archiv unter mindestens diesen Betriebssystemen ausgeführt werden:
+Für die Exekution der Applikation muss Java bzw. die [Java Runtime Environment (JRE)](https://java.com/de/download/manual.jsp) in der Version 1.8 oder höher auf dem ausführenden System installiert sein. Ist diese Voraussetzung erfüllt, so kann Mathbase unter mindestens diesen Betriebssystemen ausgeführt werden:
 
 * Windows Vista und höher
 * MacOS X und höher
@@ -25,7 +25,7 @@ Für die Installation genügt es, die Datei `Mathbase.jar` der entsprechenden [V
 Mathbase erzeugt im laufenden Betrieb automatisch im Ausführungsverzeichnis eine Datei namens `log.txt`, in welcher der Programmablauf protokolliert wird. Bei diversen Problemen mit der Anwendung verrät ein Blick in diese Logdatei in der Regel detaillierte Informationen über den Fehlerhergang.
 
 ## Quelltext
-Der gesamte Programmcode kann auf der Seite des [GitHub-Repositories](../../) des Projekts eingesehen werden. Implementierungsdetails befinden sich in der [offiziellen Dokumentation](http://slaergh.github.io/Mathbase).
+Der gesamte Programmcode kann im [Repository](../../) des Projekts eingesehen werden; eine vollständige Dokumentation des gesamten Projekts ist unter http://slaergh.github.io/Mathbase verfügbar.
 
 ## Lizenz
 Dieses Projekt ist unter der GNU General Public License v3.0 lizensiert. Sie erlaubt die Veränderung, Verbreitung, Patentierung sowie den privaten und kommerziellen Gebraucht von Mathbase, solange dieselbe Lizenz verwendet und ein Copyright der Originalautoren eingefügt wird, schließt aber jedwege Garantie oder Haftungsansprüche aus.
