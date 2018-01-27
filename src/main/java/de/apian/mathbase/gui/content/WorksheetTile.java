@@ -8,8 +8,15 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.util.Images;
+import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import org.jpedal.PdfDecoder;
+import org.jpedal.exception.PdfException;
+
+import java.io.File;
+import java.util.logging.Level;
 
 /**
  * Arbeitsblattkachel.
@@ -25,6 +32,21 @@ class WorksheetTile extends LinkTile {
 
     @Override
     protected Image getImage() {
+        try {
+            PdfDecoder pdfDecoder = new PdfDecoder();
+            pdfDecoder.openPdfFile(directoryPath + File.separator + content.getFilename());
+            Image image = SwingFXUtils.toFXImage(pdfDecoder.getPageAsImage(1), null);
+            pdfDecoder.closePdfFile();
+            return image;
+        } catch (PdfException e) {
+            Logging.log(Level.WARNING, "Vorschau der PDF-Datei " + content.getFilename() + " konnte nicht erzeugt werden", e);
+
+        }
         return Images.getInternal("icons_x64/pdf.png");
+    }
+
+    @Override
+    protected boolean fitWidth() {
+        return true;
     }
 }

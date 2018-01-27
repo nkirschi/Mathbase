@@ -8,6 +8,7 @@ package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.dialog.WarningAlert;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
@@ -28,16 +29,21 @@ import java.util.logging.Level;
  * @since 1.0
  */
 class LinkTile extends AbstractTile {
+    protected Content content;
+    protected String directoryPath;
 
     LinkTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
         super(content, directoryPath, contentPane, mainPane);
+        this.content = content;
+        this.directoryPath = directoryPath;
 
         String filename = content.getFilename();
 
         ImageView imageView = new ImageView(getImage());
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
-        //imageView.setFitWidth(Constants.COL_MIN_WIDTH - 30);
+        if (fitWidth())
+            imageView.setFitWidth(Constants.COL_MIN_WIDTH - 30);
         imageView.setCursor(Cursor.HAND);
         imageView.setPickOnBounds(true); //Damit auch die Transparenten Teile der Bilder klickbar sind
         imageView.setOnMouseClicked(a -> {
@@ -53,5 +59,9 @@ class LinkTile extends AbstractTile {
 
     protected Image getImage() {
         return Images.getInternal("icons_x64/file.png");
+    }
+
+    protected boolean fitWidth() {
+        return false;
     }
 }
