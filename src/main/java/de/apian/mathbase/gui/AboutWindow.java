@@ -13,9 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -23,6 +21,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class AboutWindow extends Stage {
@@ -35,30 +34,28 @@ public class AboutWindow extends Stage {
         setScene(new Scene(initContentPane()));
     }
 
-    private VBox initContentPane() {
-        VBox vBox = new VBox();
-
+    private BorderPane initContentPane() {
         BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(0, 10, 0, 10));
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.BOTTOM_CENTER);
+
         ImageView imageView = new ImageView(Images.getInternal("logo/logo.png"));
-        borderPane.setLeft(imageView);
         Label label = new Label("Mathbase");
         label.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.NORMAL, 36));
-        borderPane.setCenter(label);
-        label.setAlignment(Pos.CENTER_LEFT);
-        BorderPane.setAlignment(label, Pos.BOTTOM_LEFT);
-        BorderPane.setMargin(label, new Insets(0, 0, 25, 20));
-        borderPane.setPadding(new Insets(0, 20, 10, 20));
+        HBox.setMargin(label, new Insets(0, 0, 25, 10));
 
-        vBox.setPadding(new Insets(10, 10, 10, 10));
+        hBox.getChildren().addAll(imageView, label);
 
-        vBox.getChildren().addAll(borderPane, initText());
-
-        return vBox;
+        borderPane.setTop(hBox);
+        borderPane.setCenter(initText());
+        return borderPane;
     }
 
     private Text initText() {
         Text text = new Text();
-        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/ABOUT"))) {
+        try (Scanner scanner = new Scanner(getClass().getResourceAsStream("/texts/" + Constants.BUNDLE.getString("about_filename")))) {
             while (scanner.hasNextLine())
                 text.setText(text.getText() + scanner.nextLine() + "\n");
         }
