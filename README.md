@@ -10,13 +10,13 @@ Ingolstadt, Januar 2018
 Eine Übersicht der Programmveröffentlichungen ist [hier](../../releases/) zu finden.
 
 ## Systemvoraussetzungen
-Für die Exekution der Applikation ist Java in der Version 1.8 oder höher vonnöten. Anschließend kann Mathbase bequem via `.jar`-Archiv unter mindestens diesen Betriebssystemen ausgeführt werden:
+Für die Exekution der Applikation ist [Java](https://java.com/de/download/manual.jsp) in der Version 1.8 oder höher vonnöten. Anschließend kann Mathbase bequem via `.jar`-Archiv unter mindestens diesen Betriebssystemen ausgeführt werden:
 
 * Windows Vista und höher
 * MacOS X und höher
 * Linux (Desktop-Distributionen)
 
-Die vollständigen Systemvoraussetzungen sind der offiziellen Java-Website zu entnehmen.
+Die vollständigen Systemvoraussetzungen sind der [offiziellen Java-Website](https://java.com/en/download/help/sysreq.xml) zu entnehmen.
 
 ## Installation
 Für die Installation genügt es, die Datei `Mathbase.jar` der entsprechenden [Version](../../releases) in das gewünschte Verzeichnis herunterzuladen und anschließend je nach Desktopumgebung entweder mit einem Doppelklick oder von der Kommandozeile mit dem Befehl `java -jar Mathbase.jar` zu starten.
