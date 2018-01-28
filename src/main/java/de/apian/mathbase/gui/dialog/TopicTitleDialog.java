@@ -34,7 +34,7 @@ public class TopicTitleDialog extends AbstractTextDialog {
     public TopicTitleDialog(MainPane mainPane) {
         super(mainPane, new TextField());
         setTitle(Constants.BUNDLE.getString("topic_management"));
-        setInputDescription(Constants.BUNDLE.getString("title"));
+        descriptionLabel.setText(Constants.BUNDLE.getString("title") + ":");
     }
 
     @Override

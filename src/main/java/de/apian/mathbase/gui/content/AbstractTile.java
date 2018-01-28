@@ -15,16 +15,16 @@ import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
 import javax.xml.transform.TransformerException;
@@ -43,63 +43,41 @@ import java.util.logging.Level;
  */
 class AbstractTile extends BorderPane {
     protected HBox buttonBox;
+    private Content content;
+    private String directoryPath;
+    private ContentPane contentPane;
+    private MainPane mainPane;
+    private BorderPane topPane;
 
     private static Content sourceContent, targetContent;
 
     AbstractTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
-        BorderPane topPane = new BorderPane();
+        this.content = content;
+        this.directoryPath = directoryPath;
+        this.contentPane = contentPane;
+        this.mainPane = mainPane;
 
-        Button saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
-        Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
-        buttonBox = new HBox(3, saveButton, removeButton);
-        topPane.setRight(buttonBox);
+        initTopPane();
+        initDraggability();
+        setTop(topPane);
 
         Label titleLabel = new Label(content.getCaption());
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
-        topPane.setCenter(titleLabel);
-
-        topPane.setOnDragDetected(a -> {
-            sourceContent = content;
-            Dragboard db = topPane.startDragAndDrop(TransferMode.MOVE);
-            db.setDragView(this.snapshot(null, null));
-            ClipboardContent clipboardContent = new ClipboardContent();
-            clipboardContent.putString("tile");
-            db.setContent(clipboardContent);
-            a.consume();
-        });
-
-        setOnDragOver(a -> {
-            targetContent = content;
-            a.acceptTransferModes(TransferMode.MOVE);
-            InnerShadow shadow = new InnerShadow();
-            shadow.setOffsetX(1.0);
-            shadow.setColor(Color.web("#666666"));
-            shadow.setOffsetY(1.0);
-            setEffect(shadow);
-        });
-
-        setOnDragExited(a -> {
-            setEffect(null);
-        });
-
-        setOnDragDropped(a -> {
-            try {
-                TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
-                mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
-            } catch (IOException | TransformerException e) {
-                new WarningAlert().showAndWait();
-            }
-        });
-
-        BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
-
-        setTop(topPane);
+        BorderPane.setAlignment(titleLabel, Pos.CENTER);
+        setMargin(titleLabel, new Insets(10, 0, 0, 0));
+        setBottom(titleLabel);
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(5));
-        setBorder(new Border(new BorderStroke(Constants.ACCENT_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        setBorder(new Border(new BorderStroke(Constants.ACCENT_COLOR, BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+    }
 
+    private void initTopPane() {
+        topPane = new BorderPane();
+        BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
 
+        Button saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
         saveButton.setOnAction(a -> {
             Path from = Paths.get(directoryPath, content.getFilename());
             FileChooser fileChooser = new FileChooser();
@@ -115,7 +93,45 @@ class AbstractTile extends BorderPane {
                 }
             }
         });
-
+        Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
         removeButton.setOnAction(a -> contentPane.removeContent(content));
+        buttonBox = new HBox(3, saveButton, removeButton);
+        topPane.setRight(buttonBox);
+    }
+
+    private void initDraggability() {
+        topPane.setOnDragDetected(this::onDragDetected);
+        setOnDragOver(this::onDragOver);
+        setOnDragExited(a -> setEffect(null));
+        setOnDragDropped(this::onDragDropped);
+    }
+
+    private void onDragDetected(MouseEvent event) {
+        sourceContent = content;
+        Dragboard db = topPane.startDragAndDrop(TransferMode.MOVE);
+        db.setDragView(this.snapshot(null, null));
+        ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString("tile");
+        db.setContent(clipboardContent);
+        event.consume();
+    }
+
+    private void onDragOver(DragEvent event) {
+        targetContent = content;
+        event.acceptTransferModes(TransferMode.MOVE);
+        InnerShadow shadow = new InnerShadow();
+        shadow.setOffsetX(1.0);
+        shadow.setColor(Color.web("#666666"));
+        shadow.setOffsetY(1.0);
+        setEffect(shadow);
+    }
+
+    private void onDragDropped(DragEvent event) {
+        try {
+            TopicTreeController.getInstance().swapContents(sourceContent, targetContent, contentPane.getTitle());
+            mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
+        } catch (IOException | TransformerException e) {
+            new WarningAlert().showAndWait();
+        }
     }
 }

@@ -84,6 +84,7 @@ public class ContentPane extends BorderPane {
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, FontWeight.BOLD, 24));
         titleLabel.setTextFill(Constants.ACCENT_COLOR);
+
         Button addButton = new Button(Constants.BUNDLE.getString("add"),
                 new ImageView(Images.getInternal("icons_x16/add.png")));
         addButton.setOnAction(a -> {
@@ -99,6 +100,7 @@ public class ContentPane extends BorderPane {
                 }
             }
         });
+
         BorderPane titlePane = new BorderPane();
         titlePane.setCenter(titleLabel);
         titlePane.setRight(addButton);
@@ -174,16 +176,6 @@ public class ContentPane extends BorderPane {
         switch (content.getType()) {
             case DESCRIPTION:
                 return new DescriptionTile(content, directoryPath, this, mainPane);
-            case GEOGEBRA:
-                return new GeogebraTile(content, directoryPath, this, mainPane);
-            case IMAGE:
-                return new ImageTile(content, directoryPath, this, mainPane);
-            case VIDEO:
-                return new VideoTile(content, directoryPath, this, mainPane);
-            case WORKSHEET:
-                return new WorksheetTile(content, directoryPath, this, mainPane);
-            case EDITABLE_WORKSHEET:
-                return new EditableWorksheetTile(content, directoryPath, this, mainPane);
             default:
                 return new LinkTile(content, directoryPath, this, mainPane);
         }
@@ -195,7 +187,7 @@ public class ContentPane extends BorderPane {
      * @param content Inhalt
      * @since 1.0
      */
-    void removeContent(Content content) {
+    public void removeContent(Content content) {
         if (Mathbase.authenticate(mainPane)) {
             try {
                 TopicTreeController.getInstance().removeContent(content, title);

@@ -94,13 +94,6 @@ public abstract class AbstractTextDialog extends TextInputDialog {
     }
 
     /**
-     * @param description Eingabebeschreibung.
-     */
-    protected void setInputDescription(String description) {
-        descriptionLabel.setText(description + ":");
-    }
-
-    /**
      * Initialisierung des OK-Buttons.
      *
      * @since 1.0
