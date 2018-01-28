@@ -7,4 +7,4 @@ In der Datei "LICENSE" sind Informationen zum Lizenzvertrag zu finden.
 Apian-Gymnasium Ingolstadt, Januar 2018
 
 
-Authors: github.com/Slaergh and github.com/lumpenputzer
+Authors: github.com/Slaergh and github.com/Lumpenputzer

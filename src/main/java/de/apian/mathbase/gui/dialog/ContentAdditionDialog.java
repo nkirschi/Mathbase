@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
@@ -84,18 +85,14 @@ public class ContentAdditionDialog extends Dialog<Content> {
 
             Label titleLabel = new Label(Constants.BUNDLE.getString("optional_title") + ":");
             GridPane.setHalignment(titleLabel, HPos.RIGHT);
-            ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setFillWidth(true);
-            gridPane.getColumnConstraints().add(columnConstraints);
-
             titleField = new TextField();
+
             infoLabel = new Label();
             infoLabel.setTextFill(Color.RED);
             infoLabel.setVisible(false);
-            GridPane.setFillWidth(titleField, true);
             GridPane.setHgrow(titleField, Priority.ALWAYS);
             gridPane.addRow(1, titleLabel, titleField);
-            gridPane.addRow(3, infoLabel);
+            gridPane.add(infoLabel, 1, 3);
 
             type = comboBox.getSelectionModel().getSelectedItem();
             if (type.equals(Content.Type.DESCRIPTION)) {
@@ -111,7 +108,6 @@ public class ContentAdditionDialog extends Dialog<Content> {
             getDialogPane().getScene().getWindow().sizeToScene();
             getDialogPane().getScene().getWindow().centerOnScreen();
             Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
-
             okButton.setDisable(false);
             titleField.requestFocus();
         });
@@ -148,7 +144,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
                 }
             }
 
-            if (filePath == null || filePath.isEmpty()) {
+            if (filePath == null || filePath.isEmpty() || descriptionArea.getText().isEmpty()) {
                 infoLabel.setVisible(true);
                 a.consume();
             }
@@ -161,24 +157,13 @@ public class ContentAdditionDialog extends Dialog<Content> {
         GridPane.setHalignment(descriptionLabel, HPos.RIGHT);
         descriptionArea = new TextArea();
         descriptionArea.setPrefRowCount(5);
+        ColumnConstraints c = new ColumnConstraints();
+        c.setMaxWidth(100);
+        gridPane.getColumnConstraints().add(c);
+        GridPane.setHgrow(descriptionLabel, Priority.ALWAYS);
+        GridPane.setVgrow(descriptionLabel, Priority.ALWAYS);
         GridPane.setValignment(descriptionLabel, VPos.TOP);
         gridPane.addRow(2, descriptionLabel, descriptionArea);
-    }
-
-    private void initOtherMask(GridPane gridPane) {
-        infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
-        Label selectFileLabel = new Label(Constants.BUNDLE.getString("file"));
-        GridPane.setHalignment(selectFileLabel, HPos.RIGHT);
-        Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
-        gridPane.addRow(2, selectFileLabel, selectFileButton);
-        selectFileButton.setOnAction(a1 -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(getOwner());
-            if (file != null) {
-                filePath = file.getAbsolutePath();
-                selectFileButton.setText(file.getName());
-            }
-        });
     }
 
     private void initDefaultMask(GridPane gridPane) {
@@ -198,9 +183,13 @@ public class ContentAdditionDialog extends Dialog<Content> {
             fileExtensionsBuilder.append("*.*");
         }
 
+
         Label selectFileLabel = new Label(Constants.BUNDLE.getString("file") + " (" +
                 fileExtensionsBuilder.toString() + "):");
         GridPane.setHalignment(selectFileLabel, HPos.RIGHT);
+        ColumnConstraints c = new ColumnConstraints();
+        c.setMaxWidth(Math.max(new Text(selectFileLabel.getText()).getLayoutBounds().getWidth(), 100));
+        gridPane.getColumnConstraints().add(c);
         Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
         gridPane.addRow(2, selectFileLabel, selectFileButton);
         selectFileButton.setOnAction(a1 -> {
