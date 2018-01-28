@@ -7,7 +7,7 @@ Zielsetzung ist eine simple und präzise Verwaltung mannigfaltiger Themen aus de
 Ingolstadt, Januar 2018
 
 ## Releases
-Eine Übersicht aller Programmveröffentlichungen ist [hier](../../releases/) zu finden.
+Unter [Releases](../../releases/) sind alle Programmversionen zu finden.
 
 ## Systemvoraussetzungen
 Für die Exekution der Applikation muss Java bzw. die [Java Runtime Environment (JRE)](https://java.com/de/download/manual.jsp) in der Version 1.8 oder höher auf dem ausführenden System installiert sein. Ist diese Voraussetzung erfüllt, so kann Mathbase unter mindestens diesen Betriebssystemen ausgeführt werden:
@@ -19,7 +19,7 @@ Für die Exekution der Applikation muss Java bzw. die [Java Runtime Environment 
 Die vollständigen Systemvoraussetzungen sind der [offiziellen Java-Website](https://java.com/en/download/help/sysreq.xml) zu entnehmen.
 
 ## Installation
-Für die Installation genügt es, die Datei `Mathbase.jar` der entsprechenden [Version](../../releases) in das gewünschte Verzeichnis herunterzuladen und anschließend je nach Desktopumgebung entweder mit einem Doppelklick oder von der Kommandozeile mit dem Befehl `java -jar Mathbase.jar` zu starten.
+Für die Installation genügt es, die Datei `Mathbase.jar` einer bestimmten [Version](../../releases) in das gewünschte Verzeichnis herunterzuladen und anschließend je nach Desktopumgebung entweder mit einem Doppelklick oder von der Kommandozeile mit dem Befehl `java -jar Mathbase.jar` zu starten.
 
 ## Fehlerbehandlung
 Mathbase erzeugt im laufenden Betrieb automatisch im Ausführungsverzeichnis eine Datei namens `log.txt`, in welcher der Programmablauf protokolliert wird. Bei diversen Problemen mit der Anwendung verrät ein Blick in diese Logdatei in der Regel detaillierte Informationen über den Fehlerhergang.
