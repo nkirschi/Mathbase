@@ -6,18 +6,9 @@
 
 package de.apian.mathbase.gui;
 
-import de.apian.mathbase.gui.dialog.DialogUtils;
-import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.gui.topictree.SidebarPane;
-import de.apian.mathbase.util.Constants;
-import de.apian.mathbase.xml.TopicTreeController;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.SplitPane;
-
-import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Basisanzeigefläche der GUI.

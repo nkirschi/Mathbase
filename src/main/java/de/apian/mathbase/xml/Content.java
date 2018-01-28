@@ -17,14 +17,14 @@ package de.apian.mathbase.xml;
 public class Content {
 
     /**
-     * Typ dieses Inhalts als {@code Type}-Objekt
+     * Typ dieses Inhalts als {@code Type}-Objekt.
      *
      * @since 1.0
      */
     private Type type;
 
     /**
-     * Pfad der diesem Inhalt angehörigen Datei relativ zum Ordner des Elternknotens
+     * Pfad der diesem Inhalt angehörigen Datei relativ zum Ordner des Elternknotens.
      * <p>
      * Wenn ein neuer Inhalt zur XML-Datei hinzugefügt werden soll, so wird ein {@code Content}-Objekt erzeugt, welches
      * als Pfad den ursprünglichen und vollständigen Pfad der Datei hat, damit diese dann kopiert werden kann.
@@ -34,17 +34,17 @@ public class Content {
     private String filename;
 
     /**
-     * Optionaler Titel des Inhalts
+     * Optionaler Titel des Inhalts.
      *
      * @since 1.0
      */
     private String caption;
 
     /**
-     * Konstruktion eines neuen Inhaltes
+     * Konstruktion eines neuen Inhaltes.
      *
-     * @param type  Typ des Inhalts
-     * @param path  Pfad des Inhalts
+     * @param type    Typ des Inhalts
+     * @param path    Pfad des Inhalts
      * @param caption Titel des Inhalts
      */
     public Content(Type type, String path, String caption) {
@@ -75,9 +75,10 @@ public class Content {
     }
 
     /**
-     * Konvertierung des Inhalts in eine Zeichenkette
+     * Konvertierung des Inhalts in eine Zeichenkette.
      *
      * @return Den Inhalt beschreibende Zeichenkette
+     * @since 1.0
      */
     @Override
     public String toString() {
@@ -85,7 +86,7 @@ public class Content {
     }
 
     /**
-     * Wohldefinierte Typen
+     * Wohldefinierte Typen.
      *
      * @author Benedikt Mödl
      * @author Nikolas Kirschstein
@@ -102,14 +103,14 @@ public class Content {
         OTHER;
 
         /**
-         * Die dem Typ entsprechenden Dateiendungen im Format {@code *.<Dateiendung>}
+         * Die dem Typ entsprechenden Dateiendungen im Format {@code *.<Dateiendung>}.
          *
          * @since 1.0
          */
         private String[] fileExtensions;
 
         /**
-         * Privater Enum-Konstruktor
+         * Privater Enum-Konstruktor.
          *
          * @param fileExtensions Die dem Typ entsprechenden Dateiendungen im Format {@code *.<Dateiendung>}
          * @since 1.0
@@ -119,19 +120,21 @@ public class Content {
         }
 
         /**
-         * Abrufen der dem Typ entsprechenden Dateiendungen
+         * Abrufen der dem Typ entsprechenden Dateiendungen.
          *
          * @return Dem Typ entsprechenden Dateiendungen im Format {@code *.<Dateiendung>}
+         * @since 1.0
          */
         public String[] getFileExtensions() {
             return fileExtensions;
         }
 
         /**
-         * Ermitteln des Typs für einen vorgegebenen Namen
+         * Ermitteln des Typs für einen vorgegebenen Namen.
          *
          * @param name Typbezeichner
          * @return Gesuchte Enum-Typkonstante
+         * @since 1.0
          */
         public static Type forName(String name) {
             for (Type type : values()) {
@@ -142,9 +145,10 @@ public class Content {
         }
 
         /**
-         * Konvertierung des Typs in eine Zeichenkette
+         * Konvertierung des Typs in eine Zeichenkette.
          *
          * @return Typbezeichner in Kleinbuchstaben
+         * @since 1.0
          */
         @Override
         public String toString() {

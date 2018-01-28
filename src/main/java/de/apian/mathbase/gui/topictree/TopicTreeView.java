@@ -11,7 +11,6 @@ import de.apian.mathbase.gui.FillerPane;
 import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.content.ContentPane;
-import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.gui.dialog.TopicTitleDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
@@ -226,16 +225,18 @@ public class TopicTreeView extends TreeView<String> {
     }
 
     /**
-     * Festlegung der Aktionen beim Umbenennen eines Themas
+     * Festlegung der Aktionen beim Umbenennen eines Themas.
      *
      * @since 1.0
      */
     private void renameSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            DialogUtils.showAlert(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
-                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("rename_topic"),
-                    Constants.BUNDLE.getString("nothing_to_rename"));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.BUNDLE.getString("nothing_to_rename"));
+            alert.setTitle(Constants.BUNDLE.getString("topic_management"));
+            alert.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
+            alert.initOwner(mainPane.getScene().getWindow());
+            alert.showAndWait();
             return;
         }
 
@@ -257,7 +258,7 @@ public class TopicTreeView extends TreeView<String> {
     }
 
     /**
-     * Festlegung der Aktionen beim Löschen eines Themas
+     * Festlegung der Aktionen beim Löschen eines Themas.
      *
      * @see <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">Lambda-Ausdrücke</a>
      * @since 1.0
@@ -265,15 +266,20 @@ public class TopicTreeView extends TreeView<String> {
     private void removeSelected() {
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
-            DialogUtils.showAlert(mainPane.getScene().getWindow(), Alert.AlertType.INFORMATION,
-                    Constants.BUNDLE.getString("topic_management"), Constants.BUNDLE.getString("remove_topic"), Constants.BUNDLE.getString("nothing_to_remove"));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.BUNDLE.getString("nothing_to_remove"));
+            alert.setTitle(Constants.BUNDLE.getString("topic_management"));
+            alert.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
+            alert.initOwner(mainPane.getScene().getWindow());
+            alert.showAndWait();
             return;
         }
 
         if (Mathbase.authenticate(mainPane)) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    Constants.BUNDLE.getString("remove_confirmation"), ButtonType.YES, ButtonType.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, Constants.BUNDLE.getString("remove_confirmation"),
+                    ButtonType.YES, ButtonType.NO);
+            alert.setTitle(Constants.BUNDLE.getString("topic_management"));
             alert.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
+            alert.initOwner(mainPane.getScene().getWindow());
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.YES) {
@@ -289,6 +295,12 @@ public class TopicTreeView extends TreeView<String> {
         }
     }
 
+    /**
+     * Rekursives Setzen des Expansionswahrheitswertes aller Einträge des Teilbaums
+     *
+     * @param parent   Elternknoten des Teilbaums
+     * @param expanded zu setzender Wert für die Expandiertheit der Einträge
+     */
     private void setExpandedAll(TreeItem<String> parent, boolean expanded) {
         for (TreeItem<String> child : parent.getChildren()) {
             child.setExpanded(expanded);

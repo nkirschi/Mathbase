@@ -12,9 +12,11 @@ import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -76,9 +78,16 @@ public class ContentAdditionDialog extends Dialog<Content> {
             gridPane.setHgap(10);
             gridPane.setVgap(10);
 
-            gridPane.addRow(0, new Label(Constants.BUNDLE.getString("content_type") + ":"), comboBox);
+            Label typeLabel = new Label(Constants.BUNDLE.getString("content_type") + ":");
+            GridPane.setHalignment(typeLabel, HPos.RIGHT);
+            gridPane.addRow(0, typeLabel, comboBox);
 
-            Label titleLabel = new Label(Constants.BUNDLE.getString("title") + ":");
+            Label titleLabel = new Label(Constants.BUNDLE.getString("optional_title") + ":");
+            GridPane.setHalignment(titleLabel, HPos.RIGHT);
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setFillWidth(true);
+            gridPane.getColumnConstraints().add(columnConstraints);
+
             titleField = new TextField();
             infoLabel = new Label();
             infoLabel.setTextFill(Color.RED);
@@ -92,7 +101,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
             if (type.equals(Content.Type.DESCRIPTION)) {
                 initDescriptionMask(gridPane);
             } else if (type.equals(Content.Type.OTHER)) {
-                initOtherMask(gridPane);
+                initDefaultMask(gridPane);
             } else {
                 initDefaultMask(gridPane);
             }
@@ -101,6 +110,10 @@ public class ContentAdditionDialog extends Dialog<Content> {
 
             getDialogPane().getScene().getWindow().sizeToScene();
             getDialogPane().getScene().getWindow().centerOnScreen();
+            Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
+
+            okButton.setDisable(false);
+            titleField.requestFocus();
         });
 
         getDialogPane().setContent(new HBox(comboBox));
@@ -116,6 +129,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
 
     private void initOkButton() {
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
         okButton.addEventFilter(ActionEvent.ACTION, a -> {
             caption = titleField.getText();
 
@@ -144,6 +158,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
     private void initDescriptionMask(GridPane gridPane) {
         infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
         Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
+        GridPane.setHalignment(descriptionLabel, HPos.RIGHT);
         descriptionArea = new TextArea();
         descriptionArea.setPrefRowCount(5);
         GridPane.setValignment(descriptionLabel, VPos.TOP);
@@ -153,6 +168,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
     private void initOtherMask(GridPane gridPane) {
         infoLabel.setText(Constants.BUNDLE.getString("file_empty"));
         Label selectFileLabel = new Label(Constants.BUNDLE.getString("file"));
+        GridPane.setHalignment(selectFileLabel, HPos.RIGHT);
         Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
         gridPane.addRow(2, selectFileLabel, selectFileButton);
         selectFileButton.setOnAction(a1 -> {
@@ -173,9 +189,9 @@ public class ContentAdditionDialog extends Dialog<Content> {
         for (String s : type.getFileExtensions()) {
             fileExtensionsBuilder.append(s).append(", ");
         }
-        if (fileExtensionsBuilder.length() > 1) {
+        if (fileExtensionsBuilder.length() > 2) {
             //Herrauslöschen des letzten ", ", da es unnötig ist.
-            fileExtensionsBuilder.delete(fileExtensionsBuilder.length() - 2, fileExtensionsBuilder.length() - 1);
+            fileExtensionsBuilder.delete(fileExtensionsBuilder.length() - 2, fileExtensionsBuilder.length());
         } else {
             // Sollte nicht vorkommen, da jeder Typ außer OTHER besondere Dateierweiterungen
             // zugeordnet bekommen sollte
@@ -184,12 +200,14 @@ public class ContentAdditionDialog extends Dialog<Content> {
 
         Label selectFileLabel = new Label(Constants.BUNDLE.getString("file") + " (" +
                 fileExtensionsBuilder.toString() + "):");
+        GridPane.setHalignment(selectFileLabel, HPos.RIGHT);
         Button selectFileButton = new Button(Constants.BUNDLE.getString("please_select"));
         gridPane.addRow(2, selectFileLabel, selectFileButton);
         selectFileButton.setOnAction(a1 -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(Constants.BUNDLE.
-                    getString("file"), type.getFileExtensions()));
+                    getString("file"), (type.getFileExtensions().length > 0 ? type.getFileExtensions() :
+                    new String[]{"*.*"})));
             File file = fileChooser.showOpenDialog(getOwner());
             if (file != null) {
                 filePath = file.getAbsolutePath();

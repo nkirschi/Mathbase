@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.xml;
 
-import de.apian.mathbase.gui.dialog.DialogUtils;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.FileUtils;
@@ -133,9 +132,10 @@ public class TopicTreeController {
         } catch (IOException e) {
             ErrorAlert errorAlert = new ErrorAlert(e);
             errorAlert.showAndWait();
-            Optional<ButtonType> result = DialogUtils.showAlert(null, Alert.AlertType.INFORMATION,
-                    "Mathbase", null, Constants.BUNDLE.getString("no_data"),
-                    ButtonType.YES, ButtonType.NO);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.BUNDLE.getString("no_data"), ButtonType.YES, ButtonType.NO);
+            alert.setTitle("Mathbase");
+            Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get().equals(ButtonType.YES)) {
                 try {
