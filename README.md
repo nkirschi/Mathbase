@@ -13,6 +13,8 @@ To execute the application, Java respectively the [Java Runtime Environment (JRE
 * MacOS X and above
 * Linux (desktop distributions)
 
+On the [official Java website](https://java.com/en/download/help/sysreq.xml), the full system requirements can be checked.
+
 ## Installation
 For the purpose of installing it is sufficient to download the file `Mathbase.jar` of a specific [version](../../releases) into the desired directory and, depending on the desktop environment, subsequently starting it either by a double-click or by submitting the command `java -jar Mathbase.jar` from the command line.
 
