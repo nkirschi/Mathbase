@@ -1,13 +1,13 @@
 # Mathbase
 > Math as Adventure or: Math in 5 Minutes - from Students for Students
 
-This application has been developed in the course of a project seminar at the Apian high school in Ingolstadt, Germany. The goal is to provide a simple and precise management of manifold mathematical topics that have been worked out and media designed from students for students, for instance in the form of videos, worksheets and visuals. This digital collection can be easily extended by other classes, seminars or dedicated teachers, too.
+This application has been developed in the course of a project seminar at the Apian high school in Ingolstadt, Germany. The goal is to provide a simple and precise management of manifold mathematical topics that have been worked out and media designed by students for students, exempli gratia in the form of videos, worksheets and visuals. This digital collection can be easily extended by other classes, seminars or dedicated teachers, too.
 
 ## Releases
 At [releases](../../releases/), all program versions are to be found.
 
 ## System Requirements
-To execute the application, Java respectively the [Java Runtime Environment (JRE)](https://java.com/de/download/manual.jsp) version 1.8 or above is required to be installed on the executing system. Provided that this condition is met, Mathbase can be executed at least on the following operating systems:
+To execute the application, Java respectively the [Java Runtime Environment (JRE)](https://java.com/de/download/manual.jsp) version 1.8 or above must be installed on the executing system. Provided that this condition is met, Mathbase can be run at least on the following operating systems:
 
 * Windows Vista and above
 * MacOS X and above
