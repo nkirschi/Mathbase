@@ -30,6 +30,7 @@ import javafx.stage.FileChooser;
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -43,10 +44,11 @@ import java.util.logging.Level;
  */
 class AbstractTile extends BorderPane {
     protected HBox buttonBox;
-    private Content content;
-    private String directoryPath;
-    private ContentPane contentPane;
-    private MainPane mainPane;
+    protected Content content;
+    protected String directoryPath;
+    protected ContentPane contentPane;
+    protected MainPane mainPane;
+    protected Button editButton;
     private BorderPane topPane;
 
     private static Content sourceContent, targetContent;
@@ -61,12 +63,6 @@ class AbstractTile extends BorderPane {
         initDraggability();
         setTop(topPane);
 
-        Label titleLabel = new Label(content.getCaption());
-        titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
-        BorderPane.setAlignment(titleLabel, Pos.CENTER);
-        setMargin(titleLabel, new Insets(10, 0, 0, 0));
-        setBottom(titleLabel);
-
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(5));
         setBorder(new Border(new BorderStroke(Constants.ACCENT_COLOR, BorderStrokeStyle.SOLID,
@@ -76,6 +72,8 @@ class AbstractTile extends BorderPane {
     private void initTopPane() {
         topPane = new BorderPane();
         BorderPane.setMargin(topPane, new Insets(0, 0, 5, 0));
+
+        editButton = new Button(null, new ImageView(Images.getInternal("icons_x16/edit.png")));
 
         Button saveButton = new Button(null, new ImageView(Images.getInternal("icons_x16/save.png")));
         saveButton.setOnAction(a -> {
@@ -95,8 +93,14 @@ class AbstractTile extends BorderPane {
         });
         Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
         removeButton.setOnAction(a -> contentPane.removeContent(content));
-        buttonBox = new HBox(3, saveButton, removeButton);
+        buttonBox = new HBox(3, editButton, saveButton, removeButton);
         topPane.setRight(buttonBox);
+
+        Label titleLabel = new Label(content.getCaption());
+        titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
+        BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
+        BorderPane.setMargin(titleLabel, new Insets(0, 5, 0, 5));
+        topPane.setCenter(titleLabel);
     }
 
     private void initDraggability() {

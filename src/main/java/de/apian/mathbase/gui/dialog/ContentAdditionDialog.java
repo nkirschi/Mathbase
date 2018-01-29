@@ -144,7 +144,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
                 }
             }
 
-            if (filePath == null || filePath.isEmpty() || descriptionArea.getText().isEmpty()) {
+            if (filePath == null || filePath.isEmpty() || descriptionArea != null && descriptionArea.getText().isEmpty()) {
                 infoLabel.setVisible(true);
                 a.consume();
             }
