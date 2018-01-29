@@ -7,6 +7,7 @@
         <content caption="Der Schlüssel" filename="key.jpg" type="image"/>
         <content caption="Wichtiges Programm" filename="virus.exe" type="other"/>
         <content caption="Benes Gurke" filename="benes_gurke.mp4" type="video"/>
+        <content caption="Word-Datei" filename="word-datei.docx" type="editable_worksheet"/>
     </node>
     <node title="Kombinatorik">
         <node title="Urnenmodelle">
