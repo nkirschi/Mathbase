@@ -130,21 +130,25 @@ public class TopicTreeController {
         try {
             loadFile();
         } catch (IOException e) {
-            ErrorAlert errorAlert = new ErrorAlert(e);
-            errorAlert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.INFORMATION, Constants.BUNDLE.getString("no_data"), ButtonType.YES, ButtonType.NO);
             alert.setTitle("Mathbase");
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
-                try {
-                    TopicTreeController.recreateFile();
-                } catch (IOException e1) {
-                    throw new InternalError();
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.YES) {
+                    try {
+                        TopicTreeController.recreateFile();
+                        loadFile();
+                    } catch (IOException e1) {
+                        ErrorAlert errorAlert = new ErrorAlert(e1);
+                        errorAlert.showAndWait();
+                        throw new InternalError();
+                    }
+                } else {
+                    ErrorAlert errorAlert = new ErrorAlert(e);
+                    errorAlert.showAndWait();
                 }
             }
-            System.exit(0);
         }
     }
 
