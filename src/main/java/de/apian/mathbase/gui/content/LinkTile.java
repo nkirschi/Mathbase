@@ -7,28 +7,30 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.TitleDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
 import de.apian.mathbase.xml.Content;
+import de.apian.mathbase.xml.TopicTreeController;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import org.jpedal.PdfDecoder;
 
-import java.awt.Desktop;
+import javax.xml.transform.TransformerException;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.logging.Level;
 
 
@@ -51,6 +53,21 @@ public class LinkTile extends AbstractTile {
                 Logging.log(Level.WARNING, "Datei " + content.getFilename() + " konnte nicht geöffnet werden.");
                 new WarningAlert().showAndWait();
             }
+        });
+
+        editButton.setOnAction(a -> {
+            TitleDialog dialog = new TitleDialog(mainPane);
+            dialog.setHeaderText(Constants.BUNDLE.getString("rename_content"));
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(caption -> {
+                try {
+                    TopicTreeController.getInstance().renameContent(content, contentPane.getTitle(), caption);
+                    mainPane.setContent(new ContentPane(contentPane.getTitle(), mainPane));
+                } catch (IOException | TransformerException e) {
+                    Logging.log(Level.WARNING, "Inhalt " + content + " konnte nicht umbenannt werden", e);
+                    new WarningAlert().showAndWait();
+                }
+            });
         });
 
         borderPane = new BorderPane();

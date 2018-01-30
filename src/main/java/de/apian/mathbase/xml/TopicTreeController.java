@@ -198,7 +198,7 @@ public class TopicTreeController {
      * Wird von den die XML-Datei bearbeitenden Methoden selbst aufgerufen.
      *
      * @throws TransformerException wenn das Transformieren nicht erfolgreich war
-     * @throws IOException wenn das Speichern nicht erfolgreich war
+     * @throws IOException          wenn das Speichern nicht erfolgreich war
      * @since 1.0
      */
     private void saveFile() throws IOException, TransformerException {
@@ -774,6 +774,38 @@ public class TopicTreeController {
             throw e;
         }
         Logging.log(Level.INFO, content.toString() + " unter dem Knoten \"" + parent + "\" eingefügt");
+    }
+
+    public void renameContent(Content content, String parent, String caption) throws TransformerException, IOException {
+        Node parentNode = getNode(parent);
+        Path filePath = Paths.get(locateDirectory(parentNode), content.getFilename());
+        String extension = FileUtils.getFileExtension(filePath);
+        Node contentNode = getContent(content, parent);
+
+        if (contentNode.getNodeType() == Node.ELEMENT_NODE) { //Anderer Fall kann normalerweise nicht eintreten ...
+            ((Element) contentNode).setAttribute(ATTR_CAPTION, caption);
+            ((Element) contentNode).setAttribute(ATTR_FILENAME, FileUtils.normalize(caption) + extension);
+
+        }
+
+        try {
+            FileUtils.move(filePath, filePath.getParent().resolve(FileUtils.normalize(caption) + extension));
+        } catch (IOException e) {
+            //Fehlgeschlagen, änder XML im Speicher zurück, dann brich ab
+            if (contentNode.getNodeType() == Node.ELEMENT_NODE) { //Anderer Fall kann normalerweise nicht eintreten ...
+                ((Element) contentNode).setAttribute(ATTR_CAPTION, content.getCaption());
+                ((Element) contentNode).setAttribute(ATTR_FILENAME, content.getFilename());
+            }
+            throw e;
+        }
+
+        // Speichern der XML-Datei
+        try {
+            saveFile();
+        } catch (IOException | TransformerException e) {
+            FileUtils.move(filePath.getParent().resolve(caption), filePath);
+            throw e;
+        }
     }
 
     /**

@@ -16,22 +16,22 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
 /**
- * Titeleingabedialog für ein Thema, z.B. beim Erstellen oder Umbenennen.
+ * Titeleingabedialog für einen Titel, z.B. beim Erstellen oder Umbenennen.
  *
  * @author Nikolas Kirschstein
  * @version 1.0
  * @since 1.0
  */
 
-public class TopicTitleDialog extends AbstractTextDialog {
+public class TitleDialog extends AbstractTextDialog {
 
     /**
-     * Konstruktion des Thementiteldialogs.
+     * Konstruktion des Titeldialogs.
      *
      * @param mainPane Basisanzeigefläche
      * @since 1.0
      */
-    public TopicTitleDialog(MainPane mainPane) {
+    public TitleDialog(MainPane mainPane) {
         super(mainPane, new TextField());
         setTitle(Constants.BUNDLE.getString("topic_management"));
         descriptionLabel.setText(Constants.BUNDLE.getString("title") + ":");

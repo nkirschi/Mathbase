@@ -12,7 +12,7 @@ import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.MainPane;
 import de.apian.mathbase.gui.content.ContentPane;
 import de.apian.mathbase.gui.dialog.ErrorAlert;
-import de.apian.mathbase.gui.dialog.TopicTitleDialog;
+import de.apian.mathbase.gui.dialog.TitleDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
@@ -203,7 +203,7 @@ public class TopicTreeView extends TreeView<String> {
      * @since 1.0
      */
     private void addUnderSelected() {
-        TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
+        TitleDialog dialog = new TitleDialog(mainPane);
         dialog.setHeaderText(Constants.BUNDLE.getString("add_topic"));
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(title -> {
@@ -241,7 +241,7 @@ public class TopicTreeView extends TreeView<String> {
         }
 
         if (Mathbase.authenticate(mainPane)) {
-            TopicTitleDialog dialog = new TopicTitleDialog(mainPane);
+            TitleDialog dialog = new TitleDialog(mainPane);
             dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(title -> {
