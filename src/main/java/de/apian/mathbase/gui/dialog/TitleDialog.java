@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 public class TitleDialog extends AbstractTextDialog {
 
     /**
-     * Konstruktion des Titeldialogs.
+     * Konstruktion des Thementiteldialogs.
      *
      * @param mainPane Basisanzeigefläche
      * @since 1.0

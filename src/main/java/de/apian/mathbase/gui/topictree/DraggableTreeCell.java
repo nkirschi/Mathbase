@@ -6,10 +6,12 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.xml.TitleCollisionException;
 import de.apian.mathbase.xml.TopicTreeController;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.effect.InnerShadow;
@@ -19,6 +21,7 @@ import javafx.scene.paint.Color;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Ziehbarer Themenbaumeintrag für Drag and Drop.
@@ -128,10 +131,17 @@ public class DraggableTreeCell extends TreeCell<String> {
      * @since 1.0
      */
     private void dragDropped(DragEvent event) {
-        if (targetItem == null)
-            targetItem = getTreeView().getRoot();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, Constants.BUNDLE.getString("move_confirmation"),
+                ButtonType.YES, ButtonType.NO);
+        alert.initOwner(mainPane.getScene().getWindow());
+        alert.setTitle(Constants.BUNDLE.getString("topic_management"));
+        alert.setHeaderText(Constants.BUNDLE.getString("move_topic"));
+        Optional<ButtonType> result = alert.showAndWait();
 
-        if (Mathbase.authenticate(mainPane)) {
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            if (targetItem == null)
+                targetItem = getTreeView().getRoot();
+
             try {
                 TopicTreeController.getInstance().moveNode(sourceItem.getValue(), targetItem.getValue());
                 sourceItem.getParent().getChildren().remove(sourceItem);

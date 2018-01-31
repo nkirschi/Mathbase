@@ -13,6 +13,7 @@ import de.apian.mathbase.xml.Content;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -54,7 +55,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
         caption = null;
 
         initOwner(owner);
-        setTitle(Constants.BUNDLE.getString("topic_management"));
+        setTitle(Constants.BUNDLE.getString("content_management"));
         setHeaderText(Constants.BUNDLE.getString("add_content"));
         setGraphic(new ImageView(Images.getInternal("icons_x48/multimedia.png")));
         setResizable(true);
@@ -95,13 +96,10 @@ public class ContentAdditionDialog extends Dialog<Content> {
             gridPane.add(infoLabel, 1, 3);
 
             type = comboBox.getSelectionModel().getSelectedItem();
-            if (type.equals(Content.Type.DESCRIPTION)) {
+            if (type.equals(Content.Type.DESCRIPTION))
                 initDescriptionMask(gridPane);
-            } else if (type.equals(Content.Type.OTHER)) {
+            else
                 initDefaultMask(gridPane);
-            } else {
-                initDefaultMask(gridPane);
-            }
 
             getDialogPane().setContent(gridPane);
 
@@ -155,6 +153,7 @@ public class ContentAdditionDialog extends Dialog<Content> {
         infoLabel.setText(Constants.BUNDLE.getString("description_empty"));
         Label descriptionLabel = new Label(Constants.BUNDLE.getString("description") + ":");
         GridPane.setHalignment(descriptionLabel, HPos.RIGHT);
+        GridPane.setMargin(descriptionLabel, new Insets(3, 0, 0, 0));
         descriptionArea = new TextArea();
         descriptionArea.setPrefRowCount(5);
         ColumnConstraints c = new ColumnConstraints();

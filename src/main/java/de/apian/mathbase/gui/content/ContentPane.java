@@ -105,7 +105,7 @@ public class ContentPane extends BorderPane {
         titlePane.setCenter(titleLabel);
         titlePane.setRight(addButton);
         VBox titleBox = new VBox(5, titlePane, new Separator());
-        BorderPane.setMargin(titleBox, new Insets(10, 10, 10, 10));
+        BorderPane.setMargin(titleBox, new Insets(10, 10, 0, 10));
 
         return titleBox;
     }
@@ -122,7 +122,7 @@ public class ContentPane extends BorderPane {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         scrollPane.setBackground(new Background(new BackgroundFill(null, CornerRadii.EMPTY, Insets.EMPTY)));
-        scrollPane.setPadding(new Insets(10, 10, 10, 10));
+        scrollPane.setPadding(new Insets(10));
         return scrollPane;
     }
 
@@ -188,7 +188,6 @@ public class ContentPane extends BorderPane {
      * @since 1.0
      */
     public void removeContent(Content content) {
-        if (Mathbase.authenticate(mainPane)) {
             try {
                 TopicTreeController.getInstance().removeContent(content, title);
                 mainPane.setContent(new ContentPane(title, mainPane));
@@ -196,7 +195,6 @@ public class ContentPane extends BorderPane {
                 Logging.log(Level.WARNING, "Inhalt löschen fehlgeschlagen!", e);
                 new WarningAlert().showAndWait();
             }
-        }
     }
 
     public String getTitle() {

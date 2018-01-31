@@ -7,6 +7,7 @@
 package de.apian.mathbase.gui.content;
 
 import de.apian.mathbase.gui.MainPane;
+import de.apian.mathbase.gui.dialog.CaptionDialog;
 import de.apian.mathbase.gui.dialog.TitleDialog;
 import de.apian.mathbase.gui.dialog.WarningAlert;
 import de.apian.mathbase.util.Constants;
@@ -35,7 +36,6 @@ import java.util.logging.Level;
 
 
 public class LinkTile extends AbstractTile {
-    private BorderPane borderPane;
     private ImageView imageView;
 
     public LinkTile(Content content, String directoryPath, ContentPane contentPane, MainPane mainPane) {
@@ -56,7 +56,7 @@ public class LinkTile extends AbstractTile {
         });
 
         editButton.setOnAction(a -> {
-            TitleDialog dialog = new TitleDialog(mainPane);
+            CaptionDialog dialog = new CaptionDialog(mainPane, content.getCaption());
             dialog.setHeaderText(Constants.BUNDLE.getString("rename_content"));
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(caption -> {
@@ -70,12 +70,7 @@ public class LinkTile extends AbstractTile {
             });
         });
 
-        borderPane = new BorderPane();
         new Thread(this::initDisplay).start();
-        Label filenameLabel = new Label(content.getFilename());
-        BorderPane.setAlignment(filenameLabel, Pos.CENTER);
-        borderPane.setBottom(filenameLabel);
-        setCenter(borderPane);
     }
 
     private void initDisplay() {
@@ -128,6 +123,6 @@ public class LinkTile extends AbstractTile {
                 imageView.setImage(Images.getInternal("icons_x64/file.png"));
                 break;
         }
-        Platform.runLater(() -> borderPane.setCenter(imageView));
+        Platform.runLater(() -> setCenter(imageView));
     }
 }

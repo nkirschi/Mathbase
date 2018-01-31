@@ -94,12 +94,12 @@ public class Content {
      * @since 1.0
      */
     public enum Type {
-        DESCRIPTION("*.txt"),
-        GEOGEBRA("*.ggb"),
-        IMAGE("*.png", "*.jpg", "*.jpeg"),
-        VIDEO("*.mp4"),
         WORKSHEET("*.pdf"),
         EDITABLE_WORKSHEET("*.doc", "*.docx", "*.odt"),
+        DESCRIPTION("*.txt"),
+        IMAGE("*.png", "*.jpg", "*.jpeg"),
+        GEOGEBRA("*.ggb"),
+        VIDEO("*.mp4"),
         OTHER;
 
         /**

@@ -6,7 +6,6 @@
 
 package de.apian.mathbase.gui.topictree;
 
-import de.apian.mathbase.Mathbase;
 import de.apian.mathbase.gui.FillerPane;
 import de.apian.mathbase.gui.HelpWindow;
 import de.apian.mathbase.gui.MainPane;
@@ -240,7 +239,6 @@ public class TopicTreeView extends TreeView<String> {
             return;
         }
 
-        if (Mathbase.authenticate(mainPane)) {
             TitleDialog dialog = new TitleDialog(mainPane);
             dialog.setHeaderText(Constants.BUNDLE.getString("rename_topic"));
             Optional<String> result = dialog.showAndWait();
@@ -254,7 +252,7 @@ public class TopicTreeView extends TreeView<String> {
                     new WarningAlert().showAndWait();
                 }
             });
-        }
+
     }
 
     /**
@@ -274,8 +272,7 @@ public class TopicTreeView extends TreeView<String> {
             return;
         }
 
-        if (Mathbase.authenticate(mainPane)) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, Constants.BUNDLE.getString("remove_confirmation"),
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, Constants.BUNDLE.getString("remove_topic_confirmation"),
                     ButtonType.YES, ButtonType.NO);
             alert.setTitle(Constants.BUNDLE.getString("topic_management"));
             alert.setHeaderText(Constants.BUNDLE.getString("remove_topic"));
@@ -292,7 +289,7 @@ public class TopicTreeView extends TreeView<String> {
                     new WarningAlert().showAndWait();
                 }
             }
-        }
+
     }
 
     /**

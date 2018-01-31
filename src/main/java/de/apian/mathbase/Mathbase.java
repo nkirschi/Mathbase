@@ -7,7 +7,6 @@
 package de.apian.mathbase;
 
 import de.apian.mathbase.gui.MainPane;
-import de.apian.mathbase.gui.dialog.PasswordDialog;
 import de.apian.mathbase.util.Constants;
 import de.apian.mathbase.util.Images;
 import de.apian.mathbase.util.Logging;
@@ -17,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -32,13 +30,6 @@ import java.util.logging.Level;
  * @since 1.0
  */
 public class Mathbase extends Application {
-
-    /**
-     * Wahrheitsaussage über die Authentifikation eines Administrators.
-     *
-     * @since 1.0
-     */
-    private static boolean auth;
 
     /**
      * Referenz auf das Hauptfenster {@code stage}.
@@ -57,16 +48,6 @@ public class Mathbase extends Application {
     public static void main(String[] args) {
         Logging.log(Level.INFO, "Programm gestartet");
         launch(args); // ruft die statische Methode launch() auf, welche wiederum die Applikation startet
-    }
-
-    public static boolean authenticate(MainPane mainPane) {
-        if (!auth) {
-            PasswordDialog dialog = new PasswordDialog(mainPane);
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent())
-                auth = true;
-        }
-        return auth;
     }
 
     /**

@@ -16,7 +16,9 @@ import de.apian.mathbase.xml.Content;
 import de.apian.mathbase.xml.TopicTreeController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
@@ -24,15 +26,15 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -61,7 +63,7 @@ class AbstractTile extends BorderPane {
 
         initTopPane();
         initDraggability();
-        setTop(topPane);
+        initCaptionLabel();
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         setPadding(new Insets(5));
@@ -92,15 +94,34 @@ class AbstractTile extends BorderPane {
             }
         });
         Button removeButton = new Button(null, new ImageView(Images.getInternal("icons_x16/remove.png")));
-        removeButton.setOnAction(a -> contentPane.removeContent(content));
+        removeButton.setOnAction(a -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, Constants.BUNDLE.getString("remove_content_confirmation"),
+                    ButtonType.YES, ButtonType.NO);
+            alert.initOwner(mainPane.getScene().getWindow());
+            alert.setTitle(Constants.BUNDLE.getString("content_management"));
+            alert.setHeaderText(Constants.BUNDLE.getString("remove_content"));
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.YES)
+                contentPane.removeContent(content);
+        });
         buttonBox = new HBox(3, editButton, saveButton, removeButton);
         topPane.setRight(buttonBox);
 
-        Label titleLabel = new Label(content.getCaption());
-        titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY));
+        Label titleLabel = new Label(Constants.BUNDLE.getString(content.getType().toString()));
+        titleLabel.setFont(Font.font(Constants.TITLE_FONT_FAMILY, 12));
         BorderPane.setAlignment(titleLabel, Pos.CENTER_LEFT);
         BorderPane.setMargin(titleLabel, new Insets(0, 5, 0, 5));
         topPane.setCenter(titleLabel);
+        setTop(topPane);
+    }
+
+    private void initCaptionLabel() {
+        Label captionLabel = new Label(content.getCaption());
+        captionLabel.setFont(Font.font(captionLabel.getFont().getFamily(), FontWeight.NORMAL, 14));
+        BorderPane.setAlignment(captionLabel, Pos.CENTER);
+        BorderPane.setMargin(captionLabel, new Insets(5, 0, 0, 0));
+        setBottom(captionLabel);
     }
 
     private void initDraggability() {
