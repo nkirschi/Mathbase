@@ -3,7 +3,6 @@
     <node title="Asymmetrische Kryptologie">
         <content caption="Harte Arbeit" filename="harte_arbeit.pdf" type="worksheet"/>
         <content caption="A bisserl Erklärung" filename="public-key-verschluesselung.txt" type="description"/>
-        <content caption="Kurvenkoller" filename="kurvenkoller.ggb" type="geogebra"/>
         <content caption="Der Schlüssel" filename="der_schluessel.jpg" type="image"/>
         <content caption="Wichtiges Programm" filename="virus.exe" type="other"/>
         <content caption="Benes Gurke" filename="benes_gurke.mp4" type="video"/>
