@@ -26,7 +26,7 @@ For the purpose of installing it is sufficient to download the file `Mathbase.ja
 During operation, Mathbase automatically generates a file named `log.txt` in the execution directory which contains a record of the program flow. In case of problems with the application, a glimpse into this logfile usually reveals detailed information on the course of events that led to the error. 
 
 ## Source Code
-The whole program code can be viewed in the project's [repository](../../) while a complete documentation of the entire project is available at http://slaergh.github.io/Mathbase.
+The whole program code can be viewed in the project's [repository](../../) while a complete documentation of the entire project is available at http://nelorth.github.io/Mathbase.
 
 ## License
 This project is licensed under the GNU General Public License v3.0 which allows modification, distribution, patent use as well as private and commercial use of Mathbase if the same license is used and a copyright of the original authors is inserted, but excludes warranty or liability claims of any kind.
